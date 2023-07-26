@@ -8,6 +8,8 @@ enum Panel { listasRep, listaRepTodo, propiedades, ajustes }
 ListaReproduccionData listaRepTodo =
     const ListaReproduccionData(id: 0, nombre: "Todo", ordenAscendente: true);
 
+ProviderGeneral provGeneral = ProviderGeneral();
+
 class ProviderGeneral extends ChangeNotifier {
   ///Lista con todas las listas de reproduccion en el sistema.
   List<ListaReproduccionData> listas = [];
@@ -34,18 +36,17 @@ class ProviderGeneral extends ChangeNotifier {
   //Actualiza las columnas de la lista de reproduccion seleccionada.
   Future<void> actualizarColumnasListaRepSel() async {
     if (listaSel.id != listaRepTodo.id) {
-      final consultaColumnasListaRep = appDb
-          .selectOnly(appDb.listaColumnas)
-          .join([
+      final consultaColumnasListaRep =
+          appDb.selectOnly(appDb.listaColumnas).join([
         leftOuterJoin(appDb.columna,
             appDb.columna.id.equalsExp(appDb.listaColumnas.idColumna))
       ])
-        ..where(appDb.listaColumnas.idListaRep.equals(provGeneral.listaSel.id))
-        ..addColumns([
-          appDb.listaColumnas.idColumna,
-          appDb.columna.nombre,
-          appDb.listaColumnas.posicion
-        ]);
+            ..where(appDb.listaColumnas.idListaRep.equals(listaSel.id))
+            ..addColumns([
+              appDb.listaColumnas.idColumna,
+              appDb.columna.nombre,
+              appDb.listaColumnas.posicion
+            ]);
 
       final resultado = await consultaColumnasListaRep.get();
 
@@ -217,7 +218,8 @@ class ProviderGeneral extends ChangeNotifier {
     await actualizarColumnasListaRepSel();
     await actualizarValoresColumnaCancion();
 
-    provListaRep.actualizarMapaCancionesSel();
+    //TODO
+    //provListaRep.actualizarMapaCancionesSel();
 
     cambiarPanelCentral(
         listaSel == listaRepTodo ? Panel.listaRepTodo : Panel.listasRep);
