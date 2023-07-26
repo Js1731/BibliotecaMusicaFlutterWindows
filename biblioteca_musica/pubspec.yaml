@@ -9,6 +9,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_nsd: ^1.3.2
+  file_picker: 5.2.4
+  drift: 
+  sqlite3_flutter_libs: 
+  path_provider: 
+  path: 
+  provider: 
+  drift_db_viewer: 
+  dotted_border: 
+  multicast_dns: ^0.3.2+3
+  
+  mp3_info: 
+  audioplayers:
+  tuple: ^2.0.1
+  dio: ^5.2.1+1
+  shared_preferences: ^2.1.2
+  nsd: ^2.3.1
 
 dev_dependencies:
   flutter_test:
