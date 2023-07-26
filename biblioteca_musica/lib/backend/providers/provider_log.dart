@@ -6,6 +6,8 @@ const String infoTitulo = "Info";
 const EntradaLog entErrorConexion =
     EntradaLog(errorConexion, "Error durante sincronización");
 
+ProviderLog provBarraLog = ProviderLog();
+
 class ProviderLog extends ChangeNotifier {
   List<EntradaLog> lstLog = <EntradaLog>[];
 

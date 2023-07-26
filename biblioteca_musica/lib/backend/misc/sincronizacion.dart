@@ -429,16 +429,14 @@ Future<void> descargarArchivo(
   );
 }
 
-Future<void> actualizarDatosLocales(
-    ProviderGeneral provGeneral, ProviderLog provLog) async {
+Future<void> actualizarDatosLocales() async {
   final versionLocal = await obtNumeroVersionLocal();
   await actNumeroVersionLocal(versionLocal + 1);
 
   sincronizar(provGeneral, provLog);
 }
 
-Future<void> sincronizarArchivos(
-    ProviderGeneral provGeneral, ProviderLog provBarraLog) async {
+Future<void> sincronizarArchivos() async {
   var lstCanciones = await appDb.select(appDb.cancion).get();
 
   for (var cancion in lstCanciones) {
@@ -509,8 +507,7 @@ Future<void> sincronizarArchivos(
   provBarraLog.texto("Sincronizando", "Archivos Sincronizados.");
 }
 
-Future<void> sincronizar(
-    ProviderGeneral provGeneral, ProviderLog provBarraLog) async {
+Future<void> sincronizar() async {
   try {
     provBarraLog.cambiarEstadoSinc(false);
 
