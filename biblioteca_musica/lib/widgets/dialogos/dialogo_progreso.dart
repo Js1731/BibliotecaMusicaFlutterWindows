@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/misc/Proceso.dart';
+import 'package:biblioteca_musica/backend/misc/Proceso.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/dialogos/abrir_dialogo.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';

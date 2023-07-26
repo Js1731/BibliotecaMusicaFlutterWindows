@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/controles/control_panel_lista_reproduccion.dart';
-import 'package:biblioteca_musica/main.dart';
+import 'package:biblioteca_musica/backend/controles/control_panel_lista_reproduccion.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';

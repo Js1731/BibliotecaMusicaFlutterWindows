@@ -1,16 +1,16 @@
-import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/controles/control_panel_lista_reproduccion.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/backend/misc/utiles.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
+import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
+import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/main.dart';
-import 'package:biblioteca_musica/misc/sincronizacion.dart';
-import 'package:biblioteca_musica/misc/utiles.dart';
-import 'package:biblioteca_musica/providers/provider_general.dart';
-import 'package:biblioteca_musica/providers/provider_lista_rep.dart';
-import 'package:biblioteca_musica/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:biblioteca_musica/controles/control_panel_lista_reproduccion.dart';
 
 class ItemCancion extends BtnGenerico {
   final ContPanelListaReproduccion contPanelListaRep;
@@ -200,6 +200,7 @@ class ItemCancion extends BtnGenerico {
                   case 0:
                     await contPanelListaRep.renombrarCancion(cancion);
                     provGeneral.seleccionarLista(provGeneral.listaSel.id);
+                    provListaRep.actualizarMapaCancionesSel();
                     break;
 
                   case 1:

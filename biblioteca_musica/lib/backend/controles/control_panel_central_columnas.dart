@@ -1,7 +1,7 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
-import 'package:biblioteca_musica/main.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_valor_columna.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';

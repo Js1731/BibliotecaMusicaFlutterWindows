@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/datos/AppDb.dart';
-import 'package:biblioteca_musica/main.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:flutter/material.dart';
 
 class ProviderListaReproduccion extends ChangeNotifier {

@@ -1,12 +1,12 @@
+import 'package:biblioteca_musica/backend/misc/Intents.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
+import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
 import 'package:biblioteca_musica/main.dart';
-import 'package:biblioteca_musica/misc/Intents.dart';
 import 'package:biblioteca_musica/pantallas/panel_barra_log.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_rep_todo.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas_principal.dart';
 import 'package:biblioteca_musica/pantallas/panel_reproductor.dart';
-import 'package:biblioteca_musica/providers/provider_general.dart';
-import 'package:biblioteca_musica/providers/provider_panel_propiedad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +30,7 @@ class PantPrincipalState extends State<PantPrincipal> {
     super.initState();
 
     provGeneral.seleccionarLista(listaRepTodo.id);
+    provListaRep.actualizarMapaCancionesSel();
   }
 
   @override

@@ -218,9 +218,6 @@ class ProviderGeneral extends ChangeNotifier {
     await actualizarColumnasListaRepSel();
     await actualizarValoresColumnaCancion();
 
-    //TODO
-    //provListaRep.actualizarMapaCancionesSel();
-
     cambiarPanelCentral(
         listaSel == listaRepTodo ? Panel.listaRepTodo : Panel.listasRep);
 

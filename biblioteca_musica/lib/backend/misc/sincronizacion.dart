@@ -433,7 +433,7 @@ Future<void> actualizarDatosLocales() async {
   final versionLocal = await obtNumeroVersionLocal();
   await actNumeroVersionLocal(versionLocal + 1);
 
-  sincronizar(provGeneral, provLog);
+  sincronizar();
 }
 
 Future<void> sincronizarArchivos() async {
@@ -532,7 +532,7 @@ Future<void> sincronizar() async {
     provBarraLog.texto("Sincronizando", "Datos Sincronizados.");
     provBarraLog.cambiarEstadoSinc(true);
 
-    sincronizarArchivos(provGeneral, provBarraLog);
+    sincronizarArchivos();
   } catch (error) {
     if (error is DioException) {
       provBarraLog.texto(

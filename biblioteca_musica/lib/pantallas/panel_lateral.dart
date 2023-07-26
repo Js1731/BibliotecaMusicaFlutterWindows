@@ -1,11 +1,11 @@
-import 'package:biblioteca_musica/controles/control_panel_lateral.dart';
-import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/controles/control_panel_lateral.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/misc/Intents.dart';
+import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/main.dart';
-import 'package:biblioteca_musica/misc/Intents.dart';
-import 'package:biblioteca_musica/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/pantallas/item_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/item_panel_lateral_sub_menu.dart';
-import 'package:biblioteca_musica/providers/provider_general.dart';
 import 'package:biblioteca_musica/widgets/btn_agregar.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
@@ -47,6 +47,7 @@ class EstadoPanelLateral extends State<PanelLateral> {
         IntentAbrirListaTodo: CallbackAction(
           onInvoke: (intent) {
             provGeneral.seleccionarLista(listaRepTodo.id);
+            provListaRep.actualizarMapaCancionesSel();
             return null;
           },
         ),

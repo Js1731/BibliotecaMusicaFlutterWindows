@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:biblioteca_musica/misc/archivos.dart';
+import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';

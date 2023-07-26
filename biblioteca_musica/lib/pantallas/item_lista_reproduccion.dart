@@ -1,6 +1,7 @@
-import 'package:biblioteca_musica/datos/AppDb.dart';
-import 'package:biblioteca_musica/providers/provider_reproductor.dart';
-import 'package:biblioteca_musica/providers/provider_general.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
+import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
+import 'package:biblioteca_musica/main.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
@@ -66,5 +67,6 @@ class ItemListaRep extends BtnGenerico {
           //ABRIR LISTA
           Provider.of<ProviderGeneral>(context, listen: false)
               .seleccionarLista(lst.id);
+          provListaRep.actualizarMapaCancionesSel();
         });
 }

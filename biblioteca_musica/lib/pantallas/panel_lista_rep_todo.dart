@@ -1,9 +1,8 @@
-import 'package:biblioteca_musica/main.dart';
-import 'package:biblioteca_musica/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
+import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
+import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion_general.dart';
-import 'package:biblioteca_musica/providers/provider_general.dart';
-import 'package:biblioteca_musica/providers/provider_lista_rep.dart';
-import 'package:biblioteca_musica/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:flutter/material.dart';

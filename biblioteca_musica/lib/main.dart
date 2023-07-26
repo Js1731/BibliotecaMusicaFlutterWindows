@@ -4,6 +4,7 @@ import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
+import 'package:biblioteca_musica/backend/providers/provider_log.dart';
 import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
 import 'package:flutter/material.dart';

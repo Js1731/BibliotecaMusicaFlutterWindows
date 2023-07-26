@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/datos/AppDb.dart';
-import 'package:biblioteca_musica/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
 import 'package:biblioteca_musica/widgets/btn_color.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';

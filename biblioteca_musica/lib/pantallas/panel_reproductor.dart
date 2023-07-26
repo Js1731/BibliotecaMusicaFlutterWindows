@@ -1,8 +1,8 @@
-import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/misc/archivos.dart';
+import 'package:biblioteca_musica/backend/misc/utiles.dart';
+import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/main.dart';
-import 'package:biblioteca_musica/misc/archivos.dart';
-import 'package:biblioteca_musica/misc/utiles.dart';
-import 'package:biblioteca_musica/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/widgets/btn_accion_reproductor.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';

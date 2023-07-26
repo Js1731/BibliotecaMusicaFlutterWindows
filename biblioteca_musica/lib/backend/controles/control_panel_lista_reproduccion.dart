@@ -198,6 +198,7 @@ class ContPanelListaReproduccion {
 
     await provGeneral.actualizarListaListasRep();
     provGeneral.seleccionarLista(idLista);
+    provListaRep.actualizarMapaCancionesSel();
     await actualizarDatosLocales();
   }
 
@@ -253,6 +254,7 @@ class ContPanelListaReproduccion {
             idColumnaPrincipal: Value(colPrincipal?.id)));
 
     provGeneral.seleccionarLista(lst.id);
+    provListaRep.actualizarMapaCancionesSel();
     await provReproductor.actualizarDatos(provReproductor.cancionRep?.id);
     await actualizarDatosLocales();
   }

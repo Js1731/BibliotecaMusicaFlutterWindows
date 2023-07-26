@@ -1,7 +1,7 @@
-import 'package:biblioteca_musica/controles/control_panel_central_columnas.dart';
-import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/controles/control_panel_central_columnas.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
 import 'package:biblioteca_musica/pantallas/item_valor_columna.dart';
-import 'package:biblioteca_musica/providers/provider_panel_propiedad.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';

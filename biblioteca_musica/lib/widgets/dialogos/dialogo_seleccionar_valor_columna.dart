@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/controles/control_panel_central_columnas.dart';
-import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/controles/control_panel_central_columnas.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/widgets/btn_color.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/dialogos/abrir_dialogo.dart';

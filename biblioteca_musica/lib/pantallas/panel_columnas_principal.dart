@@ -1,7 +1,7 @@
-import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas_central.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas_lateral.dart';
-import 'package:biblioteca_musica/providers/provider_panel_propiedad.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

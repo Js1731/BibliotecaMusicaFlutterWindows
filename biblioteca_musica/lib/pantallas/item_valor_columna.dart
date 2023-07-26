@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:biblioteca_musica/controles/control_panel_central_columnas.dart';
-import 'package:biblioteca_musica/datos/AppDb.dart';
-import 'package:biblioteca_musica/misc/archivos.dart';
-import 'package:biblioteca_musica/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/backend/controles/control_panel_central_columnas.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/misc/archivos.dart';
+import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
