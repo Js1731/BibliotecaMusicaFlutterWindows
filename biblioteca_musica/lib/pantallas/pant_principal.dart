@@ -7,6 +7,7 @@ import 'package:biblioteca_musica/pantallas/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_rep_todo.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas_principal.dart';
 import 'package:biblioteca_musica/pantallas/panel_reproductor.dart';
+import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -48,34 +49,43 @@ class PantPrincipalState extends State<PantPrincipal> {
             const SingleActivator(LogicalKeyboardKey.keyS, control: true):
                 IntentSincronizar()
           },
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(children: <Widget>[
-                  const PanelLateral(),
+          child: Container(
+            color: Deco.cGray0,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Row(children: <Widget>[
+                    const PanelLateral(),
 
-                  //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
+                    //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
 
-                  Selector<ProviderGeneral, Panel?>(
-                    selector: (_, provGeneral) => provGeneral.panelSel,
-                    builder: (_, panel, __) => Expanded(
-                      child: panel == Panel.listaRepTodo
-                          ? PanelListaRepTodo()
-                          : panel == Panel.listasRep
-                              ? PanelListaRepCualquiera()
-                              : panel == Panel.propiedades
-                                  ? ChangeNotifierProvider(
-                                      create: (context) =>
-                                          ProviderPanelColumnas(),
-                                      child: const PanelColumnasPrincipal())
-                                  : const SizedBox(),
+                    Selector<ProviderGeneral, Panel?>(
+                      selector: (_, provGeneral) => provGeneral.panelSel,
+                      builder: (_, panel, __) => Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20)),
+                          margin: const EdgeInsets.all(10),
+                          child: panel == Panel.listaRepTodo
+                              ? PanelListaRepTodo()
+                              : panel == Panel.listasRep
+                                  ? PanelListaRepCualquiera()
+                                  : panel == Panel.propiedades
+                                      ? ChangeNotifierProvider(
+                                          create: (context) =>
+                                              ProviderPanelColumnas(),
+                                          child: const PanelColumnasPrincipal())
+                                      : const SizedBox(),
+                        ),
+                      ),
                     ),
-                  ),
-                ]),
-              ),
-              const PanelBarraLog(),
-              const PanelReproductor()
-            ],
+                  ]),
+                ),
+                const PanelBarraLog(),
+                const PanelReproductor()
+              ],
+            ),
           ),
         ),
       ),

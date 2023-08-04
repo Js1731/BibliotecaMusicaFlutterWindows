@@ -13,3 +13,8 @@ class Deco {
   static const Color cMorado3 = Color.fromRGBO(122, 43, 138, 1);
   static const Color cMorado4 = Color.fromRGBO(87, 38, 149, 1);
 }
+
+class DecoColores {
+  static const Color rosaOscuro = Color.fromRGBO(35, 27, 45, 1);
+  static const Color rosaClaro = Color.fromRGBO(116, 44, 96, 1);
+}

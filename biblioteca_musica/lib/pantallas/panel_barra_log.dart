@@ -19,7 +19,8 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
     return ChangeNotifierProvider<ProviderLog>(
       create: (_) => provBarraLog,
       child: Consumer<ProviderLog>(builder: (context, provLog, child) {
-        return SizedBox(
+        return Container(
+          margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
           child: Column(
             children: [
               const Divider(

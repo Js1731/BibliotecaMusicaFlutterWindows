@@ -34,6 +34,7 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
 
         return Container(
           height: 100,
+          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
           decoration: const BoxDecoration(color: Deco.cMorado0),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(

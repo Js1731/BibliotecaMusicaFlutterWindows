@@ -61,7 +61,7 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
         final mapaPropiedadesCancion = datos.item3;
 
         return Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               //INFORMACION SOBRE LISTA DE REPRODUCTOR
