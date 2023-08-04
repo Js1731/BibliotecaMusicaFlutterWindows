@@ -10,10 +10,6 @@ import 'package:biblioteca_musica/pantallas/pant_principal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-ProviderListaReproduccion provListaRep = ProviderListaReproduccion();
-ProviderReproductor provReproductor =
-    ProviderReproductor(providerGeneral: provGeneral);
-
 Future<void> iniciarServidor() async {
   var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
 
@@ -24,9 +20,13 @@ Future<void> iniciarServidor() async {
   });
 }
 
+ProviderListaReproduccion provListaRep = ProviderListaReproduccion();
+ProviderReproductor provReproductor =
+    ProviderReproductor(providerGeneral: provGeneral);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  actNumeroVersionLocal(0);
   await initRutaDoc();
   enviarMDNS();
   iniciarServidor();
