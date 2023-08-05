@@ -66,7 +66,8 @@ class PantPrincipalState extends State<PantPrincipal> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20)),
-                          margin: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(
+                              top: 10, right: 10, bottom: 10),
                           child: panel == Panel.listaRepTodo
                               ? PanelListaRepTodo()
                               : panel == Panel.listasRep

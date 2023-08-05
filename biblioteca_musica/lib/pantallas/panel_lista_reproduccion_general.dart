@@ -70,7 +70,7 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                   child: Text(listaSel.nombre,
                       textAlign: TextAlign.left,
                       style: const TextStyle(
-                          fontSize: 40, fontWeight: FontWeight.bold)),
+                          fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
 
                 //CANTIDAD DE CANCIONES

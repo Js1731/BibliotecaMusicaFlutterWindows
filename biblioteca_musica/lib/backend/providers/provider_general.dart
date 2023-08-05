@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 
 enum Panel { listasRep, listaRepTodo, propiedades, ajustes }
 
-ListaReproduccionData listaRepTodo =
-    const ListaReproduccionData(id: 0, nombre: "Todo", ordenAscendente: true);
+ListaReproduccionData listaRepTodo = const ListaReproduccionData(
+    id: 0, nombre: "Biblioteca", ordenAscendente: true);
 
 ProviderGeneral provGeneral = ProviderGeneral();
 

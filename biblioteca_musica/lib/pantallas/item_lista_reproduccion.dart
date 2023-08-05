@@ -17,7 +17,7 @@ class ItemListaRep extends BtnGenerico {
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 2),
             width: double.infinity,
-            height: 30,
+            height: 25,
             child: Selector<ProviderReproductor, int?>(
                 selector: (_, provRep) => provRep.idListaRep,
                 builder: (_, idListaRepReproduciendo, __) {
@@ -40,7 +40,7 @@ class ItemListaRep extends BtnGenerico {
                                     : (listaSel?.id == lst.id &&
                                             (panel == Panel.listaRepTodo ||
                                                 panel == Panel.listasRep))
-                                        ? Colors.white30
+                                        ? Colors.white
                                         : hover == true
                                             ? Colors.white12
                                             : Colors.transparent),
@@ -57,8 +57,8 @@ class ItemListaRep extends BtnGenerico {
                                       : (listaSel?.id == lst.id &&
                                               (panel == Panel.listaRepTodo ||
                                                   panel == Panel.listasRep))
-                                          ? Deco.cGray0
-                                          : Deco.cGray,
+                                          ? DecoColores.rosaClaro
+                                          : Colors.white,
                                 )));
                       });
                 }),

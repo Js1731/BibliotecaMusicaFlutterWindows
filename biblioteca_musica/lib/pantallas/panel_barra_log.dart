@@ -23,10 +23,6 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
           margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
           child: Column(
             children: [
-              const Divider(
-                color: Deco.cMorado0,
-                height: 1,
-              ),
               if (provLog.logExtendido)
                 Container(
                   height: 130,
@@ -47,13 +43,41 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
                 ),
               SizedBox(
                 height: 25,
-                child: Row(
+                child: Stack(
                   children: [
+                    Container(
+                        padding: const EdgeInsets.only(left: 350),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
+                        height: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        child: TextoPer(
+                            texto: provLog.obtLogAct()?.desc ?? "", tam: 12)),
+                    BtnGenerico(
+                      builder: (hover, context) => Container(
+                          padding: const EdgeInsets.only(left: 190),
+                          decoration: BoxDecoration(
+                              color: DecoColores.rosaClaro,
+                              borderRadius: BorderRadius.circular(15)),
+                          width: 340,
+                          alignment: Alignment.centerLeft,
+                          height: double.infinity,
+                          child: TextoPer(
+                              texto: provLog.obtLogAct()?.titulo ?? "",
+                              tam: 12,
+                              color: Colors.white)),
+                      onPressed: (_) {
+                        provLog.togglerLogExtendido(!provLog.logExtendido);
+                      },
+                    ),
                     BtnGenerico(
                       builder: (hover, context) => Container(
                           padding: const EdgeInsets.only(left: 10),
-                          color: hover ? Deco.cMorado : Deco.cMorado0,
-                          width: 200,
+                          decoration: BoxDecoration(
+                              color: DecoColores.rosaClaro1,
+                              borderRadius: BorderRadius.circular(15)),
+                          width: 170,
                           height: double.infinity,
                           alignment: Alignment.centerLeft,
                           child: Row(
@@ -83,37 +107,9 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
                         await sincronizar();
                       },
                     ),
-                    BtnGenerico(
-                      builder: (hover, context) => Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          color: hover ? Deco.cMorado4 : Deco.cMorado,
-                          width: 200,
-                          alignment: Alignment.centerLeft,
-                          height: double.infinity,
-                          child: TextoPer(
-                              texto: provLog.obtLogAct()?.titulo ?? "",
-                              tam: 12,
-                              color: Colors.white)),
-                      onPressed: (_) {
-                        provLog.togglerLogExtendido(!provLog.logExtendido);
-                      },
-                    ),
-                    Expanded(
-                      child: Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          color: Deco.cGray0,
-                          height: double.infinity,
-                          alignment: Alignment.centerLeft,
-                          child: TextoPer(
-                              texto: provLog.obtLogAct()?.desc ?? "", tam: 12)),
-                    ),
                   ],
                 ),
               ),
-              const Divider(
-                color: Colors.black54,
-                height: 0.5,
-              )
             ],
           ),
         );
