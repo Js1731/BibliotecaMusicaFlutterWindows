@@ -66,8 +66,8 @@ class EstadoPanelLateral extends State<PanelLateral> {
         autofocus: true,
         child: Container(
             width: 170,
-            height: double.infinity,
-            margin: const EdgeInsets.all(10),
+            height: double.maxFinite,
+            margin: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
             child: CustomPaint(
               painter: CustomPainterPanelLateral(),
               child: Column(children: [
@@ -99,8 +99,11 @@ class EstadoPanelLateral extends State<PanelLateral> {
                         ),
                         //ITEM PARA VER LISTA CON TODAS LAS CANCIONES
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 10),
+                          padding: const EdgeInsets.only(
+                            top: 5,
+                            bottom: 5,
+                            left: 10,
+                          ),
                           child: ItemListaRep(
                             lst: listaRepTodo,
                           ),
@@ -124,7 +127,7 @@ class EstadoPanelLateral extends State<PanelLateral> {
                                 await controlador.agregarListaNueva();
                               }, builder: (hover, context) {
                                 return CustomPaint(
-                                  painter: CustomPainterAgregarLista(),
+                                  painter: CustomPainterAgregarLista(hover),
                                   child: Container(
                                     width: 80,
                                     alignment: Alignment.centerRight,
@@ -146,7 +149,6 @@ class EstadoPanelLateral extends State<PanelLateral> {
                           child: Container(
                             padding: const EdgeInsets.only(
                               bottom: 10,
-                              right: 10,
                               left: 10,
                             ),
                             child: Column(
@@ -186,6 +188,8 @@ class EstadoPanelLateral extends State<PanelLateral> {
                                   texto: "Columnas",
                                   icono: Icons.library_books,
                                   panel: Panel.propiedades,
+                                  colorPanel: DecoColores.rosa,
+                                  colorTextoSel: Colors.white,
                                 ),
 
                                 const SizedBox(height: 5),
@@ -195,6 +199,7 @@ class EstadoPanelLateral extends State<PanelLateral> {
                                   texto: "Ajustes",
                                   icono: Icons.settings,
                                   panel: Panel.ajustes,
+                                  colorPanel: Colors.white,
                                 ),
                               ],
                             ),

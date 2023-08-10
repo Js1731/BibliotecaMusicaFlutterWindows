@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CustomPainterKOPI extends CustomPainter {
+class CustomPainerItemListaRep extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawRRect(
         RRect.fromRectAndCorners(
           Rect.fromPoints(Offset.zero, Offset(size.width, size.height)),
-          bottomLeft: Radius.circular(20),
+          topLeft: const Radius.circular(20),
+          bottomLeft: const Radius.circular(20),
         ),
         Paint()..color = Colors.white);
   }

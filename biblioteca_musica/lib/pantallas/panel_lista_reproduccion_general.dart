@@ -61,7 +61,7 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
         final mapaPropiedadesCancion = datos.item3;
 
         return Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               //INFORMACION SOBRE LISTA DE REPRODUCTOR
@@ -72,10 +72,7 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                       style: const TextStyle(
                           fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
-
-                //CANTIDAD DE CANCIONES
                 Container(
-                    padding: const EdgeInsets.all(5),
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(20)),
                     width: 80,
@@ -93,17 +90,18 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
 
                 //DURACION DE TODA LA LISTA DE REPRODUCCION
                 Container(
-                    padding: const EdgeInsets.all(5),
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(20)),
                     child: Row(children: [
                       const Icon(Icons.access_time_filled, color: Deco.cGray1),
                       const SizedBox(width: 10),
                       Text(obtDuracionLista(canciones)),
-                    ]))
+                    ])),
               ]),
 
-              const SizedBox(height: 10),
+              //CANTIDAD DE CANCIONES
+
+              const SizedBox(height: 5),
 
               //BARRA DE OPCIONES
               Selector<ProviderListaReproduccion, Tuple2<int, int>>(

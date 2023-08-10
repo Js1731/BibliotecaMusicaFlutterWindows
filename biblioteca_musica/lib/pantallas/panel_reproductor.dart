@@ -35,8 +35,9 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
         return Container(
           height: 100,
           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-          decoration: const BoxDecoration(color: Deco.cMorado0),
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+              color: DecoColores.rosa, borderRadius: BorderRadius.circular(20)),
           child: Column(
             children: [
               Row(
@@ -117,7 +118,7 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                     height: 60,
                     padding: const EdgeInsets.only(right: 10),
                     decoration: BoxDecoration(
-                        color: Deco.cMorado,
+                        color: DecoColores.rosaOscuro,
                         borderRadius: BorderRadius.circular(10)),
                     child: Row(
                       children: [
@@ -139,7 +140,7 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                                 texto: cancionRep?.nombre ?? "--",
                                 tam: 20,
                                 color: Colors.white,
-                                weight: FontWeight.bold,
+                                weight: FontWeight.normal,
                               ),
                             ),
                             TextoPer(
@@ -156,12 +157,12 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                   const SizedBox(width: 20),
 
                   Container(
-                      width: 600,
+                      width: 500,
                       height: 60,
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 10),
                       decoration: BoxDecoration(
-                          color: Deco.cMorado,
+                          color: DecoColores.rosaOscuro,
                           borderRadius: BorderRadius.circular(10)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,7 +175,8 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
-                                    color: Deco.cMorado0,
+                                    color: DecoColores.rosaOscuro,
+                                    border: Border.all(color: Deco.cGray1),
                                     borderRadius: BorderRadius.circular(30)),
                                 child: Selector<ProviderReproductor, double>(
                                     selector: (_, provRep) => provRep.volumen,
@@ -201,7 +203,8 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                                                             overlayRadius: 15)),
                                                 child: Slider(
                                                   activeColor: Colors.white,
-                                                  inactiveColor: Deco.cGray1,
+                                                  inactiveColor:
+                                                      DecoColores.rosaOscuro,
                                                   value: volumen,
                                                   min: 0,
                                                   max: 1,
@@ -219,9 +222,10 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                               ),
                               const Spacer(),
                               Container(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(5),
                                 decoration: BoxDecoration(
-                                    color: Deco.cMorado0,
+                                    border: Border.all(color: Deco.cGray1),
+                                    color: DecoColores.rosaOscuro,
                                     borderRadius: BorderRadius.circular(30)),
                                 child: Selector<ProviderReproductor,
                                         Tuple2<bool, bool>>(
@@ -298,9 +302,13 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                                           alignment: Alignment.center,
                                           padding: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: enOrden
+                                                      ? Deco.cGray1
+                                                      : Colors.transparent),
                                               color: enOrden
-                                                  ? Colors.transparent
-                                                  : Deco.cMorado3,
+                                                  ? DecoColores.rosaOscuro
+                                                  : DecoColores.rosaClaro1,
                                               borderRadius:
                                                   BorderRadius.circular(20)),
                                           child: !enOrden
@@ -310,15 +318,32 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                                                       Icons.shuffle,
                                                       color: Colors.white,
                                                     ),
-                                                    const Spacer(),
-                                                    TextoPer(
-                                                      texto: "Aleatorio",
-                                                      tam: 14,
-                                                      color: Colors.white,
+                                                    Expanded(
+                                                      child: TextoPer(
+                                                        align: TextAlign.center,
+                                                        texto: "Aleatorio",
+                                                        tam: 14,
+                                                        color: Colors.white,
+                                                      ),
                                                     ),
                                                   ],
                                                 )
-                                              : null,
+                                              : Row(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.shuffle,
+                                                      color: Colors.white,
+                                                    ),
+                                                    Expanded(
+                                                      child: TextoPer(
+                                                        align: TextAlign.center,
+                                                        texto: "Orden",
+                                                        tam: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                         ));
                                   })
                             ],

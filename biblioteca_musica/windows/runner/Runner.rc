@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "biblioteca_musica" "\0"
+            VALUE "FileDescription", "KOPI" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "biblioteca_musica" "\0"
+            VALUE "InternalName", "KOPI" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "biblioteca_musica.exe" "\0"
-            VALUE "ProductName", "biblioteca_musica" "\0"
+            VALUE "OriginalFilename", "KOPI.exe" "\0"
+            VALUE "ProductName", "KOPI" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

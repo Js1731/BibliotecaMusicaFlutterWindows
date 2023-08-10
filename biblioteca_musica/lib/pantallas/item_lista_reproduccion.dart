@@ -14,55 +14,75 @@ class ItemListaRep extends BtnGenerico {
 
   ItemListaRep({required this.lst, super.key})
       : super(builder: (hover, context) {
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 2),
-            width: double.infinity,
-            height: 25,
-            child: Selector<ProviderReproductor, int?>(
-                selector: (_, provRep) => provRep.idListaRep,
-                builder: (_, idListaRepReproduciendo, __) {
-                  return Selector<ProviderGeneral,
-                          Tuple2<ListaReproduccionData?, Panel?>>(
-                      selector: (_, provGen) =>
-                          Tuple2(provGen.listaSel, provGen.panelSel),
-                      builder: (_, data, __) {
-                        final listaSel = data.item1;
-                        final panel = data.item2;
-                        return Container(
-                            alignment: Alignment.centerLeft,
-                            margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
+          return Selector<ProviderReproductor, int?>(
+              selector: (_, provRep) => provRep.idListaRep,
+              builder: (_, idListaRepReproduciendo, __) {
+                return Selector<ProviderGeneral, Tuple2<int, Panel?>>(
+                    selector: (_, p) => Tuple2(p.listaSel.id, p.panelSel),
+                    builder: (context, data, child) {
+                      final idListaSel = data.item1;
+                      final panel = data.item2;
+                      return Stack(
+                        children: [
+                          Container(
+                              margin: EdgeInsets.only(
+                                top: 2,
+                                bottom: 2,
+                                right: (hover && idListaSel != lst.id) ? 10 : 0,
+                              ),
+                              width: double.infinity,
+                              height: 25,
+                              child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
 
-                            //DECORACION
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: idListaRepReproduciendo == lst.id
-                                    ? Colors.white
-                                    : (listaSel?.id == lst.id &&
-                                            (panel == Panel.listaRepTodo ||
-                                                panel == Panel.listasRep))
-                                        ? Colors.white
-                                        : hover == true
-                                            ? Colors.white12
-                                            : Colors.transparent),
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                  //DECORACION
+                                  decoration: BoxDecoration(
+                                      borderRadius: (hover &&
+                                              idListaSel != lst.id)
+                                          ? BorderRadius.circular(10)
+                                          : BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              bottomLeft: Radius.circular(10)),
+                                      color: idListaSel == lst.id
+                                          ? Colors.white
+                                          : hover == true
+                                              ? Colors.white12
+                                              : Colors.transparent),
+                                  child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
 
-                                //NOMBRE DE LA LISTA
-                                child: TextoPer(
-                                  texto: lst.nombre,
-                                  tam: 16,
-                                  color: lst.id == idListaRepReproduciendo
-                                      ? Deco.cMorado2
-                                      : (listaSel?.id == lst.id &&
-                                              (panel == Panel.listaRepTodo ||
-                                                  panel == Panel.listasRep))
-                                          ? DecoColores.rosaClaro
-                                          : Colors.white,
-                                )));
-                      });
-                }),
-          );
+                                      //NOMBRE DE LA LISTA
+                                      child: TextoPer(
+                                        texto: lst.nombre,
+                                        tam: 16,
+                                        color: lst.id == idListaSel
+                                            ? Deco.cMorado2
+                                            : (idListaSel == lst.id &&
+                                                    (panel ==
+                                                            Panel
+                                                                .listaRepTodo ||
+                                                        panel ==
+                                                            Panel.listasRep))
+                                                ? DecoColores.rosaClaro
+                                                : Colors.white,
+                                      )))),
+                          if (idListaRepReproduciendo == lst.id)
+                            Container(
+                              margin: const EdgeInsets.only(top: 3),
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                Icons.play_arrow,
+                                color: idListaSel == lst.id
+                                    ? DecoColores.rosaClaro
+                                    : Colors.white,
+                              ),
+                            )
+                        ],
+                      );
+                    });
+              });
         }, onPressed: (context) {
           //ABRIR LISTA
           Provider.of<ProviderGeneral>(context, listen: false)

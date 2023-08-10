@@ -1,4 +1,5 @@
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:biblioteca_musica/backend/providers/provider_log.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
@@ -26,8 +27,12 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
               if (provLog.logExtendido)
                 Container(
                   height: 130,
-                  padding: const EdgeInsets.all(5),
-                  color: Deco.cMorado0,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20)),
                   child: ListView.builder(
                     itemCount: provLog.lstLog.length - 1,
                     reverse: true,
@@ -35,8 +40,8 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
                       final log = provLog.obtLog(index);
                       return TextoPer(
                         texto: "${log!.titulo}: ${log.desc}",
-                        tam: 12,
-                        color: Deco.cGray,
+                        tam: 14,
+                        color: Colors.black,
                       );
                     },
                   ),
@@ -58,14 +63,16 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
                       builder: (hover, context) => Container(
                           padding: const EdgeInsets.only(left: 190),
                           decoration: BoxDecoration(
-                              color: DecoColores.rosaClaro,
+                              color: hover
+                                  ? aumnetarBrillo(DecoColores.rosaClaro, 20)
+                                  : DecoColores.rosaClaro,
                               borderRadius: BorderRadius.circular(15)),
                           width: 340,
                           alignment: Alignment.centerLeft,
                           height: double.infinity,
                           child: TextoPer(
                               texto: provLog.obtLogAct()?.titulo ?? "",
-                              tam: 12,
+                              tam: 14,
                               color: Colors.white)),
                       onPressed: (_) {
                         provLog.togglerLogExtendido(!provLog.logExtendido);
@@ -75,7 +82,9 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
                       builder: (hover, context) => Container(
                           padding: const EdgeInsets.only(left: 10),
                           decoration: BoxDecoration(
-                              color: DecoColores.rosaClaro1,
+                              color: hover
+                                  ? aumnetarBrillo(DecoColores.rosaClaro1, 20)
+                                  : DecoColores.rosaClaro1,
                               borderRadius: BorderRadius.circular(15)),
                           width: 170,
                           height: double.infinity,
@@ -88,8 +97,8 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
                                   height: 15,
                                   decoration: BoxDecoration(
                                       color: provLog.sincronizado
-                                          ? Deco.cRosa0
-                                          : Deco.cGray0,
+                                          ? Colors.white
+                                          : DecoColores.gris,
                                       borderRadius: BorderRadius.circular(10))),
                               const SizedBox(
                                 width: 5,
@@ -98,7 +107,7 @@ class EstadoPanelBarraLog extends State<PanelBarraLog> {
                                 texto: provLog.sincronizado
                                     ? "Sincronizado"
                                     : "Desincronizado",
-                                tam: 12,
+                                tam: 14,
                                 color: Deco.cGray0,
                               ),
                             ],

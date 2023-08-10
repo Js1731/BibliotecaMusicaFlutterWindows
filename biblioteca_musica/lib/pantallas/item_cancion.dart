@@ -37,7 +37,7 @@ class ItemCancion extends BtnGenerico {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   decoration: reproduciendo
                       ? BoxDecoration(
-                          color: Deco.cMorado2,
+                          color: DecoColores.rosaClaro1,
                           borderRadius: BorderRadius.circular(30))
                       : seleccionado
                           ? BoxDecoration(

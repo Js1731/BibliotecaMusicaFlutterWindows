@@ -11,34 +11,51 @@ class ItemColumna extends BtnGenerico {
       : super(
             builder: (hover, context) {
               return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 2),
+                  margin: const EdgeInsets.only(top: 2, bottom: 2, left: 10),
                   width: double.infinity,
                   height: 30,
                   child: Selector<ProviderPanelColumnas, ColumnaData?>(
                       selector: (_, provProp) => provProp.tipoPropiedadSel,
                       builder: (_, columnaSel, __) {
                         return Container(
+                            margin: EdgeInsets.only(
+                              top: 2,
+                              bottom: 2,
+                              right: (hover && columnaSel?.id != columna.id)
+                                  ? 10
+                                  : 0,
+                            ), //(hover && listaS!.id != lst.id) ? 10 : 0),
+                            width: double.infinity,
+                            height: 25,
+                            child: Container(
+                                alignment: Alignment.centerLeft,
+                                margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
 
-                            //PROPIEDADES
-                            alignment: Alignment.centerLeft,
-                            margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
+                                //DECORACION
+                                decoration: BoxDecoration(
+                                    borderRadius: (hover &&
+                                            columnaSel?.id != columna.id)
+                                        ? BorderRadius.circular(10)
+                                        : BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10)),
+                                    color: columnaSel?.id == columna.id
+                                        ? Colors.white
+                                        : hover == true
+                                            ? Colors.white12
+                                            : Colors.transparent),
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
 
-                            //DECORACION
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: (columnaSel?.id == columna.id)
-                                    ? Colors.white30
-                                    : hover == true
-                                        ? Colors.white12
-                                        : Colors.transparent),
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: TextoPer(
-                                  texto: columna.nombre,
-                                  tam: 16,
-                                  color: Deco.cGray,
-                                )));
+                                    //NOMBRE DE LA LISTA
+                                    child: TextoPer(
+                                      texto: columna.nombre,
+                                      tam: 16,
+                                      color: columnaSel?.id == columna.id
+                                          ? DecoColores.rosa
+                                          : Colors.white,
+                                    ))));
                       }));
             },
             onPressed: onPressed);

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class CustomPainterPanelLateral extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Rect rect = Rect.fromPoints(Offset.zero, Offset(size.width, size.height));
+    Rect rect = Rect.fromPoints(Offset(0, 2), Offset(size.width, size.height));
 
     LinearGradient gradient = const LinearGradient(
         begin: Alignment.topLeft,
@@ -16,14 +16,12 @@ class CustomPainterPanelLateral extends CustomPainter {
         RRect.fromRectAndCorners(
           rect,
           bottomLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
         ),
         Paint()..shader = gradient.createShader(rect));
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
-    throw UnimplementedError();
+    return true;
   }
 }
