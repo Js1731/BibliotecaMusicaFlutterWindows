@@ -1,20 +1,18 @@
 import 'package:biblioteca_musica/backend/misc/CustomPainerPanelCentral.dart';
-import 'package:biblioteca_musica/backend/misc/Intents.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
+import 'package:biblioteca_musica/bloc/bloc_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/main.dart';
-import 'package:biblioteca_musica/pantallas/panel_barra_log.dart';
-import 'package:biblioteca_musica/pantallas/panel_lateral.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_rep_todo.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas_principal.dart';
-import 'package:biblioteca_musica/pantallas/panel_reproductor.dart';
+import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_rep_cualquiera.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_rep_todo.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-
-import 'panel_lista_rep_cualquiera.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 final GlobalKey<PantPrincipalState> keyPantPrincipal = GlobalKey();
 
@@ -32,7 +30,7 @@ class PantPrincipalState extends State<PantPrincipal> {
   void initState() {
     super.initState();
 
-    provGeneral.seleccionarLista(listaRepTodo.id);
+    provGeneral.seleccionarLista(listaRepBiblioteca.id);
     provListaRep.actualizarMapaCancionesSel();
   }
 
@@ -40,78 +38,71 @@ class PantPrincipalState extends State<PantPrincipal> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Shortcuts(
-          shortcuts: {
-            const SingleActivator(LogicalKeyboardKey.keyL):
-                IntentAgregarLista(),
-            const SingleActivator(LogicalKeyboardKey.keyC):
-                IntentAbrirColumnas(),
-            const SingleActivator(LogicalKeyboardKey.keyT):
-                IntentAbrirListaTodo(),
-            const SingleActivator(LogicalKeyboardKey.keyS, control: true):
-                IntentSincronizar()
-          },
-          child: Stack(
-            children: [
-              Container(
+        child: Stack(
+          children: [
+            MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (context) => CubitPanelSeleccionado()),
+                BlocProvider(create: (context) => BlocReproductor()),
+                BlocProvider(
+                    create: (context) => BlocListaReproduccionSeleccionada())
+              ],
+              child: Container(
                 color: DecoColores.gris,
                 child: Column(
                   children: [
                     Expanded(
-                      child: Row(children: <Widget>[
-                        const PanelLateral(),
+                      child: Row(children: [
+                        PanelLateral(),
 
                         //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
 
-                        Selector<ProviderGeneral, Panel?>(
-                          selector: (_, provGeneral) => provGeneral.panelSel,
-                          builder: (_, panel, __) => Expanded(
+                        BlocBuilder<CubitPanelSeleccionado, Panel>(
+                          builder: (context, panel) => Expanded(
                             child: Container(
                               margin: const EdgeInsets.only(
                                   top: 10, right: 10, bottom: 10),
                               child: CustomPaint(
                                 painter: CustomPainerPanelCentral(),
-                                child: panel == Panel.listaRepTodo
-                                    ? PanelListaRepTodo()
+                                child: panel == Panel.listaRepBiblioteca
+                                    ? PanellistaRepBiblioteca()
                                     : panel == Panel.listasRep
                                         ? PanelListaRepCualquiera()
-                                        : panel == Panel.propiedades
-                                            ? const PanelColumnasPrincipal()
-                                            : const SizedBox(),
+                                        : const SizedBox(),
                               ),
                             ),
                           ),
                         ),
                       ]),
                     ),
-                    const PanelBarraLog(),
-                    const PanelReproductor()
+                    //const PanelBarraLog(),
+                    //const PanelReproductor()
                   ],
                 ),
               ),
-              WindowTitleBarBox(child: MoveWindow()),
-              Container(
-                margin: const EdgeInsets.all(10),
-                alignment: Alignment.topRight,
-                child: WindowTitleBarBox(
-                    child: Row(
-                  children: [
-                    const Spacer(),
-                    MinimizeWindowButton(),
-                    MaximizeWindowButton(),
-                    CloseWindowButton(
-                      colors:
-                          WindowButtonColors(mouseOver: DecoColores.rosaClaro1),
-                    ),
-                  ],
-                )),
-              )
-            ],
-          ),
+            ),
+            WindowTitleBarBox(child: MoveWindow()),
+            Container(
+              margin: const EdgeInsets.all(10),
+              alignment: Alignment.topRight,
+              child: WindowTitleBarBox(
+                  child: Row(
+                children: [
+                  const Spacer(),
+                  MinimizeWindowButton(),
+                  MaximizeWindowButton(),
+                  CloseWindowButton(
+                    colors:
+                        WindowButtonColors(mouseOver: DecoColores.rosaClaro1),
+                  ),
+                ],
+              )),
+            )
+          ],
         ),
       ),
-
-      //const BarraSync()
     );
+
+    //const BarraSync()
   }
 }

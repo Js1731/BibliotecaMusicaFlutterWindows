@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
+import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -105,7 +106,7 @@ class ProviderReproductor extends ChangeNotifier {
     List<TypedResult> lstActualizada;
     List<CancionData> nuevaListaMapeada;
 
-    if (idListaRep == listaRepTodo.id) {
+    if (idListaRep == listaRepBiblioteca.id) {
       nuevaListaMapeada = await (appDb.select(appDb.cancion)).get();
     } else {
       lstActualizada = await (appDb.select(appDb.cancion).join([

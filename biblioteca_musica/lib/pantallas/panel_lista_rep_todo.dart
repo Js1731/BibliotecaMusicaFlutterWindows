@@ -1,17 +1,17 @@
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
-import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
+import 'package:biblioteca_musica/bloc/bloc_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/bloc_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion_general.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PanelListaRepTodo extends PanelListaReproduccion {
-  PanelListaRepTodo({super.key})
+class PanellistaRepBiblioteca extends PanelListaReproduccion {
+  PanellistaRepBiblioteca({super.key})
       : super(
-            builderOpcionesNormales: (context, provListaRep, controlador) => [
+            builderOpcionesNormales: (context, controlador) => [
                   SeccionCintaOpciones(lstItems: [
                     const TextoCintaOpciones(texto: "Reproducir"),
 
@@ -19,20 +19,20 @@ class PanelListaRepTodo extends PanelListaReproduccion {
                     BotonCintaOpciones(
                         icono: Icons.play_arrow,
                         texto: "Orden",
-                        onPressed: (_) async {
-                          await Provider.of<ProviderReproductor>(context,
-                                  listen: false)
-                              .reproducirListaOrden(listaRepTodo.id);
+                        onPressed: (context) async {
+                          context
+                              .read<BlocReproductor>()
+                              .add(EvReproducirOrden(listaRepBiblioteca));
                         }),
 
                     //REPRODUCIR AL AZAR
                     BotonCintaOpciones(
                         icono: Icons.shuffle,
                         texto: "Azar",
-                        onPressed: (_) async {
-                          await Provider.of<ProviderReproductor>(context,
-                                  listen: false)
-                              .reproducirListaAzar(listaRepTodo.id);
+                        onPressed: (context) async {
+                          context
+                              .read<BlocReproductor>()
+                              .add(EvReproducirAzar(listaRepBiblioteca));
                         }),
                   ]),
                   const SizedBox(width: 10),
@@ -48,95 +48,89 @@ class PanelListaRepTodo extends PanelListaReproduccion {
                     ],
                   ),
                 ],
-            builderOpcionesSeleccion: (context, provListaRep, controlador,
-                    cantCancSel, totalCanciones) =>
-                [
-                  SeccionCintaOpciones(
-                    lstItems: [
-                      //CHECKBOX SELECCIONAR TODOS
-                      Checkbox(
-                          //BOOL TODOS SELECCIONADOS
-                          value: cantCancSel == totalCanciones,
-                          activeColor: Deco.cRosa0,
-                          onChanged: (_) {
-                            Provider.of<ProviderListaReproduccion>(context,
-                                    listen: false)
-                                .toggleSelTodo();
-                          }),
+            builderOpcionesSeleccion:
+                (context, controlador, cantCancSel, totalCanciones) => [
+                      SeccionCintaOpciones(
+                        lstItems: [
+                          //CHECKBOX SELECCIONAR TODOS
+                          Checkbox(
+                              //BOOL TODOS SELECCIONADOS
+                              value: cantCancSel == totalCanciones,
+                              activeColor: Deco.cRosa0,
+                              onChanged: (todoSel) {
+                                context
+                                    .read<BlocListaReproduccionSeleccionada>()
+                                    .add(EvToogleSeleccionarTodo(todoSel!));
+                              }),
 
-                      const TextoCintaOpciones(texto: "Seleccionar Todo"),
-                    ],
-                  ),
+                          const TextoCintaOpciones(texto: "Seleccionar Todo"),
+                        ],
+                      ),
 
-                  const SizedBox(width: 10),
+                      const SizedBox(width: 10),
 
-                  SeccionCintaOpciones(lstItems: [
-                    //ASIGNAR CANCIONES SELECCIONADAS A LISTA DE REPRODUCCION
-                    BotonPopUpMenuCintaOpciones(
-                      icono: Icons.playlist_add_outlined,
-                      enabled: cantCancSel > 0,
-                      itemBuilder: (_) => (provGeneral.listas
-                          .map<PopupMenuItem<int>>((lista) => PopupMenuItem(
-                                value: lista.id,
-                                child: Text(lista.nombre),
-                              ))).toList(),
-                      onSelected: (idListaSel) async {
-                        await controlador.asignarCancionesLista(
-                            Provider.of<ProviderListaReproduccion>(context,
-                                    listen: false)
-                                .obtCancionesSeleccionadas(),
-                            idListaSel);
-                        await actualizarDatosLocales();
-                      },
-                      texto: "Asignar Lista...",
-                    ),
+                      SeccionCintaOpciones(lstItems: [
+                        //ASIGNAR CANCIONES SELECCIONADAS A LISTA DE REPRODUCCION
+                        BotonPopUpMenuCintaOpciones(
+                          icono: Icons.playlist_add_outlined,
+                          enabled: cantCancSel > 0,
+                          itemBuilder: (_) => (context
+                              .read<BlocPanelLateral>()
+                              .state
+                              .listasReproduccion
+                              .map<PopupMenuItem<int>>((lista) => PopupMenuItem(
+                                    value: lista.id,
+                                    child: Text(lista.nombre),
+                                  ))).toList(),
+                          onSelected: (idListaSel) async {},
+                          texto: "Asignar Lista...",
+                        ),
 
-                    ///ASIGNAR VALORES COLUMNA A LAS CANCIONES SELECCIONADAS
-                    BotonPopUpMenuCintaOpciones(
-                        icono: Icons.view_column,
-                        texto: "Asignar Columnas...",
-                        onSelected: (idColumna) {
-                          controlador.asignarValorColumnaACancionesSimple(
-                              provListaRep.obtCancionesSeleccionadas(),
-                              provGeneral.columnasListaRepSel[idColumna]);
-                        },
-                        itemBuilder: (_) {
-                          List<PopupMenuEntry> popupitems = [];
+                        ///ASIGNAR VALORES COLUMNA A LAS CANCIONES SELECCIONADAS
+                        BotonPopUpMenuCintaOpciones(
+                            icono: Icons.view_column,
+                            texto: "Asignar Columnas...",
+                            onSelected: (idColumna) {},
+                            itemBuilder: (_) {
+                              List<PopupMenuEntry> popupitems = [];
 
-                          for (int i = 0;
-                              i < provGeneral.columnasListaRepSel.length;
-                              i++) {
-                            popupitems.add(PopupMenuItem(
-                                value: i,
-                                child: Text(provGeneral
-                                    .columnasListaRepSel[i].nombre)));
-                          }
+                              final columnas = context
+                                  .read<BlocListaReproduccionSeleccionada>()
+                                  .state
+                                  .lstColumnas;
 
-                          return popupitems;
-                        }),
+                              for (int i = 0; i < columnas.length; i++) {
+                                popupitems.add(PopupMenuItem(
+                                    value: i, child: Text(columnas[i].nombre)));
+                              }
 
-                    //RECORTAR NOMBRES
-                    BotonCintaOpciones(
-                        icono: Icons.content_cut_rounded,
-                        texto: "Recortar Nombres",
-                        onPressed: (_) {
-                          controlador.recortarNombresCanciones();
-                        }),
-                  ]),
+                              return popupitems;
+                            }),
 
-                  const Spacer(),
+                        //RECORTAR NOMBRES
+                        BotonCintaOpciones(
+                            icono: Icons.content_cut_rounded,
+                            texto: "Recortar Nombres",
+                            onPressed: (_) {
+                              controlador.recortarNombresCanciones();
+                            }),
+                      ]),
 
-                  //ELIMINAR CANCIONES SELECCIONADAS
-                  SeccionCintaOpciones(
-                    lstItems: [
-                      BotonCintaOpciones(
-                          icono: Icons.delete_sweep,
-                          texto: "Eliminar",
-                          onPressed: (_) async {
-                            await controlador.eliminarCancionesTotalmente(
-                                provListaRep.obtCancionesSeleccionadas());
-                          })
-                    ],
-                  ),
-                ]);
+                      const Spacer(),
+
+                      //ELIMINAR CANCIONES SELECCIONADAS
+                      SeccionCintaOpciones(
+                        lstItems: [
+                          BotonCintaOpciones(
+                              icono: Icons.delete_sweep,
+                              texto: "Eliminar",
+                              onPressed: (_) async {
+                                // await controlador.eliminarCancionesTotalmente(
+                                //     provListaRep.obtCancionesSeleccionadas());
+                              })
+                        ],
+                      ),
+                    ]);
 }
+
+class btn_context {}

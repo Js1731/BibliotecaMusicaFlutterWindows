@@ -4,7 +4,6 @@ import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 ///Boton ubicado en el PanelLateral, Se utiliza para acceder a paneles adicionales, como Opciones, Columnas, etc.

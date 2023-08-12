@@ -82,28 +82,28 @@ class TextoCintaOpciones extends StatelessWidget {
 
 class BotonCintaOpciones extends BtnGenerico {
   BotonCintaOpciones(
-      {required String texto, required onPressed, IconData? icono, super.key})
+      {required String texto, super.onPressed, IconData? icono, super.key})
       : super(
-            builder: (hover, context) => Container(
-                  height: double.maxFinite,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  color: hover ? Colors.white24 : Colors.transparent,
-                  child: Row(
-                    children: [
-                      icono != null
-                          ? Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Icon(
-                                icono,
-                                color: Deco.cGray1,
-                              ),
-                            )
-                          : const SizedBox(),
-                      Text(texto),
-                    ],
-                  ),
-                ),
-            onPressed: onPressed);
+          builder: (hover, context) => Container(
+            height: double.maxFinite,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            color: hover ? Colors.white24 : Colors.transparent,
+            child: Row(
+              children: [
+                icono != null
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Icon(
+                          icono,
+                          color: Deco.cGray1,
+                        ),
+                      )
+                    : const SizedBox(),
+                Text(texto),
+              ],
+            ),
+          ),
+        );
 }
 
 class BotonPopUpMenuCintaOpciones extends BtnPopupMenuGenerico {

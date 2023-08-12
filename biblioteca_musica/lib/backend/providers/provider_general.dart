@@ -1,12 +1,10 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
+import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 
-enum Panel { listasRep, listaRepTodo, propiedades, ajustes }
-
-ListaReproduccionData listaRepTodo = const ListaReproduccionData(
-    id: 0, nombre: "Biblioteca", ordenAscendente: true);
+enum Panel { listasRep, listaRepBiblioteca, propiedades, ajustes }
 
 ProviderGeneral provGeneral = ProviderGeneral();
 
@@ -15,7 +13,7 @@ class ProviderGeneral extends ChangeNotifier {
   List<ListaReproduccionData> listas = [];
 
   ///Lista seleccionada actualmente.
-  ListaReproduccionData listaSel = listaRepTodo;
+  ListaReproduccionData listaSel = listaRepBiblioteca;
 
   ///Lista con todas las canciones de la lista de reproduccion seleccionada actualmente.
   List<CancionData> lstCancionesListaRepSel = [];
@@ -35,7 +33,7 @@ class ProviderGeneral extends ChangeNotifier {
 
   //Actualiza las columnas de la lista de reproduccion seleccionada.
   Future<void> actualizarColumnasListaRepSel() async {
-    if (listaSel.id != listaRepTodo.id) {
+    if (listaSel.id != listaRepBiblioteca.id) {
       final consultaColumnasListaRep =
           appDb.selectOnly(appDb.listaColumnas).join([
         leftOuterJoin(appDb.columna,
@@ -94,7 +92,7 @@ class ProviderGeneral extends ChangeNotifier {
   //Actualiza la lista de canciones de la lista de reproduccion seleccionada.
   Future<void> actualizarListaCanciones() async {
     //CARGAR TODAS LAS CANCIONES
-    if (listaSel == listaRepTodo) {
+    if (listaSel == listaRepBiblioteca) {
       lstCancionesListaRepSel = await appDb.select(appDb.cancion).get();
     }
     //CANCIONES DE LA LISTA DE REPRODUCCION
@@ -207,7 +205,7 @@ class ProviderGeneral extends ChangeNotifier {
 
   void seleccionarLista(int idLst) async {
     listaSel = idLst == 0
-        ? listaRepTodo
+        ? listaRepBiblioteca
         : await (appDb.select(appDb.listaReproduccion)
               ..where((tbl) => tbl.id.equals(idLst)))
             .getSingle();
@@ -218,8 +216,9 @@ class ProviderGeneral extends ChangeNotifier {
     await actualizarColumnasListaRepSel();
     await actualizarValoresColumnaCancion();
 
-    cambiarPanelCentral(
-        listaSel == listaRepTodo ? Panel.listaRepTodo : Panel.listasRep);
+    cambiarPanelCentral(listaSel == listaRepBiblioteca
+        ? Panel.listaRepBiblioteca
+        : Panel.listasRep);
 
     notifyListeners();
   }

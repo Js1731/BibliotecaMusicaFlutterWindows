@@ -5,6 +5,7 @@ import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
 import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
+import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/main.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
@@ -183,7 +184,8 @@ class ItemCancion extends BtnGenerico {
                           Text("Recortar")
                         ])));
               }
-              if (!(provGeneral.listaSel == listaRepTodo && modoSeleccion)) {
+              if (!(provGeneral.listaSel == listaRepBiblioteca &&
+                  modoSeleccion)) {
                 lstOpciones.insert(
                     lstOpciones.length - 1,
                     const PopupMenuItem(

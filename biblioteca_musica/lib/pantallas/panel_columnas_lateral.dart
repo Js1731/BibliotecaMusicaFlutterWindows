@@ -3,7 +3,6 @@ import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/CustomPainterAgregarLista.dart';
 import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
 import 'package:biblioteca_musica/pantallas/item_columna.dart';
-import 'package:biblioteca_musica/widgets/btn_agregar.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';

@@ -7,10 +7,13 @@ import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
 import 'package:biblioteca_musica/backend/providers/provider_log.dart';
 import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
 import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
+import 'package:biblioteca_musica/data/dbp_listas_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> iniciarServidor() async {
   var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
@@ -35,12 +38,13 @@ Future<void> main() async {
 
   sincronizar();
 
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => provListaRep),
-    ChangeNotifierProvider(create: (_) => ProviderPanelColumnas()),
-    ChangeNotifierProvider(create: (_) => provGeneral),
-    ChangeNotifierProvider(create: (_) => provReproductor)
-  ], child: const MyApp()));
+  runApp(
+    MultiRepositoryProvider(providers: [
+      RepositoryProvider(
+          create: (context) =>
+              RepositorioListasReproduccion(DBPListasReproduccion()))
+    ], child: const MyApp()),
+  );
 
   doWhenWindowReady(() {
     const initialSize = Size(1024, 700);
