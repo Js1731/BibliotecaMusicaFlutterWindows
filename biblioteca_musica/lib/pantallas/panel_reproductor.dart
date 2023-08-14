@@ -26,8 +26,7 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
   Widget build(BuildContext context) {
     return Selector<ProviderReproductor,
         Tuple2<CancionData?, ValorColumnaData?>>(
-      selector: (_, provRep) =>
-          Tuple2(provRep.cancionRep, provRep.valorColumnaPrincipal),
+      selector: (_, provRep) => Tuple2(null, provRep.valorColumnaPrincipal),
       builder: (_, datos, __) {
         final cancionRep = datos.item1;
         final valorColumnaPrincipal = datos.item2;

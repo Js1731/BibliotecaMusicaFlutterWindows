@@ -61,6 +61,6 @@ class ItemListaReproduccion extends BtnGenerico {
           }
           context
               .read<BlocListaReproduccionSeleccionada>()
-              .add(EvListaRepSelSeleccionarLista(lst));
+              .add(EvSeleccionarLista(lst));
         });
 }

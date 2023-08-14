@@ -1,9 +1,8 @@
 import 'package:biblioteca_musica/backend/controles/control_panel_columna_lateral.dart';
-import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/bloc/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion_general.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
 
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
@@ -150,7 +149,7 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                             icono: Icons.cut,
                             texto: "Recortar Nombres",
                             onPressed: (_) {
-                              controlador.recortarNombresCanciones();
+                              //controlador.recortarNombresCanciones();
                             }),
                       ]),
 

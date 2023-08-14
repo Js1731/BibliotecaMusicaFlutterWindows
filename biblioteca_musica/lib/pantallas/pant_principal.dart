@@ -3,15 +3,16 @@ import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
-import 'package:biblioteca_musica/main.dart';
-import 'package:biblioteca_musica/pantallas/panel_columnas_principal.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_rep_cualquiera.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_rep_todo.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_cualquiera.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_todo.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 final GlobalKey<PantPrincipalState> keyPantPrincipal = GlobalKey();
@@ -27,14 +28,6 @@ class PantPrincipalState extends State<PantPrincipal> {
   bool iniciado = false;
 
   @override
-  void initState() {
-    super.initState();
-
-    provGeneral.seleccionarLista(listaRepBiblioteca.id);
-    provListaRep.actualizarMapaCancionesSel();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -43,9 +36,16 @@ class PantPrincipalState extends State<PantPrincipal> {
             MultiBlocProvider(
               providers: [
                 BlocProvider(create: (context) => CubitPanelSeleccionado()),
-                BlocProvider(create: (context) => BlocReproductor()),
                 BlocProvider(
-                    create: (context) => BlocListaReproduccionSeleccionada())
+                    create: (context) =>
+                        BlocReproductor(context.read<RepositorioReproductor>())
+                          ..add(EvEscucharReproductor())),
+                BlocProvider(
+                    create: (context) => BlocListaReproduccionSeleccionada(
+                        context.read<RepositorioCanciones>(),
+                        context.read<RepositorioColumnas>(),
+                        context.read<RepositorioListasReproduccion>())
+                      ..add(EvSeleccionarLista(listaRepBiblioteca)))
               ],
               child: Container(
                 color: DecoColores.gris,

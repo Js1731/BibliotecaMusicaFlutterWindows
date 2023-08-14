@@ -12,4 +12,8 @@ class RepositorioListasReproduccion {
   Future<void> agregarListaReproduccion(String nombreListaNueva) async {
     await _dbpListasReproduccion.agregarListaReproduccion(nombreListaNueva);
   }
+
+  void actOrdenColumna(int idColumnaOrden, int idListaRep) {
+    _dbpListasReproduccion.actOrdenColumna(idColumnaOrden, idListaRep);
+  }
 }

@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:flutter/material.dart';
 
 String duracionString(Duration dur) {
@@ -24,7 +24,7 @@ String duracionHorasString(Duration dur) {
 }
 
 //Obtiene cuanto tiempo dura reproducir todas las canciones en la base de datos
-String obtDuracionLista(List<CancionData> canciones) {
+String obtDuracionLista(List<CancionColumnas> canciones) {
   return duracionHorasString((Duration(
       seconds: canciones.fold<int>(
           0, (anterior, siguiente) => anterior + siguiente.duracion))));

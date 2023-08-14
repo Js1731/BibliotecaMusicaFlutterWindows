@@ -7,9 +7,15 @@ import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
 import 'package:biblioteca_musica/backend/providers/provider_log.dart';
 import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
 import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
+import 'package:biblioteca_musica/data/dbp_canciones.dart';
+import 'package:biblioteca_musica/data/dbp_columnas.dart';
 import 'package:biblioteca_musica/data/dbp_listas_reproduccion.dart';
+import 'package:biblioteca_musica/data/reproductor.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,8 +47,17 @@ Future<void> main() async {
   runApp(
     MultiRepositoryProvider(providers: [
       RepositoryProvider(
-          create: (context) =>
-              RepositorioListasReproduccion(DBPListasReproduccion()))
+        create: (context) =>
+            RepositorioListasReproduccion(DBPListasReproduccion()),
+      ),
+      RepositoryProvider(
+        create: (context) => RepositorioCanciones(DBPCanciones()),
+      ),
+      RepositoryProvider(
+        create: (context) => RepositorioColumnas(DBPColumnas()),
+      ),
+      RepositoryProvider(
+          create: (context) => RepositorioReproductor(Reproductor()))
     ], child: const MyApp()),
   );
 
