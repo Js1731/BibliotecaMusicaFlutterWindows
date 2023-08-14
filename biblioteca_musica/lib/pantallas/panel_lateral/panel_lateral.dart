@@ -33,7 +33,7 @@ class PanelLateral extends StatelessWidget {
 }
 
 class _ConstructorPanelLateral extends StatelessWidget {
-  final bool db = false;
+  final bool db = true;
 
   const _ConstructorPanelLateral();
 

@@ -4,6 +4,7 @@ import 'package:biblioteca_musica/bloc/bloc_lista_reproduccion_seleccionada.dart
 import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
+import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +46,9 @@ class ItemListaReproduccion extends BtnGenerico {
                           child: TextoPer(
                             texto: lst.nombre,
                             tam: 16,
-                            color: Colors.white,
+                            color: seleccionado
+                                ? DecoColores.rosaOscuro
+                                : Colors.white,
                           )))),
             ],
           );

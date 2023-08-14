@@ -1,79 +1,5 @@
-import 'dart:io';
-
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/misc/Proceso.dart';
-import 'package:biblioteca_musica/backend/misc/archivos.dart';
-import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
-import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
-import 'package:mp3_info/mp3_info.dart';
-import 'package:path/path.dart';
-
-///Importa archivos MP3 al sistema, crea canciones que las representan, sin asociaciones a ninguna lista.
-Future<List<int>?> procesoImportarCancionesGlobal(
-    Procedimiento proc, dynamic lstArchivos) async {
-  if (lstArchivos != null) {
-    List<String?> lstRutas = lstArchivos.paths;
-    List<File> lstUrlArchivos =
-        lstRutas.map<File>((path) => File(path!)).toList();
-    Map<int, String> mapaIdRuta = {};
-
-    //INSERTAR TODAS LAS CANCIONES EN LA BASE DE DATOS
-    await appDb.batch((batch) =>
-        batch.insertAll(appDb.cancion, lstUrlArchivos.map((archivoCancion) {
-          //GENERAR ID UNICO
-          int id = UniqueKey().hashCode;
-
-          //REGISTRAR RUTA Y ID
-          mapaIdRuta[id] = archivoCancion.path;
-
-          //INSERTAR CANCION EN LA BASE DE DATOS
-          return CancionCompanion.insert(
-              id: Value(id),
-              nombre: basenameWithoutExtension(archivoCancion.path),
-              duracion:
-                  MP3Processor.fromFile(archivoCancion).duration.inSeconds,
-              estado: estadoLocal);
-        })));
-
-    //COPIAR ARCHIVOS A LA CARPETA DE TRABAJO
-    int cant = 0;
-    for (var id in mapaIdRuta.keys) {
-      await copiarArchivo(mapaIdRuta[id]!, "$id.mp3");
-      cant++;
-      proc.actProgreso(cant / mapaIdRuta.length);
-      proc.actLog("$cant/${mapaIdRuta.length}");
-    }
-    return mapaIdRuta.keys.toList();
-  }
-
-  return null;
-}
-
 class ContPanelListaReproduccion {
-  // Future<void> importarCancionesEnListaTodo() async {
-  //   FilePickerResult? lstArchivosSeleccionados =
-  //       await FilePicker.platform.pickFiles(allowMultiple: true);
-
-  //   if (lstArchivosSeleccionados == null) return;
-
-  //   Procedimiento procImportarCancionesListaTodo =
-  //       Procedimiento(procesoImportarCancionesGlobal, lstArchivosSeleccionados);
-  //   procImportarCancionesListaTodo.encolarProceso((proc, lstIds) async {
-  //     if (lstIds == null) return;
-
-  //     await provReproductor.actualizarListaCanciones();
-  //     await provReproductor.actualizarListaCanciones();
-  //     await provGeneral.actualizarListaCanciones();
-  //     await provGeneral.actualizarValoresColumnaCancion();
-  //     provListaRep.actualizarMapaCancionesSel();
-
-  //     await actualizarDatosLocales();
-  //   });
-
-  //   await abrirDialogoProgreso(
-  //       "Importando Canciones...", procImportarCancionesListaTodo);
-  // }
+  Future<void> importarCancionesEnListaTodo() async {}
 
   // ///Importa archivos MP3 al sistema,crea canciones que las representan y los asocia a la lista indicada.
   // Future<void> importarCancionesEnLista(int idLista) async {
@@ -115,24 +41,6 @@ class ContPanelListaReproduccion {
   // }
 
   // ///Asocia las canciones indicadas a una Lista. Sin generar asociaciones duplicadas.
-  // Future<void> asignarCancionesLista(
-  //     List<int> lstIdcanciones, int idListaRep) async {
-  //   final Set<int> setIdsCancionesListaDestino =
-  //       (await (appDb.select(appDb.cancionListaReproduccion)
-  //                 ..where((tbl) => tbl.idListaRep.equals(idListaRep)))
-  //               .get())
-  //           .map((e) => e.idCancion)
-  //           .toSet();
-
-  //   final Set<int> lstIdsCancionesNoDuplicados =
-  //       lstIdcanciones.toSet().difference(setIdsCancionesListaDestino);
-
-  //   appDb.batch((batch) => batch.insertAll(
-  //       appDb.cancionListaReproduccion,
-  //       lstIdsCancionesNoDuplicados.map((idCan) =>
-  //           CancionListaReproduccionCompanion.insert(
-  //               idCancion: idCan, idListaRep: idListaRep))));
-  // }
 
   // Future<void> eliminarCancionesDeLista(
   //     List<int> lstCanciones, int idLista) async {

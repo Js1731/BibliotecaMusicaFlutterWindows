@@ -5,7 +5,6 @@ import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
 import 'package:biblioteca_musica/backend/providers/provider_log.dart';
-import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
 import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/data/dbp_canciones.dart';
 import 'package:biblioteca_musica/data/dbp_columnas.dart';
@@ -18,7 +17,6 @@ import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.d
 import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> iniciarServidor() async {

@@ -5,6 +5,7 @@ import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
 import 'package:equatable/equatable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 //-------------------EVENTOS--------------------------------------------------
@@ -46,7 +47,11 @@ class EvOrdenarListaPorColumna extends EventoListaReproduccionSeleccionada {
   EvOrdenarListaPorColumna(this.idColumnaOrden);
 }
 
-class EvImportarCanciones extends EventoListaReproduccionSeleccionada {}
+class EvImportarCanciones extends EventoListaReproduccionSeleccionada {
+  final FilePickerResult lstCanciones;
+
+  EvImportarCanciones(this.lstCanciones);
+}
 
 class EvRenombrarLista extends EventoListaReproduccionSeleccionada {}
 
@@ -225,7 +230,10 @@ class BlocListaReproduccionSeleccionada extends Bloc<
       Emitter<EstadoListaReproduccionSelecconada> emit) {}
 
   void _onImportarCanciones(EvImportarCanciones evento,
-      Emitter<EstadoListaReproduccionSelecconada> emit) {}
+      Emitter<EstadoListaReproduccionSelecconada> emit) {
+    _repositorioCanciones.importarCancionesLista(
+        evento.lstCanciones, state.listaReproduccionSeleccionada.id);
+  }
 
   void _onRenombrarLista(EvRenombrarLista evento,
       Emitter<EstadoListaReproduccionSelecconada> emit) {}

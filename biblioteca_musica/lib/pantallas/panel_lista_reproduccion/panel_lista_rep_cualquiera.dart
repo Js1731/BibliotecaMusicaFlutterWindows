@@ -6,6 +6,7 @@ import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista
 
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,9 +48,17 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                         icono: Icons.folder_copy,
                         texto: "Importar Canciones",
                         onPressed: (context) async {
-                          context
-                              .read<BlocListaReproduccionSeleccionada>()
-                              .add(EvImportarCanciones());
+                          FilePickerResult? lstArchivosSeleccionados =
+                              await FilePicker.platform
+                                  .pickFiles(allowMultiple: true);
+
+                          if (lstArchivosSeleccionados == null) return;
+                          if (context.mounted) {
+                            context
+                                .read<BlocListaReproduccionSeleccionada>()
+                                .add(EvImportarCanciones(
+                                    lstArchivosSeleccionados));
+                          }
                         }),
                   ]),
                   const Spacer(),

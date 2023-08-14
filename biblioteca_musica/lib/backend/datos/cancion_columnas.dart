@@ -13,9 +13,9 @@ class CancionColumnas extends Table {
       required this.nombre,
       required this.duracion,
       required this.estado,
-      required String strValoresColumna,
-      required String strIdColumnas,
-      required String strIdValoresColumna,
+      required String? strValoresColumna,
+      required String? strIdColumnas,
+      required String? strIdValoresColumna,
       required List<ColumnaData> columnasLista}) {
     cargarColumnas(
         strValoresColumna: strValoresColumna,
@@ -25,17 +25,23 @@ class CancionColumnas extends Table {
   }
 
   void cargarColumnas(
-      {required String strValoresColumna,
-      required String strIdColumnas,
-      required String strIdValoresColumna,
+      {required String? strValoresColumna,
+      required String? strIdColumnas,
+      required String? strIdValoresColumna,
       required List<ColumnaData> columnasLista}) {
-    final List<String> idcolumnas = strIdColumnas.split(",");
-    final List<String> valorescolumna = strValoresColumna.split(",");
-    final List<String> idValoresColumna = strIdValoresColumna.split(",");
-
     Map<int, Map<String, String>?> mpColumnas = {
       for (ColumnaData columna in columnasLista) columna.id: null
     };
+
+    mapaColumnas = mpColumnas;
+
+    if (strIdColumnas == null ||
+        strIdValoresColumna == null ||
+        strValoresColumna == null) return;
+
+    final List<String> idcolumnas = strIdColumnas.split(",");
+    final List<String> valorescolumna = strValoresColumna.split(",");
+    final List<String> idValoresColumna = strIdValoresColumna.split(",");
 
     for (ColumnaData columna in columnasLista) {
       final posIdColumna =
