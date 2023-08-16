@@ -6,6 +6,12 @@ import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
 import 'package:biblioteca_musica/backend/providers/provider_log.dart';
 import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
+import 'package:biblioteca_musica/bloc/bloc_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/cubit_columnas.dart';
+import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/data/dbp_canciones.dart';
 import 'package:biblioteca_musica/data/dbp_columnas.dart';
 import 'package:biblioteca_musica/data/dbp_listas_reproduccion.dart';
@@ -43,20 +49,42 @@ Future<void> main() async {
   sincronizar();
 
   runApp(
-    MultiRepositoryProvider(providers: [
-      RepositoryProvider(
-        create: (context) =>
-            RepositorioListasReproduccion(DBPListasReproduccion()),
-      ),
-      RepositoryProvider(
-        create: (context) => RepositorioCanciones(DBPCanciones()),
-      ),
-      RepositoryProvider(
-        create: (context) => RepositorioColumnas(DBPColumnas()),
-      ),
-      RepositoryProvider(
-          create: (context) => RepositorioReproductor(Reproductor()))
-    ], child: const MyApp()),
+    MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(
+            create: (context) =>
+                RepositorioListasReproduccion(DBPListasReproduccion()),
+          ),
+          RepositoryProvider(
+            create: (context) => RepositorioCanciones(DBPCanciones()),
+          ),
+          RepositoryProvider(
+            create: (context) => RepositorioColumnas(DBPColumnas()),
+          ),
+          RepositoryProvider(
+              create: (context) => RepositorioReproductor(Reproductor()))
+        ],
+        child: MultiBlocProvider(providers: [
+          BlocProvider(create: (context) => CubitPanelSeleccionado()),
+          BlocProvider(
+              create: (context) =>
+                  BlocColumnasSistema(context.read<RepositorioColumnas>())
+                    ..add(EvEscucharColumnasSistema())),
+          BlocProvider(
+              create: (context_) => BlocPanelLateral(
+                  context_.read<RepositorioListasReproduccion>())
+                ..add(PanelLateralEscucharStreamListasReproduccion())),
+          BlocProvider(
+              create: (context) =>
+                  BlocReproductor(context.read<RepositorioReproductor>())
+                    ..add(EvEscucharReproductor())),
+          BlocProvider(
+              create: (context) => BlocListaReproduccionSeleccionada(
+                  context.read<RepositorioCanciones>(),
+                  context.read<RepositorioColumnas>(),
+                  context.read<RepositorioListasReproduccion>())
+                ..add(EvSeleccionarLista(listaRepBiblioteca)))
+        ], child: const MyApp())),
   );
 
   doWhenWindowReady(() {

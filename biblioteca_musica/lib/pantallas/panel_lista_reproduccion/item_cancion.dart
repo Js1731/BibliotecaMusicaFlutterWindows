@@ -4,7 +4,9 @@ import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
@@ -12,12 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ItemCancion extends BtnGenerico {
-  final ContPanelListaReproduccion contPanelListaRep;
   final CancionColumnas cancion;
   final int idLst;
   final bool reproduciendo;
   final bool seleccionado;
   final bool modoSeleccion;
+  final ContPanelListaReproduccion contPanelListaRep;
 
   ItemCancion(
       {required this.cancion,
@@ -29,7 +31,7 @@ class ItemCancion extends BtnGenerico {
       super.key})
       : super(builder: (hover, context) {
           List<String?> valoresColumna = cancion.mapaColumnas.values
-              .map((mapa) => mapa?["valor_columna"])
+              .map((mapa) => mapa?["valor_columna_nombre"])
               .toList();
 
           return Container(
@@ -66,9 +68,9 @@ class ItemCancion extends BtnGenerico {
                                 : Colors.white),
                     value: seleccionado,
                     onChanged: (nuevoValor) {
-                      Provider.of<ProviderListaReproduccion>(context,
-                              listen: false)
-                          .toggleSelCancion(cancion.id);
+                      context
+                          .read<BlocListaReproduccionSeleccionada>()
+                          .add(EvToggleSelCancion(cancion.id));
                     }),
 
                 if (cancion.estado == estadoLocal)

@@ -18,4 +18,20 @@ class DBPListasReproduccion {
       ..write(
           ListaReproduccionCompanion(idColumnaOrden: Value(idColumnaOrden)));
   }
+
+  Future<void> actColumnasListaReproduccion(
+      List<int> lstColumnas, int idListaRep) async {
+    await (appDb.delete(appDb.listaColumnas)
+          ..where((tbl) => tbl.idListaRep.equals(idListaRep)))
+        .go();
+
+    await appDb.batch((batch) => batch.insertAll(
+        appDb.listaColumnas,
+        lstColumnas
+            .map((idColumna) => ListaColumnasCompanion.insert(
+                idListaRep: idListaRep,
+                idColumna: idColumna,
+                posicion: lstColumnas.indexOf(idColumna)))
+            .toList()));
+  }
 }

@@ -16,4 +16,10 @@ class RepositorioListasReproduccion {
   void actOrdenColumna(int idColumnaOrden, int idListaRep) {
     _dbpListasReproduccion.actOrdenColumna(idColumnaOrden, idListaRep);
   }
+
+  Future<void> actColumnasListaRep(
+      List<int> lstColumnas, int idListaRep) async {
+    await _dbpListasReproduccion.actColumnasListaReproduccion(
+        lstColumnas, idListaRep);
+  }
 }

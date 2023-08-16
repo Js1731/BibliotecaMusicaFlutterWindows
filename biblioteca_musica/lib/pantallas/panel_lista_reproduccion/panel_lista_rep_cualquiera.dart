@@ -1,11 +1,14 @@
 import 'package:biblioteca_musica/backend/controles/control_panel_columna_lateral.dart';
-import 'package:biblioteca_musica/bloc/bloc_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
 
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
+import 'package:biblioteca_musica/widgets/dialogos/dialogo_seleccionar_valor_columna.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -83,108 +86,131 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                         }),
                   ]),
                 ],
-            builderOpcionesSeleccion:
-                (context, controlador, cantCancSel, totalCanciones) => [
-                      SeccionCintaOpciones(lstItems: [
-                        //CHECKBOX SELECCIONAR TODOS
-                        Checkbox(
-                            //BOOL TODOS SELECCIONADOS
-                            activeColor: Deco.cRosa0,
-                            value: cantCancSel == totalCanciones,
-                            onChanged: (selTodo) {
-                              context
-                                  .read<BlocListaReproduccionSeleccionada>()
-                                  .add(EvToogleSeleccionarTodo(selTodo!));
-                            }),
+            builderOpcionesSeleccion: (context, controlador, cantCancSel,
+                    totalCanciones) =>
+                [
+                  SeccionCintaOpciones(lstItems: [
+                    //CHECKBOX SELECCIONAR TODOS
+                    Checkbox(
+                        //BOOL TODOS SELECCIONADOS
+                        activeColor: Deco.cRosa0,
+                        value: cantCancSel == totalCanciones,
+                        onChanged: (selTodo) {
+                          context
+                              .read<BlocListaReproduccionSeleccionada>()
+                              .add(EvToggleSeleccionarTodo());
+                        }),
 
-                        const TextoCintaOpciones(texto: "Seleccionar Todo"),
-                      ]),
+                    const TextoCintaOpciones(texto: "Seleccionar Todo"),
+                  ]),
 
-                      const SizedBox(width: 10),
+                  const SizedBox(width: 10),
 
-                      SeccionCintaOpciones(lstItems: [
-                        //ASIGNAR CANCIONES SELECCIONADAS A LISTA DE REPRODUCCION
-                        BotonPopUpMenuCintaOpciones(
-                          icono: Icons.playlist_add_outlined,
-                          enabled: cantCancSel > 0,
-                          itemBuilder: (_) => (context
-                              .read<BlocPanelLateral>()
+                  SeccionCintaOpciones(lstItems: [
+                    //ASIGNAR CANCIONES SELECCIONADAS A LISTA DE REPRODUCCION
+                    BotonPopUpMenuCintaOpciones(
+                      icono: Icons.playlist_add_outlined,
+                      enabled: cantCancSel > 0,
+                      itemBuilder: (_) {
+                        return (List<ListaReproduccionData>.from(context
+                                .read<BlocPanelLateral>()
+                                .state
+                                .listasReproduccion)
+                              ..removeWhere((element) =>
+                                  element.id ==
+                                  context
+                                      .read<BlocListaReproduccionSeleccionada>()
+                                      .state
+                                      .listaReproduccionSeleccionada
+                                      .id))
+                            .map<PopupMenuItem<int>>((lista) => PopupMenuItem(
+                                  value: lista.id,
+                                  child: Text(lista.nombre),
+                                ))
+                            .toList();
+                      },
+                      onSelected: (idListaSel) async {
+                        context
+                            .read<BlocListaReproduccionSeleccionada>()
+                            .add(EvAsignarCancionesALista(idListaSel));
+                      },
+                      texto: "Asignar Lista...",
+                    ),
+
+                    ///ASIGNAR VALORES COLUMNA A LAS CANCIONES SELECCIONADAS
+                    BotonPopUpMenuCintaOpciones(
+                        icono: Icons.view_column,
+                        texto: "Asignar Columnas",
+                        onSelected: (indexColumna) async {
+                          if (indexColumna == -1) {
+                            await agregarColumna();
+                          } else {
+                            final bloc = context
+                                .read<BlocListaReproduccionSeleccionada>();
+                            ValorColumnaData? valorColumnaSel =
+                                await abrirDialogoSeleccionarValorColumna(
+                                    bloc.state.lstColumnas[indexColumna], null);
+
+                            if (valorColumnaSel == null) return;
+
+                            bloc.add(EvActValorColumnaCanciones(
+                                valorColumnaSel.id, valorColumnaSel.idColumna));
+                          }
+                        },
+                        itemBuilder: (_) {
+                          final columnas = context
+                              .read<BlocListaReproduccionSeleccionada>()
                               .state
-                              .listasReproduccion
-                              .map<PopupMenuItem<int>>((lista) => PopupMenuItem(
-                                    value: lista.id,
-                                    child: Text(lista.nombre),
-                                  ))).toList(),
-                          onSelected: (idListaSel) async {
-                            context
-                                .read<BlocListaReproduccionSeleccionada>()
-                                .add(EvAsignarCancionesALista());
-                          },
-                          texto: "Asignar Lista...",
-                        ),
+                              .lstColumnas;
 
-                        ///ASIGNAR VALORES COLUMNA A LAS CANCIONES SELECCIONADAS
-                        BotonPopUpMenuCintaOpciones(
-                            icono: Icons.view_column,
-                            texto: "Asignar Columnas",
-                            onSelected: (idColumna) async {
-                              if (idColumna == -1) {
-                                await agregarColumna();
-                              } else {}
-                            },
-                            itemBuilder: (_) {
-                              List<PopupMenuEntry> popupitems = [
-                                const PopupMenuItem(
-                                    value: -1,
-                                    child: Row(children: [
-                                      Icon(Icons.add, color: Deco.cGray1),
-                                      Text("Nueva Columna"),
-                                    ]))
-                              ];
-                              // for (int i = 0;
-                              //     i < provGeneral.columnasListaRepSel.length;
-                              //     i++) {
-                              //   popupitems.add(PopupMenuItem(
-                              //       value: i,
-                              //       child: Text(provGeneral
-                              //           .columnasListaRepSel[i].nombre)));
-                              // }
+                          List<PopupMenuEntry> popupitems = [
+                            const PopupMenuItem(
+                                value: -1,
+                                child: Row(children: [
+                                  Icon(Icons.add, color: Deco.cGray1),
+                                  Text("Nueva Columna"),
+                                ]))
+                          ];
+                          for (int i = 0; i < columnas.length; i++) {
+                            popupitems.add(PopupMenuItem(
+                                value: i, child: Text(columnas[i].nombre)));
+                          }
 
-                              return popupitems;
-                            }),
+                          return popupitems;
+                        }),
 
-                        //RECORTAR NOMBRES
-                        BotonCintaOpciones(
-                            icono: Icons.cut,
-                            texto: "Recortar Nombres",
-                            onPressed: (_) {
-                              //controlador.recortarNombresCanciones();
-                            }),
-                      ]),
+                    //RECORTAR NOMBRES
+                    BotonCintaOpciones(
+                        icono: Icons.cut,
+                        texto: "Recortar Nombres",
+                        onPressed: (_) {
+                          //controlador.recortarNombresCanciones();
+                        }),
+                  ]),
 
-                      const Spacer(),
+                  const Spacer(),
 
-                      ///ELIMINAR CANCIONES SELECCIONADAS
-                      SeccionCintaOpciones(lstItems: [
-                        BotonPopUpMenuCintaOpciones(
-                            icono: Icons.delete_sweep,
-                            texto: "Eliminar...",
-                            itemBuilder: (_) => [
-                                  const PopupMenuItem(
-                                      value: 0, child: Text("De esta Lista")),
-                                  const PopupMenuItem(
-                                      value: 1, child: Text("Totalmente"))
-                                ],
-                            onSelected: (opSel) async {
-                              // if (opSel == 0) {
-                              //   await controlador.eliminarCancionesDeLista(
-                              //       provListaRep.obtCancionesSeleccionadas(),
-                              //       provGeneral.listaSel.id);
-                              // } else {
-                              //   await controlador.eliminarCancionesTotalmente(
-                              //       provListaRep.obtCancionesSeleccionadas());
-                              // }
-                            })
-                      ])
-                    ]);
+                  ///ELIMINAR CANCIONES SELECCIONADAS
+                  SeccionCintaOpciones(lstItems: [
+                    BotonPopUpMenuCintaOpciones(
+                        icono: Icons.delete_sweep,
+                        texto: "Eliminar...",
+                        itemBuilder: (_) => [
+                              const PopupMenuItem(
+                                  value: 0, child: Text("De esta Lista")),
+                              const PopupMenuItem(
+                                  value: 1, child: Text("Totalmente"))
+                            ],
+                        onSelected: (opSel) async {
+                          // if (opSel == 0) {
+                          //   await controlador.eliminarCancionesDeLista(
+                          //       provListaRep.obtCancionesSeleccionadas(),
+                          //       provGeneral.listaSel.id);
+                          // } else {
+                          //   await controlador.eliminarCancionesTotalmente(
+                          //       provListaRep.obtCancionesSeleccionadas());
+                          // }
+                        })
+                  ])
+                ]);
 }

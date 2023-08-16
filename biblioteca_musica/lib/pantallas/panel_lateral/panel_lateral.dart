@@ -3,10 +3,11 @@ import 'package:biblioteca_musica/backend/misc/CustomPainterAgregarLista.dart';
 import 'package:biblioteca_musica/backend/misc/CustomPainterKOPI.dart';
 import 'package:biblioteca_musica/backend/misc/CustomPainterPanelLateral.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/bloc/bloc_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/item_lista_reproduccion.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
@@ -24,11 +25,7 @@ class PanelLateral extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context_) =>
-            BlocPanelLateral(context_.read<RepositorioListasReproduccion>())
-              ..add(PanelLateralEscucharStreamListasReproduccion()),
-        child: const _ConstructorPanelLateral());
+    return const _ConstructorPanelLateral();
   }
 }
 

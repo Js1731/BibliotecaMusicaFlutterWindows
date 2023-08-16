@@ -30,7 +30,7 @@ Future abrirDialogoSeleccionarValorColumna(
       await obtValoresColumna(columna.id, "");
   String filtroBusquedaValorColumna = "";
 
-  return mostrarDialogo(
+  return mostrarDialogo<ValorColumnaData?>(
       contenido: AlertDialog(
     title: TextoPer(
         texto: "Escoger ${columna.nombre}", tam: 20, weight: FontWeight.bold),

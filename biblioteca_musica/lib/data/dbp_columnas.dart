@@ -24,5 +24,13 @@ class DBPColumnas {
     return streamFinal;
   }
 
+  Stream<List<ColumnaData>> crearStreamColumnas() {
+    return appDb.select(appDb.columna).watch();
+  }
+
   crearStreamMapaValoresColumnaCancion() {}
+
+  Future<List<ColumnaData>> obtColumnasSistema() async {
+    return await (appDb.select(appDb.columna)).get();
+  }
 }

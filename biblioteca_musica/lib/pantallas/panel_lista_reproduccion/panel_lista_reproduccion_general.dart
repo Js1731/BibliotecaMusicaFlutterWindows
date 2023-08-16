@@ -2,13 +2,16 @@ import 'package:biblioteca_musica/backend/controles/control_panel_lista_reproduc
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
-import 'package:biblioteca_musica/bloc/bloc_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/main.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_cancion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_columna_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
+import 'package:biblioteca_musica/widgets/dialogos/dialogo_columnas.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -116,13 +119,19 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                         BlocSelector<
                                 BlocListaReproduccionSeleccionada,
                                 EstadoListaReproduccionSelecconada,
-                                Tuple2<int, int>>(
-                            selector: (state) => Tuple2(
-                                state.obtCantidadCancionesSeleccionadas(),
-                                state.obtCantidadCancionesTotal()),
+                                Map<int, bool>>(
+                            selector: (state) =>
+                                state.mapaCancionesSeleccionadas,
                             builder: (_, datos) {
-                              final cantCancionesSel = datos.item1;
-                              final cantTotalCanciones = datos.item2;
+                              final int cantCancionesSel = context
+                                  .read<BlocListaReproduccionSeleccionada>()
+                                  .state
+                                  .obtCancionesSeleccionadas()
+                                  .length;
+                              final int cantTotalCanciones = context
+                                  .read<BlocListaReproduccionSeleccionada>()
+                                  .state
+                                  .obtCantidadCancionesTotal();
                               return AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 200),
                                 transitionBuilder: (child, animation) =>
@@ -187,11 +196,35 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                                             contPanelList: widget.controlador,
                                           ),
                                         ),
-                                        if (listaSel.id ==
+                                        if (listaSel.id !=
                                             listaRepBiblioteca.id)
                                           IconButton(
                                               padding: EdgeInsets.zero,
-                                              onPressed: () async {},
+                                              onPressed: () async {
+                                                final resultados =
+                                                    await abrirDialogoColumnas(context
+                                                        .read<
+                                                            BlocListaReproduccionSeleccionada>()
+                                                        .state
+                                                        .listaReproduccionSeleccionada);
+
+                                                if (resultados == null) return;
+
+                                                final List<ColumnaData>
+                                                    columnas =
+                                                    resultados["columnas"];
+                                                final columnaPrincipal =
+                                                    resultados["colPrincipal"];
+
+                                                if (context.mounted) {
+                                                  final bloc = context.read<
+                                                      BlocListaReproduccionSeleccionada>();
+                                                  bloc.add(EvActColumnasLista(
+                                                      columnas
+                                                          .map((e) => e.id)
+                                                          .toList()));
+                                                }
+                                              },
                                               color: Deco.cGray1,
                                               icon: const Icon(
                                                   Icons.more_vert_rounded,

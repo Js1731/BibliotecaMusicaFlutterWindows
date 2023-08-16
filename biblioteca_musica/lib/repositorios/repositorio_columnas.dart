@@ -6,7 +6,15 @@ class RepositorioColumnas {
 
   RepositorioColumnas(this._dbpColumnas);
 
+  Future<List<ColumnaData>> obtColumnasSistema() async {
+    return await _dbpColumnas.obtColumnasSistema();
+  }
+
   Stream<List<ColumnaData>> crearStreamColumnasListaSel(int idListaSel) {
     return _dbpColumnas.crearStreamColumnasListaSel(idListaSel);
+  }
+
+  Stream<List<ColumnaData>> crearStreamColumnas() {
+    return _dbpColumnas.crearStreamColumnas();
   }
 }

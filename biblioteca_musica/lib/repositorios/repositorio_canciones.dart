@@ -77,7 +77,15 @@ class RepositorioCanciones {
     //     "Importando Canciones...", procImportarCancionesListaTodo);
   }
 
-  void asignarCancionesListaRep(List<int> lstIdCanciones, int idListaRep) {
-    _dbpCanciones.asignarCancionesListaReproduccion(lstIdCanciones, idListaRep);
+  Future<void> asignarCancionesListaRep(
+      List<int> lstIdCanciones, int idListaRep) async {
+    await _dbpCanciones.asignarCancionesListaReproduccion(
+        lstIdCanciones, idListaRep);
+  }
+
+  Future<void> actValorColumnaCanciones(int idColumna, int idValorColumna,
+      List<int> lstCancionesSeleccionadas) async {
+    await _dbpCanciones.actValorColumnaCanciones(
+        idColumna, idValorColumna, lstCancionesSeleccionadas);
   }
 }

@@ -5,36 +5,69 @@ import 'package:drift/drift.dart';
 class DBPCanciones {
   Stream<List<CancionColumnas>> crearStreamListaCancion(
       int idListaRep, List<ColumnaData> columnasLista) {
-    String query;
+    final streamSinFormato = appDb.customSelect(
+        'SELECT can.id as "cancion.id", can.nombre as "cancion.nombre", can.duracion as "cancion.duracion", can.estado as "cancion.estado"  FROM cancion can LEFT JOIN cancion_lista_reproduccion cl ON cl.idCancion= can.id WHERE cl.idListaRep = $idListaRep;',
+        readsFrom: {
+          appDb.cancion,
+          appDb.cancionValorColumna,
+          appDb.columna,
+          appDb.cancionListaReproduccion
+        }).watch();
 
-    if (columnasLista.isNotEmpty) {
-      query =
-          'SELECT can.id as "cancion.id", can.nombre as "cancion.nombre", can.duracion as "cancion.duracion", can.estado as "cancion.estado",   GROUP_CONCAT(vc.nombre) AS "cancion.valores_columna", GROUP_CONCAT(vc.id) AS "cancion.id_valores_columna", GROUP_CONCAT(col.nombre) AS "cancion.columnas", GROUP_CONCAT(col.id) AS "cancion.id_columnas" FROM cancion can LEFT JOIN cancion_valor_columna cvc ON can.id = cvc.idCancion LEFT JOIN valor_columna vc ON vc.id = cvc.idValorColumna LEFT JOIN columna col ON vc.idColumna = col.id INNER JOIN cancion_lista_reproduccion cl ON cl.idCancion= can.id WHERE cl.idListaRep = $idListaRep and col.id IN (SELECT lista_columnas.idListaRep FROM lista_columnas WHERE lista_columnas.idListaRep = $idListaRep ) GROUP BY can.id';
-    } else {
-      query =
-          'SELECT can.id as "cancion.id", can.nombre as "cancion.nombre", can.duracion as "cancion.duracion", can.estado as "cancion.estado" FROM cancion can  LEFT JOIN cancion_lista_reproduccion cl ON cl.idCancion= can.id WHERE cl.idListaRep = $idListaRep ;';
-    }
+    Stream<List<CancionColumnas>> streamFinal =
+        streamSinFormato.asyncMap((listaDatos) async {
+      final tarea = () async {
+        final List<CancionColumnas?> nuevaLista =
+            List.filled(listaDatos.length, null);
+        for (int i = 0; i < nuevaLista.length; i++) {
+          final dato = listaDatos[i];
 
-    final streamSinFormato = appDb.customSelect(query, readsFrom: {
-      appDb.cancion,
-      appDb.valorColumna,
-      appDb.cancionValorColumna,
-      appDb.columna,
-      appDb.cancionListaReproduccion
-    }).watch();
+          final int idCancion = dato.data["cancion.id"];
+          final nombre = dato.data["cancion.nombre"];
+          final duracion = dato.data["cancion.duracion"];
+          final estado = dato.data["cancion.estado"];
 
-    Stream<List<CancionColumnas>> streamFinal = streamSinFormato.map((lista) =>
-        lista
-            .map((dato) => CancionColumnas(
-                id: dato.data["cancion.id"],
-                nombre: dato.data["cancion.nombre"],
-                duracion: dato.data["cancion.duracion"],
-                estado: dato.data["cancion.estado"],
-                columnasLista: columnasLista,
-                strIdColumnas: dato.data["cancion.id_columnas"],
-                strIdValoresColumna: dato.data["cancion.id_valores_columna"],
-                strValoresColumna: dato.data["cancion.valores_columna"]))
-            .toList());
+          final consultaValorColumnaCancion =
+              appDb.select(appDb.cancionValorColumna).join([
+            leftOuterJoin(
+                appDb.valorColumna,
+                appDb.valorColumna.id
+                    .equalsExp(appDb.cancionValorColumna.idValorPropiedad)),
+            leftOuterJoin(appDb.columna,
+                appDb.columna.id.equalsExp(appDb.valorColumna.idColumna)),
+          ])
+                ..where(appDb.cancionValorColumna.idCancion.equals(idCancion));
+
+          final resultados = await consultaValorColumnaCancion.get();
+
+          //CREAR MAPA DE VALOR COLUMNA PARA CADA CANCION
+          Map<int, Map<String, String>?> mapaValoresColumnaCancion = {
+            for (var columna in columnasLista) columna.id: null
+          };
+
+          //LLENAR MAPA CON LOS VALOR QUE TIENE LA CANCION
+          for (var datos in resultados) {
+            final mapaDatos = datos.rawData.data;
+            final idColumna = mapaDatos["valor_columna.idColumna"];
+            mapaValoresColumnaCancion[idColumna] = {
+              "valor_columna_id": "${mapaDatos["valor_columna.id"]}",
+              "columna_nombre": "${mapaDatos["columna.nombre"]}",
+              "valor_columna_nombre": mapaDatos["valor_columna.nombre"]
+            };
+          }
+
+          nuevaLista[i] = CancionColumnas(
+              id: idCancion,
+              nombre: nombre,
+              duracion: duracion,
+              estado: estado,
+              mapaColumnas: mapaValoresColumnaCancion);
+        }
+        return nuevaLista.map<CancionColumnas>((e) => e!).toList();
+      }();
+
+      return tarea;
+    });
 
     return streamFinal;
   }
@@ -46,19 +79,31 @@ class DBPCanciones {
           appDb.cancion,
         }).watch();
 
-    Stream<List<CancionColumnas>> streamFinal = streamSinFormato.map((lista) =>
-        lista
-            .map((dato) => CancionColumnas(
-                id: dato.data["cancion.id"],
-                nombre: dato.data["cancion.nombre"],
-                duracion: dato.data["cancion.duracion"],
-                estado: dato.data["cancion.estado"],
-                columnasLista: [],
-                strIdColumnas: dato.data["cancion.id_columnas"],
-                strIdValoresColumna: dato.data["cancion.id_valores_columna"],
-                strValoresColumna: dato.data["cancion.valores_columna"]))
-            .toList());
+    Stream<List<CancionColumnas>> streamFinal =
+        streamSinFormato.asyncMap((listaDatos) async {
+      final tarea = () async {
+        final List<CancionColumnas?> nuevaLista =
+            List.filled(listaDatos.length, null);
+        for (int i = 0; i < nuevaLista.length; i++) {
+          final dato = listaDatos[i];
 
+          final id = dato.data["cancion.id"];
+          final nombre = dato.data["cancion.nombre"];
+          final duracion = dato.data["cancion.duracion"];
+          final estado = dato.data["cancion.estado"];
+
+          nuevaLista[i] = CancionColumnas(
+              id: id,
+              nombre: nombre,
+              duracion: duracion,
+              estado: estado,
+              mapaColumnas: {});
+        }
+        return nuevaLista.map<CancionColumnas>((e) => e!).toList();
+      }();
+
+      return tarea;
+    });
     return streamFinal;
   }
 
@@ -90,5 +135,42 @@ class DBPCanciones {
         lstIdsCancionesNoDuplicados.map((idCan) =>
             CancionListaReproduccionCompanion.insert(
                 idCancion: idCan, idListaRep: idListaRep))));
+  }
+
+  Future<void> actValorColumnaCanciones(int idColumna, int idValorColumna,
+      List<int> lstCancionesSeleccionadas) async {
+    //
+    final consultaCanValColEliminar = (appDb
+        .selectOnly(appDb.cancionValorColumna)
+        .join([
+      leftOuterJoin(
+          appDb.valorColumna,
+          appDb.valorColumna.id
+              .equalsExp(appDb.cancionValorColumna.idValorPropiedad)),
+      leftOuterJoin(appDb.columna,
+          appDb.columna.id.equalsExp(appDb.valorColumna.idColumna))
+    ])
+      ..where(appDb.columna.id.equals(idColumna) &
+          appDb.cancionValorColumna.idCancion.isIn(lstCancionesSeleccionadas)))
+      ..addColumns([appDb.cancionValorColumna.id]);
+
+    final resultados = await consultaCanValColEliminar.get();
+    List<int> lstIdsCanValColEliminar = resultados
+        .map<int>((e) => e.rawData.data["cancion_valor_columna.id"])
+        .toList();
+
+    await (appDb.delete(appDb.cancionValorColumna)
+          ..where((tbl) => tbl.id.isIn(lstIdsCanValColEliminar)))
+        .go();
+
+    List<Insertable> inserts = [];
+
+    for (var idCan in lstCancionesSeleccionadas) {
+      inserts.add(CancionValorColumnaCompanion.insert(
+          idCancion: idCan, idValorPropiedad: idValorColumna));
+    }
+
+    await appDb
+        .batch((batch) => batch.insertAll(appDb.cancionValorColumna, inserts));
   }
 }
