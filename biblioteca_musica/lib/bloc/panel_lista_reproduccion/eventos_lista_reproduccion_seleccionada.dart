@@ -47,7 +47,11 @@ class EvToggleSelCancion extends EventoListaReproduccionSeleccionada {
   EvToggleSelCancion(this.idCancion);
 }
 
-class EvRenombrarLista extends EventoListaReproduccionSeleccionada {}
+class EvRenombrarLista extends EventoListaReproduccionSeleccionada {
+  final String nuevoNombre;
+
+  EvRenombrarLista(this.nuevoNombre);
+}
 
 class EvEliminarLista extends EventoListaReproduccionSeleccionada {}
 
@@ -69,3 +73,15 @@ class EvActValorColumnaCanciones extends EventoListaReproduccionSeleccionada {
 
   EvActValorColumnaCanciones(this.idValorColumna, this.idColumna);
 }
+
+class EvRecortarNombresCancionesSeleccionadas
+    extends EventoListaReproduccionSeleccionada {
+  final String filtro;
+
+  EvRecortarNombresCancionesSeleccionadas(this.filtro);
+}
+
+class EvEliminarCancionesLista extends EventoListaReproduccionSeleccionada {}
+
+class EvEliminarCancionesTotalmente
+    extends EventoListaReproduccionSeleccionada {}

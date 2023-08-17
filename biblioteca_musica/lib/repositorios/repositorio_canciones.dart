@@ -11,6 +11,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:path/path.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
 class RepositorioCanciones {
@@ -87,5 +88,19 @@ class RepositorioCanciones {
       List<int> lstCancionesSeleccionadas) async {
     await _dbpCanciones.actValorColumnaCanciones(
         idColumna, idValorColumna, lstCancionesSeleccionadas);
+  }
+
+  Future<void> recortarNombresCanciones(
+      String filtro, List<CancionColumnas> cancionesSeleccionadas) async {
+    await _dbpCanciones.recortarNombresCanciones(
+        filtro, cancionesSeleccionadas);
+  }
+
+  void eliminarCancionesLista(int idLista, List<int> cancionesSeleccionadas) {
+    _dbpCanciones.eliminarCancionesLista(idLista, cancionesSeleccionadas);
+  }
+
+  void eliminarCancionesTotalmente(List<int> cancionesSeleccionadas) {
+    _dbpCanciones.eliminarCancionesTotalemnte(cancionesSeleccionadas);
   }
 }

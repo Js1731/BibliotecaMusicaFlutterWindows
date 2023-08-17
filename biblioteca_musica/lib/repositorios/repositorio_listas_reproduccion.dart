@@ -22,4 +22,12 @@ class RepositorioListasReproduccion {
     await _dbpListasReproduccion.actColumnasListaReproduccion(
         lstColumnas, idListaRep);
   }
+
+  void renombrarLista(int idLista, String nuevoNombre) {
+    _dbpListasReproduccion.renombarLista(idLista, nuevoNombre);
+  }
+
+  void eliminarLista(int idListaRep) {
+    _dbpListasReproduccion.eliminarListaRep(idListaRep);
+  }
 }

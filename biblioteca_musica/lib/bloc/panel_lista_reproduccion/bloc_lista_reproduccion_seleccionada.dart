@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,8 +21,10 @@ class BlocListaReproduccionSeleccionada extends Bloc<
       this._repositorioColumna, this._repositorioListasReproduccion)
       : super(const EstadoListaReproduccionSelecconada()) {
     on<EvSeleccionarLista>(_onSeleccionarLista);
-    on<EvEscucharCancionesListaRep>(_onEscucharCancionesListaRep);
-    on<EvEscucharColumnasListaRep>(_onEscucharColumnasListaRep);
+    on<EvEscucharCancionesListaRep>(_onEscucharCancionesListaRep,
+        transformer: restartable());
+    on<EvEscucharColumnasListaRep>(_onEscucharColumnasListaRep,
+        transformer: restartable());
     on<EvToggleSeleccionarTodo>(_onToggleSeleccionarTodo);
     on<EvImportarCanciones>(_onImportarCanciones);
     on<EvRenombrarLista>(_onRenombrarLista);
@@ -28,34 +32,12 @@ class BlocListaReproduccionSeleccionada extends Bloc<
     on<EvAsignarCancionesALista>(_onAsignarCancionesLista);
     on<EvOrdenarListaPorColumna>(_onOrdenarPorColumna);
     on<EvToggleSelCancion>(_onToggleSelCancion);
-    on<EvActColumnasLista>(_onActColumnaLista);
+    on<EvActColumnasLista>(_onActColumnaLista, transformer: restartable());
     on<EvActValorColumnaCanciones>(_onActValorColumnaCancion);
-  }
-
-  void ordernarListaCanciones(
-      List<CancionColumnas> lista, int? idColumnaOrden, bool ordenAscendente) {
-    if (idColumnaOrden == null) return;
-
-    if (idColumnaOrden == -1) {
-      lista.sort((cancionA, cancionB) =>
-          cancionA.nombre.compareTo(cancionB.nombre) *
-          (ordenAscendente ? 1 : -1));
-    } else if (idColumnaOrden == -2) {
-      lista.sort((cancionA, cancionB) =>
-          cancionA.duracion.compareTo(cancionB.duracion) *
-          (ordenAscendente ? 1 : -1));
-    } else {
-      lista.sort((cancionA, cancionB) {
-        final columnaA =
-            cancionA.mapaColumnas[idColumnaOrden]?["valor_columna"];
-        final columnaB =
-            cancionB.mapaColumnas[idColumnaOrden]?["valor_columna"];
-
-        if (columnaA == null || columnaB == null) return 1;
-
-        return columnaA.compareTo(columnaB) * (ordenAscendente ? 1 : -1);
-      });
-    }
+    on<EvRecortarNombresCancionesSeleccionadas>(
+        _onRecortarNombresCancionesSeleccionadas);
+    on<EvEliminarCancionesLista>(_eliminarCancionesLista);
+    on<EvEliminarCancionesTotalmente>(_eliminarCancionesTotalmente);
   }
 
   ///Cambia la lista seleccionada
@@ -88,10 +70,6 @@ class BlocListaReproduccionSeleccionada extends Bloc<
           _repositorioCanciones.crearStreamCancionesLista(
               evento.listaSeleccionada.id, evento.lstColumnas),
           onData: (nuevaLista) {
-        ordernarListaCanciones(
-            nuevaLista,
-            state.listaReproduccionSeleccionada.idColumnaOrden,
-            state.listaReproduccionSeleccionada.ordenAscendente);
         final nuevoMapa = {for (var cancion in nuevaLista) cancion.id: false};
         return state.copiarCon(
             nuevalistaCanciones: nuevaLista,
@@ -164,14 +142,32 @@ class BlocListaReproduccionSeleccionada extends Bloc<
   }
 
   void _onRenombrarLista(EvRenombrarLista evento,
-      Emitter<EstadoListaReproduccionSelecconada> emit) {}
+      Emitter<EstadoListaReproduccionSelecconada> emit) {
+    _repositorioListasReproduccion.renombrarLista(
+        state.listaReproduccionSeleccionada.id, evento.nuevoNombre);
+
+    final lista = state.listaReproduccionSeleccionada;
+    final nuevaLista = ListaReproduccionData(
+        id: lista.id,
+        nombre: evento.nuevoNombre,
+        ordenAscendente: lista.ordenAscendente,
+        idColumnaOrden: lista.idColumnaOrden,
+        idColumnaPrincipal: lista.idColumnaPrincipal);
+
+    emit(state.copiarCon(nuevaListaSel: nuevaLista));
+  }
 
   void _onEliminarLista(EvEliminarLista evento,
-      Emitter<EstadoListaReproduccionSelecconada> emit) {}
+      Emitter<EstadoListaReproduccionSelecconada> emit) {
+    _repositorioListasReproduccion
+        .eliminarLista(state.listaReproduccionSeleccionada.id);
+
+    add(EvSeleccionarLista(listaRepBiblioteca));
+  }
 
   void _onAsignarCancionesLista(EvAsignarCancionesALista evento,
       Emitter<EstadoListaReproduccionSelecconada> emit) async {
-    await _repositorioCanciones.asignarCancionesListaRep(
+    _repositorioCanciones.asignarCancionesListaRep(
         state.obtCancionesSeleccionadas(), evento.idListaRep);
   }
 
@@ -185,5 +181,25 @@ class BlocListaReproduccionSeleccionada extends Bloc<
       Emitter<EstadoListaReproduccionSelecconada> emit) async {
     await _repositorioCanciones.actValorColumnaCanciones(evento.idColumna,
         evento.idValorColumna, state.obtCancionesSeleccionadas());
+  }
+
+  void _onRecortarNombresCancionesSeleccionadas(
+      EvRecortarNombresCancionesSeleccionadas event,
+      Emitter<EstadoListaReproduccionSelecconada> emit) {
+    _repositorioCanciones.recortarNombresCanciones(
+        event.filtro, state.obtCancionesSelecionadasCompleta());
+  }
+
+  void _eliminarCancionesLista(EvEliminarCancionesLista event,
+      Emitter<EstadoListaReproduccionSelecconada> emit) {
+    _repositorioCanciones.eliminarCancionesLista(
+        state.listaReproduccionSeleccionada.id,
+        state.obtCancionesSeleccionadas());
+  }
+
+  void _eliminarCancionesTotalmente(EvEliminarCancionesTotalmente event,
+      Emitter<EstadoListaReproduccionSelecconada> emit) {
+    _repositorioCanciones
+        .eliminarCancionesTotalmente(state.obtCancionesSeleccionadas());
   }
 }

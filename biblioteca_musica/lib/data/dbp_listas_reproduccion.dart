@@ -34,4 +34,22 @@ class DBPListasReproduccion {
                 posicion: lstColumnas.indexOf(idColumna)))
             .toList()));
   }
+
+  void renombarLista(int idLista, String nuevoNombre) {
+    appDb.update(appDb.listaReproduccion)
+      ..where((tbl) => tbl.id.equals(idLista))
+      ..write(ListaReproduccionCompanion(nombre: Value(nuevoNombre)));
+  }
+
+  void eliminarListaRep(int idListaRep) {
+    (appDb.delete(appDb.cancionListaReproduccion)
+          ..where((tbl) => tbl.idListaRep.equals(idListaRep)))
+        .go();
+    (appDb.delete(appDb.listaColumnas)
+          ..where((tbl) => tbl.idListaRep.equals(idListaRep)))
+        .go();
+    (appDb.delete(appDb.listaReproduccion)
+          ..where((tbl) => tbl.id.equals(idListaRep)))
+        .go();
+  }
 }

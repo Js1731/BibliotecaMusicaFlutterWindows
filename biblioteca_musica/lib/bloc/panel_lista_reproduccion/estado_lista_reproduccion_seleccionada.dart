@@ -42,6 +42,14 @@ class EstadoListaReproduccionSelecconada extends Equatable {
           .keys
           .toList();
 
+  List<CancionColumnas> obtCancionesSelecionadasCompleta() {
+    final listaCancionesSel = obtCancionesSeleccionadas();
+    final cancionesSeleccionadas = listaCanciones
+        .where((element) => listaCancionesSel.contains(element.id))
+        .toList();
+    return cancionesSeleccionadas;
+  }
+
   int obtCantidadCancionesSeleccionadas() => obtCancionesSeleccionadas().length;
   int obtCantidadCancionesTotal() => listaCanciones.length;
 

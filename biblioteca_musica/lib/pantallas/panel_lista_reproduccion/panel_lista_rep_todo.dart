@@ -9,6 +9,7 @@ import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_seleccionar_valor_columna.dart';
+import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -158,7 +159,12 @@ class PanellistaRepBiblioteca extends PanelListaReproduccion {
                     BotonCintaOpciones(
                         icono: Icons.content_cut_rounded,
                         texto: "Recortar Nombres",
-                        onPressed: (_) {
+                        onPressed: (_) async {
+                          context.read<BlocListaReproduccionSeleccionada>().add(
+                              EvRecortarNombresCancionesSeleccionadas(
+                                  await mostrarDialogoTexto(
+                                          context, "Filtro") ??
+                                      ""));
                           //controlador.recortarNombresCanciones();
                         }),
                   ]),
@@ -172,12 +178,11 @@ class PanellistaRepBiblioteca extends PanelListaReproduccion {
                           icono: Icons.delete_sweep,
                           texto: "Eliminar",
                           onPressed: (_) async {
-                            // await controlador.eliminarCancionesTotalmente(
-                            //     provListaRep.obtCancionesSeleccionadas());
+                            context
+                                .read<BlocListaReproduccionSeleccionada>()
+                                .add(EvEliminarCancionesTotalmente());
                           })
                     ],
                   ),
                 ]);
 }
-
-class btn_context {}

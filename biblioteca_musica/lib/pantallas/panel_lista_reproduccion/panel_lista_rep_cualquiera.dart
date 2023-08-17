@@ -9,6 +9,7 @@ import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_seleccionar_valor_columna.dart';
+import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -71,9 +72,12 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                         icono: Icons.edit,
                         texto: "Renombrar",
                         onPressed: (context) async {
-                          context
-                              .read<BlocListaReproduccionSeleccionada>()
-                              .add(EvRenombrarLista());
+                          final bloc =
+                              context.read<BlocListaReproduccionSeleccionada>();
+
+                          bloc.add(EvRenombrarLista(await mostrarDialogoTexto(
+                                  context, "Nuevo Nombre") ??
+                              bloc.state.listaReproduccionSeleccionada.nombre));
                         }),
                     //ELIMINAR LISTA
                     BotonCintaOpciones(
@@ -183,8 +187,12 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                     BotonCintaOpciones(
                         icono: Icons.cut,
                         texto: "Recortar Nombres",
-                        onPressed: (_) {
-                          //controlador.recortarNombresCanciones();
+                        onPressed: (_) async {
+                          context.read<BlocListaReproduccionSeleccionada>().add(
+                              EvRecortarNombresCancionesSeleccionadas(
+                                  await mostrarDialogoTexto(
+                                          context, "Filtro") ??
+                                      ""));
                         }),
                   ]),
 
@@ -202,14 +210,15 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                                   value: 1, child: Text("Totalmente"))
                             ],
                         onSelected: (opSel) async {
-                          // if (opSel == 0) {
-                          //   await controlador.eliminarCancionesDeLista(
-                          //       provListaRep.obtCancionesSeleccionadas(),
-                          //       provGeneral.listaSel.id);
-                          // } else {
-                          //   await controlador.eliminarCancionesTotalmente(
-                          //       provListaRep.obtCancionesSeleccionadas());
-                          // }
+                          if (opSel == 0) {
+                            context
+                                .read<BlocListaReproduccionSeleccionada>()
+                                .add(EvEliminarCancionesLista());
+                          } else {
+                            context
+                                .read<BlocListaReproduccionSeleccionada>()
+                                .add(EvEliminarCancionesTotalmente());
+                          }
                         })
                   ])
                 ]);

@@ -1,5 +1,6 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:drift/drift.dart';
 
 class DBPCanciones {
@@ -27,8 +28,9 @@ class DBPCanciones {
           final duracion = dato.data["cancion.duracion"];
           final estado = dato.data["cancion.estado"];
 
-          final consultaValorColumnaCancion =
-              appDb.select(appDb.cancionValorColumna).join([
+          final consultaValorColumnaCancion = appDb
+              .select(appDb.cancionValorColumna)
+              .join([
             leftOuterJoin(
                 appDb.valorColumna,
                 appDb.valorColumna.id
@@ -36,7 +38,8 @@ class DBPCanciones {
             leftOuterJoin(appDb.columna,
                 appDb.columna.id.equalsExp(appDb.valorColumna.idColumna)),
           ])
-                ..where(appDb.cancionValorColumna.idCancion.equals(idCancion));
+            ..where(appDb.cancionValorColumna.idCancion.equals(idCancion) &
+                appDb.columna.id.isIn(columnasLista.map((e) => e.id)));
 
           final resultados = await consultaValorColumnaCancion.get();
 
@@ -172,5 +175,36 @@ class DBPCanciones {
 
     await appDb
         .batch((batch) => batch.insertAll(appDb.cancionValorColumna, inserts));
+  }
+
+  Future<void> recortarNombresCanciones(
+      String filtro, List<CancionColumnas> cancionesSeleccionadas) async {
+    for (CancionColumnas cancion in cancionesSeleccionadas) {
+      String nuevoNombre = cancion.nombre;
+
+      nuevoNombre = nuevoNombre.replaceAll(filtro, "");
+      nuevoNombre = removerEspaciosDobles(nuevoNombre);
+      nuevoNombre = removerDigitos(nuevoNombre);
+      nuevoNombre = nuevoNombre.trim();
+
+      (appDb.update(appDb.cancion)
+        ..where((tbl) => tbl.id.equals(cancion.id))
+        ..write(CancionCompanion(nombre: Value(nuevoNombre))));
+    }
+  }
+
+  void eliminarCancionesLista(int idLista, List<int> cancionesSeleccionadas) {
+    appDb.batch((batch) => batch.deleteWhere(
+        appDb.cancionListaReproduccion,
+        (tbl) =>
+            tbl.idCancion.isIn(cancionesSeleccionadas) &
+            tbl.idListaRep.equals(idLista)));
+  }
+
+  void eliminarCancionesTotalemnte(List<int> cancionesSeleccionadas) {
+    appDb.batch((batch) => batch.deleteWhere(appDb.cancionListaReproduccion,
+        (tbl) => tbl.idCancion.isIn(cancionesSeleccionadas)));
+    appDb.batch((batch) => batch.deleteWhere(
+        appDb.cancion, (tbl) => tbl.id.isIn(cancionesSeleccionadas)));
   }
 }
