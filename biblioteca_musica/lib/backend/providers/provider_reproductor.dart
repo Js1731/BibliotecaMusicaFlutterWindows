@@ -1,12 +1,13 @@
 import 'dart:async';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:audioplayers/audioplayers.dart';
+import '../../bloc/reproductor/evento_reproductor.dart';
 
 class ProviderReproductor extends ChangeNotifier {
   final ProviderGeneral providerGeneral;

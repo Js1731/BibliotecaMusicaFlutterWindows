@@ -5,13 +5,12 @@ import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/backend/misc/Proceso.dart';
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/data/dbp_canciones.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:path/path.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
 class RepositorioCanciones {
@@ -102,5 +101,14 @@ class RepositorioCanciones {
 
   void eliminarCancionesTotalmente(List<int> cancionesSeleccionadas) {
     _dbpCanciones.eliminarCancionesTotalemnte(cancionesSeleccionadas);
+  }
+
+  Future<void> renombrarCancion(int idCancion, String nuevoNombre) async {
+    await _dbpCanciones.renombrarCancion(idCancion, nuevoNombre);
+  }
+
+  void actValoresColumnaCancionUnica(
+      int idCancion, List<ValorColumnaData> lstValorColumna) {
+    _dbpCanciones.actValorColumnasCancionUnica(idCancion, lstValorColumna);
   }
 }

@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:drift/drift.dart';
+import 'package:rxdart/rxdart.dart';
 
 class Reproductor {
   final BehaviorSubject<CancionData?> streamContCancionReproducida =

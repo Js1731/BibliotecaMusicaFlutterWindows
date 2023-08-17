@@ -1,14 +1,14 @@
 import 'package:biblioteca_musica/backend/controles/control_panel_columna_lateral.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/bloc_panel_lateral.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
-
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/dialogos/dialogo_seleccionar_valor_columna.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -142,23 +142,17 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                     ),
 
                     ///ASIGNAR VALORES COLUMNA A LAS CANCIONES SELECCIONADAS
-                    BotonPopUpMenuCintaOpciones(
+                    BotonPopUpMenuCintaOpciones<ColumnaData>(
                         icono: Icons.view_column,
                         texto: "Asignar Columnas",
-                        onSelected: (indexColumna) async {
-                          if (indexColumna == -1) {
+                        onSelected: (columnaSel) async {
+                          if (columnaSel.id == -1) {
                             await agregarColumna();
                           } else {
-                            final bloc = context
-                                .read<BlocListaReproduccionSeleccionada>();
-                            ValorColumnaData? valorColumnaSel =
-                                await abrirDialogoSeleccionarValorColumna(
-                                    bloc.state.lstColumnas[indexColumna], null);
-
-                            if (valorColumnaSel == null) return;
-
-                            bloc.add(EvActValorColumnaCanciones(
-                                valorColumnaSel.id, valorColumnaSel.idColumna));
+                            await context
+                                .read<AuxiliarListaReproduccion>()
+                                .asignarValoresColumnaACanciones(
+                                    context, columnaSel);
                           }
                         },
                         itemBuilder: (_) {
@@ -167,18 +161,17 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                               .state
                               .lstColumnas;
 
-                          List<PopupMenuEntry> popupitems = [
+                          List<PopupMenuEntry<ColumnaData>> popupitems = [
                             const PopupMenuItem(
-                                value: -1,
+                                value: ColumnaData(
+                                    id: -1, nombre: "Nueva Columna"),
                                 child: Row(children: [
                                   Icon(Icons.add, color: Deco.cGray1),
                                   Text("Nueva Columna"),
-                                ]))
+                                ])),
+                            ...columnas.map((col) => PopupMenuItem<ColumnaData>(
+                                value: col, child: Text(col.nombre)))
                           ];
-                          for (int i = 0; i < columnas.length; i++) {
-                            popupitems.add(PopupMenuItem(
-                                value: i, child: Text(columnas[i].nombre)));
-                          }
 
                           return popupitems;
                         }),
@@ -188,11 +181,9 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                         icono: Icons.cut,
                         texto: "Recortar Nombres",
                         onPressed: (_) async {
-                          context.read<BlocListaReproduccionSeleccionada>().add(
-                              EvRecortarNombresCancionesSeleccionadas(
-                                  await mostrarDialogoTexto(
-                                          context, "Filtro") ??
-                                      ""));
+                          await context
+                              .read<AuxiliarListaReproduccion>()
+                              .recortarNombres(context);
                         }),
                   ]),
 

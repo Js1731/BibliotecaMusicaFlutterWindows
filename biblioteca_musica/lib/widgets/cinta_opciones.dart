@@ -106,7 +106,7 @@ class BotonCintaOpciones extends BtnGenerico {
         );
 }
 
-class BotonPopUpMenuCintaOpciones extends BtnPopupMenuGenerico {
+class BotonPopUpMenuCintaOpciones<T> extends BtnPopupMenuGenerico<T> {
   BotonPopUpMenuCintaOpciones(
       {super.key,
       super.enabled,

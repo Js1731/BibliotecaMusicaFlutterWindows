@@ -17,4 +17,9 @@ class RepositorioReproductor {
   Future<void> reproducirListaAzar(ListaReproduccionData lista) async {
     await _reproductor.reproducirLista(lista, false);
   }
+
+  Future<void> reproducirCancion(
+      CancionData cancion, ListaReproduccionData listaRep) async {
+    await _reproductor.reproducirCancion(cancion, listaRep);
+  }
 }

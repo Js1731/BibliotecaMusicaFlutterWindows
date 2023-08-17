@@ -1,8 +1,9 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../../bloc/reproductor/evento_reproductor.dart';
 
 enum Panel { listasRep, listaRepBiblioteca, propiedades, ajustes }
 

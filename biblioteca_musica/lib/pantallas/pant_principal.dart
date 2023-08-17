@@ -1,13 +1,16 @@
 import 'package:biblioteca_musica/backend/misc/CustomPainerPanelCentral.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_cualquiera.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_todo.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 final GlobalKey<PantPrincipalState> keyPantPrincipal = GlobalKey();
 
@@ -33,7 +36,9 @@ class PantPrincipalState extends State<PantPrincipal> {
                 children: [
                   Expanded(
                     child: Row(children: [
-                      PanelLateral(),
+                      Provider(
+                          create: (context) => AuxiliarPanelLateral(),
+                          child: const PanelLateral()),
 
                       //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
 
@@ -45,9 +50,15 @@ class PantPrincipalState extends State<PantPrincipal> {
                             child: CustomPaint(
                               painter: CustomPainerPanelCentral(),
                               child: panel == Panel.listaRepBiblioteca
-                                  ? PanellistaRepBiblioteca()
+                                  ? Provider(
+                                      create: (context) =>
+                                          AuxiliarListaReproduccion(),
+                                      child: PanellistaRepBiblioteca())
                                   : panel == Panel.listasRep
-                                      ? PanelListaRepCualquiera()
+                                      ? Provider(
+                                          create: (context) =>
+                                              AuxiliarListaReproduccion(),
+                                          child: PanelListaRepCualquiera())
                                       : const SizedBox(),
                             ),
                           ),

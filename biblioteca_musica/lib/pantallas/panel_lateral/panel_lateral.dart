@@ -4,19 +4,22 @@ import 'package:biblioteca_musica/backend/misc/CustomPainterKOPI.dart';
 import 'package:biblioteca_musica/backend/misc/CustomPainterPanelLateral.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/bloc_panel_lateral.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
+import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/item_lista_reproduccion.dart';
-import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../bloc/panel_lateral/estado_panel_lateral.dart';
 
 ///Panel donde se puede seleccionar una Lista de reproduccion para ver sus canciones y cualquier Panel Adicional.
 
@@ -109,16 +112,9 @@ class _ConstructorPanelLateral extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: BtnGenerico(onPressed: (_) async {
-                            final nombreLista = await mostrarDialogoTexto(
-                                context, "Nueva Lista");
-
-                            if (nombreLista == null) return;
-
-                            if (context.mounted) {
-                              context
-                                  .read<BlocPanelLateral>()
-                                  .add(PanelLateralAgregarLista(nombreLista));
-                            }
+                            await context
+                                .read<AuxiliarPanelLateral>()
+                                .agregarLista(context);
                           }, builder: (hover, context) {
                             return CustomPaint(
                               painter: CustomPainterAgregarLista(hover),

@@ -1,14 +1,11 @@
-import 'dart:async';
-
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BlocListaReproduccionSeleccionada extends Bloc<
@@ -38,6 +35,8 @@ class BlocListaReproduccionSeleccionada extends Bloc<
         _onRecortarNombresCancionesSeleccionadas);
     on<EvEliminarCancionesLista>(_eliminarCancionesLista);
     on<EvEliminarCancionesTotalmente>(_eliminarCancionesTotalmente);
+    on<EvRenombrarCancion>(_renombrarCancion);
+    on<EvActValoresColumnaCancionUnica>(_onActValoresColumnaCancionUnica);
   }
 
   ///Cambia la lista seleccionada
@@ -201,5 +200,17 @@ class BlocListaReproduccionSeleccionada extends Bloc<
       Emitter<EstadoListaReproduccionSelecconada> emit) {
     _repositorioCanciones
         .eliminarCancionesTotalmente(state.obtCancionesSeleccionadas());
+  }
+
+  void _renombrarCancion(EvRenombrarCancion event,
+      Emitter<EstadoListaReproduccionSelecconada> emit) async {
+    await _repositorioCanciones.renombrarCancion(
+        event.idCancion, event.nuevoNombre);
+  }
+
+  void _onActValoresColumnaCancionUnica(EvActValoresColumnaCancionUnica event,
+      Emitter<EstadoListaReproduccionSelecconada> emit) {
+    _repositorioCanciones.actValoresColumnaCancionUnica(
+        event.idCancion, event.lstValorColumna);
   }
 }

@@ -207,4 +207,25 @@ class DBPCanciones {
     appDb.batch((batch) => batch.deleteWhere(
         appDb.cancion, (tbl) => tbl.id.isIn(cancionesSeleccionadas)));
   }
+
+  Future<void> renombrarCancion(int idCancion, String nuevoNombre) async {
+    await (appDb.update(appDb.cancion)
+          ..where((tbl) => tbl.id.equals(idCancion)))
+        .write(CancionCompanion(nombre: Value(nuevoNombre)));
+  }
+
+  void actValorColumnasCancionUnica(
+      int idCancion, List<ValorColumnaData> lstValorColumna) async {
+    await (appDb.delete(appDb.cancionValorColumna)
+          ..where((tbl) =>
+              tbl.idValorPropiedad.isIn(lstValorColumna.map((e) => e.id)) &
+              tbl.idCancion.equals(idCancion)))
+        .go();
+
+    await appDb.batch((batch) => batch.insertAll(
+        appDb.cancionValorColumna,
+        lstValorColumna.map<CancionValorColumnaCompanion>((e) =>
+            CancionValorColumnaCompanion.insert(
+                idCancion: idCancion, idValorPropiedad: e.id))));
+  }
 }

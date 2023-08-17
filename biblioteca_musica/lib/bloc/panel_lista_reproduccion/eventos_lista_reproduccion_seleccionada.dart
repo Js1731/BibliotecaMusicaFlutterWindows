@@ -85,3 +85,18 @@ class EvEliminarCancionesLista extends EventoListaReproduccionSeleccionada {}
 
 class EvEliminarCancionesTotalmente
     extends EventoListaReproduccionSeleccionada {}
+
+class EvRenombrarCancion extends EventoListaReproduccionSeleccionada {
+  final int idCancion;
+  final String nuevoNombre;
+
+  EvRenombrarCancion(this.idCancion, this.nuevoNombre);
+}
+
+class EvActValoresColumnaCancionUnica
+    extends EventoListaReproduccionSeleccionada {
+  final List<ValorColumnaData> lstValorColumna;
+  final int idCancion;
+
+  EvActValoresColumnaCancionUnica(this.lstValorColumna, this.idCancion);
+}

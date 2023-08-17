@@ -1,12 +1,14 @@
 import 'package:biblioteca_musica/backend/controles/control_panel_lista_reproduccion.dart';
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
@@ -139,12 +141,20 @@ class ItemCancion extends BtnGenerico {
             ),
           );
         }, onPressed: (context) async {
-          // if (cancion.estado == estadoSync ||
-          //     cancion.estado == estadoLocal ||
-          //     cancion.estado == estadoLocal) {
-          //   await Provider.of<ProviderReproductor>(context, listen: false)
-          //       .reproducirCancion(cancion, idLst);
-          // }
+          if (cancion.estado == estadoSync ||
+              cancion.estado == estadoLocal ||
+              cancion.estado == estadoLocal) {
+            context.read<BlocReproductor>().add(EvReproducirCancion(
+                CancionData(
+                    id: cancion.id,
+                    nombre: cancion.nombre,
+                    duracion: cancion.duracion,
+                    estado: cancion.estado),
+                context
+                    .read<BlocListaReproduccionSeleccionada>()
+                    .state
+                    .listaReproduccionSeleccionada));
+          }
         }, onRightPressed: (context, position) async {
           List<PopupMenuEntry<int>> lstOpciones = [
             const PopupMenuItem(
@@ -196,37 +206,39 @@ class ItemCancion extends BtnGenerico {
 
           await mostrarMenuContextual<int>(context, position, lstOpciones)
               .then((value) async {
-            // switch (value) {
-            //   case 0:
-            //     await contPanelListaRep.renombrarCancion(cancion);
-            //     provGeneral.seleccionarLista(provGeneral.listaSel.id);
-            //     provListaRep.actualizarMapaCancionesSel();
-            //     break;
+            switch (value) {
+              case 0:
+                context
+                    .read<AuxiliarListaReproduccion>()
+                    .renombrarCancion(context, cancion);
 
-            //   case 1:
-            //     contPanelListaRep.asignarValorColumnaACancionesDetallado(
-            //         [cancion.id], await provGeneral.obtTodasColumnas());
-            //     break;
+                break;
 
-            //   case 2:
-            //     await contPanelListaRep.eliminarCancionesDeLista(
-            //         modoSeleccion
-            //             ? provListaRep.mapaSel.keys.toList()
-            //             : [cancion.id],
-            //         idLst);
-            //     break;
+              case 1:
+                await context
+                    .read<AuxiliarListaReproduccion>()
+                    .asignarValoresColumnasDetallado(context, cancion);
+                break;
 
-            //   case 3:
-            //     await contPanelListaRep.eliminarCancionesTotalmente(
-            //         modoSeleccion
-            //             ? provListaRep.mapaSel.keys.toList()
-            //             : [cancion.id]);
-            //     break;
+              // case 2:
+              //   await contPanelListaRep.eliminarCancionesDeLista(
+              //       modoSeleccion
+              //           ? provListaRep.mapaSel.keys.toList()
+              //           : [cancion.id],
+              //       idLst);
+              //   break;
 
-            //   case 4:
-            //     await contPanelListaRep.recortarNombresCanciones();
-            //     break;
-            // }
+              // case 3:
+              //   await contPanelListaRep.eliminarCancionesTotalmente(
+              //       modoSeleccion
+              //           ? provListaRep.mapaSel.keys.toList()
+              //           : [cancion.id]);
+              //   break;
+
+              // case 4:
+              //   await contPanelListaRep.recortarNombresCanciones();
+              //   break;
+            }
           });
         });
 }

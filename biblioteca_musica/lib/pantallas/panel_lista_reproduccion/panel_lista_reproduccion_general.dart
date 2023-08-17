@@ -3,15 +3,16 @@ import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/main.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_cancion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_columna_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/dialogos/dialogo_columnas.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -201,29 +202,11 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                                           IconButton(
                                               padding: EdgeInsets.zero,
                                               onPressed: () async {
-                                                final resultados =
-                                                    await abrirDialogoColumnas(context
-                                                        .read<
-                                                            BlocListaReproduccionSeleccionada>()
-                                                        .state
-                                                        .listaReproduccionSeleccionada);
-
-                                                if (resultados == null) return;
-
-                                                final List<ColumnaData>
-                                                    columnas =
-                                                    resultados["columnas"];
-                                                final columnaPrincipal =
-                                                    resultados["colPrincipal"];
-
-                                                if (context.mounted) {
-                                                  final bloc = context.read<
-                                                      BlocListaReproduccionSeleccionada>();
-                                                  bloc.add(EvActColumnasLista(
-                                                      columnas
-                                                          .map((e) => e.id)
-                                                          .toList()));
-                                                }
+                                                await context
+                                                    .read<
+                                                        AuxiliarListaReproduccion>()
+                                                    .actColumnasListaRep(
+                                                        context);
                                               },
                                               color: Deco.cGray1,
                                               icon: const Icon(
