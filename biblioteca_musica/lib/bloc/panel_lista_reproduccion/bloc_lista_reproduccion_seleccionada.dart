@@ -37,6 +37,7 @@ class BlocListaReproduccionSeleccionada extends Bloc<
     on<EvEliminarCancionesTotalmente>(_eliminarCancionesTotalmente);
     on<EvRenombrarCancion>(_renombrarCancion);
     on<EvActValoresColumnaCancionUnica>(_onActValoresColumnaCancionUnica);
+    on<EvActColumnaPrincipal>(_onActColumnaPrincipal);
   }
 
   ///Cambia la lista seleccionada
@@ -46,15 +47,14 @@ class BlocListaReproduccionSeleccionada extends Bloc<
   void _onSeleccionarLista(EvSeleccionarLista evento,
       Emitter<EstadoListaReproduccionSelecconada> emit) async {
     emit(state.copiarCon(nuevaListaSel: evento.listaSeleccionada));
-    add(EvEscucharCancionesListaRep(
-        evento.listaSeleccionada, state.lstColumnas));
+    add(EvEscucharCancionesListaRep(state.lstColumnas));
     add(EvEscucharColumnasListaRep(evento.listaSeleccionada));
   }
 
   void _onEscucharCancionesListaRep(EvEscucharCancionesListaRep evento,
       Emitter<EstadoListaReproduccionSelecconada> emit) async {
     ///BIBLIOTECA
-    if (evento.listaSeleccionada.id == listaRepBiblioteca.id) {
+    if (state.listaReproduccionSeleccionada.id == listaRepBiblioteca.id) {
       await emit.forEach(_repositorioCanciones.crearStreamCancionesBiblioteca(),
           onData: (nuevaLista) {
         final nuevoMapa = {for (var cancion in nuevaLista) cancion.id: false};
@@ -67,7 +67,7 @@ class BlocListaReproduccionSeleccionada extends Bloc<
     } else {
       await emit.forEach(
           _repositorioCanciones.crearStreamCancionesLista(
-              evento.listaSeleccionada.id, evento.lstColumnas),
+              state.listaReproduccionSeleccionada, evento.lstColumnas),
           onData: (nuevaLista) {
         final nuevoMapa = {for (var cancion in nuevaLista) cancion.id: false};
         return state.copiarCon(
@@ -82,8 +82,7 @@ class BlocListaReproduccionSeleccionada extends Bloc<
     await emit.forEach(
         _repositorioColumna.crearStreamColumnasListaSel(
             evento.listaSeleccionada.id), onData: (nuevaLista) {
-      add(EvEscucharCancionesListaRep(
-          state.listaReproduccionSeleccionada, nuevaLista));
+      add(EvEscucharCancionesListaRep(nuevaLista));
       return state.copiarCon(nuevaListaColumnas: nuevaLista);
     });
   }
@@ -103,8 +102,7 @@ class BlocListaReproduccionSeleccionada extends Bloc<
             idColumnaOrden: evento.idColumnaOrden,
             idColumnaPrincipal:
                 state.listaReproduccionSeleccionada.idColumnaPrincipal)));
-    add(EvEscucharCancionesListaRep(
-        state.listaReproduccionSeleccionada, state.lstColumnas));
+    add(EvEscucharCancionesListaRep(state.lstColumnas));
   }
 
   void _onToggleSelCancion(EvToggleSelCancion evento,
@@ -212,5 +210,20 @@ class BlocListaReproduccionSeleccionada extends Bloc<
       Emitter<EstadoListaReproduccionSelecconada> emit) {
     _repositorioCanciones.actValoresColumnaCancionUnica(
         event.idCancion, event.lstValorColumna);
+  }
+
+  void _onActColumnaPrincipal(EvActColumnaPrincipal event,
+      Emitter<EstadoListaReproduccionSelecconada> emit) async {
+    _repositorioListasReproduccion.actColumnaPrincipal(
+        event.columna.id, state.listaReproduccionSeleccionada.id);
+
+    emit(state.copiarCon(
+        nuevaListaSel: ListaReproduccionData(
+            id: state.listaReproduccionSeleccionada.id,
+            nombre: state.listaReproduccionSeleccionada.nombre,
+            ordenAscendente:
+                state.listaReproduccionSeleccionada.ordenAscendente,
+            idColumnaOrden: state.listaReproduccionSeleccionada.idColumnaOrden,
+            idColumnaPrincipal: event.columna.id)));
   }
 }

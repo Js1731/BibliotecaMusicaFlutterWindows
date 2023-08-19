@@ -16,6 +16,8 @@ import 'package:tuple/tuple.dart';
 class RepositorioCanciones {
   final DBPCanciones _dbpCanciones;
 
+  Stream<List<CancionColumnas>>? _streamCanciones;
+
   ///Importa archivos MP3 al sistema, crea canciones que las representan, sin asociaciones a ninguna lista.
   Future<List<int>?> procesoImportarCancionesGlobal(
       Procedimiento proc, dynamic data) async {
@@ -58,13 +60,16 @@ class RepositorioCanciones {
 
   RepositorioCanciones(this._dbpCanciones);
 
+  Stream<List<CancionColumnas>>? obtStreamCanciones() => _streamCanciones;
+
   Stream<List<CancionColumnas>> crearStreamCancionesLista(
-      int idListaRep, List<ColumnaData> columnasLista) {
-    return _dbpCanciones.crearStreamListaCancion(idListaRep, columnasLista);
+      ListaReproduccionData listaRep, List<ColumnaData> columnasLista) {
+    return _streamCanciones =
+        _dbpCanciones.crearStreamListaCancion(listaRep, columnasLista);
   }
 
   Stream<List<CancionColumnas>> crearStreamCancionesBiblioteca() {
-    return _dbpCanciones.crearStramCancionesBiblioteca();
+    return _streamCanciones = _dbpCanciones.crearStramCancionesBiblioteca();
   }
 
   void importarCancionesLista(

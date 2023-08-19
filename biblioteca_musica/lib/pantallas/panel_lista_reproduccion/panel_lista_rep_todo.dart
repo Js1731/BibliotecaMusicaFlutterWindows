@@ -4,8 +4,6 @@ import 'package:biblioteca_musica/bloc/cubit_columnas.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
-import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
@@ -25,9 +23,9 @@ class PanellistaRepBiblioteca extends PanelListaReproduccion {
                         icono: Icons.play_arrow,
                         texto: "Orden",
                         onPressed: (context) async {
-                          context
-                              .read<BlocReproductor>()
-                              .add(EvReproducirOrden(listaRepBiblioteca));
+                          await context
+                              .read<AuxiliarListaReproduccion>()
+                              .reproducirListaEnOrden(context);
                         }),
 
                     //REPRODUCIR AL AZAR
@@ -35,9 +33,9 @@ class PanellistaRepBiblioteca extends PanelListaReproduccion {
                         icono: Icons.shuffle,
                         texto: "Azar",
                         onPressed: (context) async {
-                          context
-                              .read<BlocReproductor>()
-                              .add(EvReproducirAzar(listaRepBiblioteca));
+                          await context
+                              .read<AuxiliarListaReproduccion>()
+                              .reproducirListaAzar(context);
                         }),
                   ]),
                   const SizedBox(width: 10),

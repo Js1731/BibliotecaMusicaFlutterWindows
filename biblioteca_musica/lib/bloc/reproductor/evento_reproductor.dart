@@ -9,23 +9,38 @@ class EventoReproductor extends Equatable {
   List<Object?> get props => [];
 }
 
-class EvReproducirOrden extends EventoReproductor {
-  final ListaReproduccionData lista;
-
-  EvReproducirOrden(this.lista);
-}
-
-class EvReproducirAzar extends EventoReproductor {
-  final ListaReproduccionData lista;
-
-  EvReproducirAzar(this.lista);
-}
-
-class EvReproducirCancion extends EventoReproductor {
-  final CancionData cancion;
-  final ListaReproduccionData listaRep;
-
-  EvReproducirCancion(this.cancion, this.listaRep);
-}
-
 class EvEscucharReproductor extends EventoReproductor {}
+
+class EvEscucharCancionReproducida extends EventoReproductor {}
+
+class EvEscucharListaReproducida extends EventoReproductor {}
+
+class EvEscucharProgresoReproduccion extends EventoReproductor {}
+
+class EvEscucharReproduciendo extends EventoReproductor {}
+
+class EvEscucharEnOrden extends EventoReproductor {}
+
+class EvEscucharVolumen extends EventoReproductor {}
+
+class EvCambiarProgreso extends EventoReproductor {
+  final int nuevoProgreso;
+
+  EvCambiarProgreso(this.nuevoProgreso);
+}
+
+class EvCambiarVolumen extends EventoReproductor {
+  final double nuevoVolumen;
+
+  EvCambiarVolumen(this.nuevoVolumen);
+}
+
+class EvRegresarCancion extends EventoReproductor {}
+
+class EvRegresar10s extends EventoReproductor {}
+
+class EvTogglePausa extends EventoReproductor {}
+
+class EvAvanzar10s extends EventoReproductor {}
+
+class EvAvanzarCancion extends EventoReproductor {}

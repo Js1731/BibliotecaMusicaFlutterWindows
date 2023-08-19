@@ -16,10 +16,9 @@ class EvSeleccionarLista extends EventoListaReproduccionSeleccionada {
 class EvToggleSeleccionarTodo extends EventoListaReproduccionSeleccionada {}
 
 class EvEscucharCancionesListaRep extends EventoListaReproduccionSeleccionada {
-  final ListaReproduccionData listaSeleccionada;
   final List<ColumnaData> lstColumnas;
 
-  EvEscucharCancionesListaRep(this.listaSeleccionada, this.lstColumnas);
+  EvEscucharCancionesListaRep(this.lstColumnas);
 }
 
 class EvEscucharColumnasListaRep extends EventoListaReproduccionSeleccionada {
@@ -99,4 +98,10 @@ class EvActValoresColumnaCancionUnica
   final int idCancion;
 
   EvActValoresColumnaCancionUnica(this.lstValorColumna, this.idCancion);
+}
+
+class EvActColumnaPrincipal extends EventoListaReproduccionSeleccionada {
+  final ColumnaData columna;
+
+  EvActColumnaPrincipal(this.columna);
 }

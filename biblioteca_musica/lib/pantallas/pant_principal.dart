@@ -6,6 +6,9 @@ import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_cualquiera.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_todo.dart';
+import 'package:biblioteca_musica/pantallas/reproductor/panel_reproductor.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
@@ -52,12 +55,20 @@ class PantPrincipalState extends State<PantPrincipal> {
                               child: panel == Panel.listaRepBiblioteca
                                   ? Provider(
                                       create: (context) =>
-                                          AuxiliarListaReproduccion(),
+                                          AuxiliarListaReproduccion(
+                                              context.read<
+                                                  RepositorioReproductor>(),
+                                              context.read<
+                                                  RepositorioCanciones>()),
                                       child: PanellistaRepBiblioteca())
                                   : panel == Panel.listasRep
                                       ? Provider(
                                           create: (context) =>
-                                              AuxiliarListaReproduccion(),
+                                              AuxiliarListaReproduccion(
+                                                  context.read<
+                                                      RepositorioReproductor>(),
+                                                  context.read<
+                                                      RepositorioCanciones>()),
                                           child: PanelListaRepCualquiera())
                                       : const SizedBox(),
                             ),
@@ -67,7 +78,7 @@ class PantPrincipalState extends State<PantPrincipal> {
                     ]),
                   ),
                   //const PanelBarraLog(),
-                  //const PanelReproductor()
+                  const PanelReproductor()
                 ],
               ),
             ),

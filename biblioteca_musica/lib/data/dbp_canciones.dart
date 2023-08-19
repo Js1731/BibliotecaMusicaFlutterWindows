@@ -4,10 +4,36 @@ import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:drift/drift.dart';
 
 class DBPCanciones {
+  void ordenarListaColumna(
+      List<CancionColumnas> lista, int? idColumnaOrden, bool ascendente) {
+    if (idColumnaOrden != null) {
+      if (idColumnaOrden == -1) {
+        lista.sort(
+            (a, b) => a.nombre.compareTo(b.nombre) * (ascendente ? 1 : -1));
+      } else if (idColumnaOrden == -2) {
+        lista.sort(
+            (a, b) => a.duracion.compareTo(b.duracion) * (ascendente ? 1 : -1));
+      } else {
+        lista.sort((cancionA, cancionB) {
+          String? columnaA =
+              cancionA.mapaColumnas[idColumnaOrden]?["valor_columna_nombre"];
+          final columnaB =
+              cancionB.mapaColumnas[idColumnaOrden]?["valor_columna_nombre"];
+
+          if (columnaA == null || columnaB == null) {
+            return (ascendente ? 1 : -1);
+          }
+
+          return columnaA.compareTo(columnaB) * (ascendente ? 1 : -1);
+        });
+      }
+    }
+  }
+
   Stream<List<CancionColumnas>> crearStreamListaCancion(
-      int idListaRep, List<ColumnaData> columnasLista) {
+      ListaReproduccionData listaRep, List<ColumnaData> columnasLista) {
     final streamSinFormato = appDb.customSelect(
-        'SELECT can.id as "cancion.id", can.nombre as "cancion.nombre", can.duracion as "cancion.duracion", can.estado as "cancion.estado"  FROM cancion can LEFT JOIN cancion_lista_reproduccion cl ON cl.idCancion= can.id WHERE cl.idListaRep = $idListaRep;',
+        'SELECT can.id as "cancion.id", can.nombre as "cancion.nombre", can.duracion as "cancion.duracion", can.estado as "cancion.estado"  FROM cancion can LEFT JOIN cancion_lista_reproduccion cl ON cl.idCancion= can.id WHERE cl.idListaRep = ${listaRep.id};',
         readsFrom: {
           appDb.cancion,
           appDb.cancionValorColumna,
@@ -66,7 +92,10 @@ class DBPCanciones {
               estado: estado,
               mapaColumnas: mapaValoresColumnaCancion);
         }
-        return nuevaLista.map<CancionColumnas>((e) => e!).toList();
+        final listaNoNull = nuevaLista.map<CancionColumnas>((e) => e!).toList();
+        ordenarListaColumna(
+            listaNoNull, listaRep.idColumnaOrden, listaRep.ordenAscendente);
+        return listaNoNull;
       }();
 
       return tarea;

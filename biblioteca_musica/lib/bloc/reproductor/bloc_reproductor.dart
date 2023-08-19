@@ -9,40 +9,110 @@ class BlocReproductor extends Bloc<EventoReproductor, EstadoReproductor> {
 
   BlocReproductor(this._repositorioReproductor)
       : super(const EstadoReproductor()) {
-    on<EvReproducirOrden>(_onReproducirOrden);
-    on<EvReproducirAzar>(_onReproducirAzar);
-    on<EvReproducirCancion>(_onReproducirCancion);
+    on<EvEscucharCancionReproducida>(_onEscucharCancionReproducida);
+    on<EvEscucharListaReproducida>(_onEscucharListaReproducida);
+    on<EvEscucharProgresoReproduccion>(_onEscucharProgresoReproduccion);
+    on<EvEscucharEnOrden>(_onEscucharEnOrden);
     on<EvEscucharReproductor>(_onEscucharReproductor);
+    on<EvEscucharReproduciendo>(_onEscucharReproduciendo);
+    on<EvCambiarProgreso>(_onCambiarProgreso);
+    on<EvEscucharVolumen>(_onEvEscucharVolumen);
+    on<EvCambiarVolumen>(_onEvCambiarVolumen);
+    on<EvRegresarCancion>(_onEvRegresarCancion);
+    on<EvRegresar10s>(_onRegresar10s);
+    on<EvTogglePausa>(_onTogglePausa);
+    on<EvAvanzar10s>(_onAvanzar10s);
+    on<EvAvanzarCancion>(_onAvanzarCancion);
   }
 
   void _onEscucharReproductor(
-      EvEscucharReproductor evento, Emitter<EstadoReproductor> emit) async {
-    final (streamCancionRep, streamListaRep) =
-        _repositorioReproductor.escucharReproductor();
+      EvEscucharReproductor evento, Emitter<EstadoReproductor> emit) {
+    add(EvEscucharCancionReproducida());
+    add(EvEscucharListaReproducida());
+    add(EvEscucharProgresoReproduccion());
+    add(EvEscucharEnOrden());
+    add(EvEscucharVolumen());
+    add(EvEscucharReproduciendo());
+  }
 
+  void _onEscucharCancionReproducida(EvEscucharCancionReproducida evento,
+      Emitter<EstadoReproductor> emit) async {
     ///ESCUCHAR CAMBIOS EN LA CANCION REPRODUCIDA
-    await emit.forEach(streamCancionRep,
+    await emit.forEach(_repositorioReproductor.escucharCancionReproducida(),
         onData: (nuevaCancion) =>
             state.copiarCon(nuevaCancionReproducida: nuevaCancion));
+  }
 
-    ///ESCUCHAR CAMBIOS EN LA LISTA REPRODUCIDA
-    emit.forEach(streamListaRep,
+  void _onEscucharListaReproducida(
+      EvEscucharListaReproducida event, Emitter<EstadoReproductor> emit) async {
+    await emit.forEach(_repositorioReproductor.escucharListaReproducida(),
         onData: (nuevaLista) =>
             state.copiarCon(nuevaListaRepReproducida: nuevaLista));
   }
 
-  void _onReproducirOrden(
-      EvReproducirOrden evento, Emitter<EstadoReproductor> emit) async {
-    await _repositorioReproductor.reproducirListaOrden(evento.lista);
+  void _onEscucharProgresoReproduccion(EvEscucharProgresoReproduccion event,
+      Emitter<EstadoReproductor> emit) async {
+    await emit.forEach(_repositorioReproductor.escucharProgresoReproduccion(),
+        onData: (progreso) => state.copiarCon(progRep: progreso));
   }
 
-  Future<void> _onReproducirAzar(
-      EvReproducirAzar evento, Emitter<EstadoReproductor> emit) async {
-    await _repositorioReproductor.reproducirListaAzar(evento.lista);
+  void _onEscucharEnOrden(
+      EvEscucharEnOrden event, Emitter<EstadoReproductor> emit) async {
+    await emit.forEach(_repositorioReproductor.escucharEnOrden(),
+        onData: (enOrden) => state.copiarCon(enOrd: enOrden));
   }
 
-  void _onReproducirCancion(
-      EvReproducirCancion evento, Emitter<EstadoReproductor> emit) {
-    _repositorioReproductor.reproducirCancion(evento.cancion, evento.listaRep);
+  void _onEscucharReproduciendo(
+      EvEscucharReproduciendo evento, Emitter<EstadoReproductor> emit) async {
+    await emit.forEach(_repositorioReproductor.escucharReproduciendo(),
+        onData: (reproduciendo) => state.copiarCon(rep: reproduciendo));
+  }
+
+  void _onCambiarProgreso(
+      EvCambiarProgreso event, Emitter<EstadoReproductor> emit) {
+    _repositorioReproductor.cambiarProgreso(event.nuevoProgreso);
+  }
+
+  void _onEvEscucharVolumen(
+      EvEscucharVolumen event, Emitter<EstadoReproductor> emit) async {
+    await emit.forEach(_repositorioReproductor.escucharVolumen(),
+        onData: (nuevoVolumen) => state.copiarCon(vol: nuevoVolumen));
+  }
+
+  void _onEvCambiarVolumen(
+      EvCambiarVolumen event, Emitter<EstadoReproductor> emit) {
+    _repositorioReproductor.cambiarVolumen(event.nuevoVolumen);
+  }
+
+  void _onEvRegresarCancion(
+      EvRegresarCancion event, Emitter<EstadoReproductor> emit) {
+    if (state.cancionReproducida != null) {
+      _repositorioReproductor.regresarCancion();
+    }
+  }
+
+  void _onRegresar10s(EvRegresar10s event, Emitter<EstadoReproductor> emit) {
+    if (state.cancionReproducida != null) {
+      _repositorioReproductor.regresar10s();
+    }
+  }
+
+  void _onTogglePausa(EvTogglePausa event, Emitter<EstadoReproductor> emit) {
+    if (state.cancionReproducida != null) {
+      _repositorioReproductor.togglePausar();
+    }
+  }
+
+  void _onAvanzar10s(EvAvanzar10s event, Emitter<EstadoReproductor> emit) {
+    if (state.cancionReproducida != null) {
+      _repositorioReproductor.avanzar10s();
+    }
+  }
+
+  void _onAvanzarCancion(
+      EvAvanzarCancion event, Emitter<EstadoReproductor> emit) {
+    if (state.cancionReproducida != null) {
+      _repositorioReproductor.avanzarCancion();
+    }
   }
 }

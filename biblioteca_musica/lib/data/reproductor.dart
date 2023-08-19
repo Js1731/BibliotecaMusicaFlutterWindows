@@ -2,53 +2,115 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
+import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
-import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:drift/drift.dart';
-import 'package:rxdart/rxdart.dart';
+
+import '../backend/misc/custom_stream_controller.dart';
 
 class Reproductor {
-  final BehaviorSubject<CancionData?> streamContCancionReproducida =
-      BehaviorSubject.seeded(null);
+  final CustomStreamController<CancionColumnaPrincipal?>
+      streamContCancionReproducida = CustomStreamController();
 
-  final BehaviorSubject<ListaReproduccionData?> streamContListaReproducida =
-      BehaviorSubject.seeded(null);
+  final CustomStreamController<ListaReproduccionData?>
+      streamContListaReproducida = CustomStreamController();
+
+  final CustomStreamController<int> streamContProgresoReproduccion =
+      CustomStreamController(semilla: 0);
+
+  final CustomStreamController<bool> streamContEnOrden =
+      CustomStreamController(semilla: true);
+
+  final CustomStreamController<bool> streamContReproduciendo =
+      CustomStreamController(semilla: false);
+
+  final CustomStreamController<double> streamContVolumen =
+      CustomStreamController(semilla: 1.0);
 
   List<CancionData> pilaCanciones = [];
 
-  int? idColumnaPrinc;
-  ValorColumnaData? valorColumnaPrincipal;
-
-  bool activo = false;
-  bool reproduciendo = false;
-  bool enOrden = true;
-
   int indexCancionAct = 0;
 
-  int posActual = 0;
-  int durActual = 0;
-
-  double volumen = 1;
-
   AudioPlayer player = AudioPlayer();
-  StreamSubscription? _subscriptionCanciones;
+  StreamSubscription? _subscriptionListaCanciones;
+  StreamSubscription? _subscriptionCompletarReproduccion;
 
-  void actCancionReproducida(CancionData? nuevaCancion) =>
-      streamContCancionReproducida.add(nuevaCancion);
+  void ordenarListaColumna(
+      List<CancionColumnas> lista, int? idColumnaOrden, bool ascendente) {
+    if (idColumnaOrden != null) {
+      if (idColumnaOrden == -1) {
+        lista.sort(
+            (a, b) => a.nombre.compareTo(b.nombre) * (ascendente ? 1 : -1));
+      } else if (idColumnaOrden == -2) {
+        lista.sort(
+            (a, b) => a.duracion.compareTo(b.duracion) * (ascendente ? 1 : -1));
+      } else {
+        lista.sort((cancionA, cancionB) {
+          String? columnaA =
+              cancionA.mapaColumnas[idColumnaOrden]?["valor_columna_nombre"];
+          final columnaB =
+              cancionB.mapaColumnas[idColumnaOrden]?["valor_columna_nombre"];
 
-  void actListaReproducida(ListaReproduccionData? nuevaLista) =>
-      streamContListaReproducida.add(nuevaLista);
+          if (columnaA == null || columnaB == null) {
+            return (ascendente ? 1 : -1);
+          }
 
-  CancionData? obtCancionReproducida() => streamContCancionReproducida.value;
+          return columnaA.compareTo(columnaB) * (ascendente ? 1 : -1);
+        });
+      }
+    }
+  }
 
-  ListaReproduccionData? obtListaReproducida() =>
-      streamContListaReproducida.value;
+  Future<CancionColumnaPrincipal> crearCancionColumnaPrincipal(
+      CancionData cancion, ListaReproduccionData lista) async {
+    ValorColumnaData? valorColumna;
 
-  (Stream<CancionData?>, Stream<ListaReproduccionData?>) escucharReproductor() {
-    return (
-      streamContCancionReproducida.asBroadcastStream(),
-      streamContListaReproducida.asBroadcastStream()
-    );
+    if (lista.idColumnaPrincipal != null) {
+      final resultado = await (appDb.selectOnly(appDb.cancionListaReproduccion)
+            ..join([
+              leftOuterJoin(
+                  appDb.cancionValorColumna,
+                  appDb.cancionValorColumna.idCancion
+                      .equalsExp(appDb.cancionListaReproduccion.idCancion)),
+              leftOuterJoin(
+                  appDb.valorColumna,
+                  appDb.cancionValorColumna.idValorPropiedad
+                      .equalsExp(appDb.valorColumna.id))
+            ])
+            ..where(
+                appDb.valorColumna.idColumna.equals(lista.idColumnaPrincipal!) &
+                    appDb.cancionListaReproduccion.idCancion.equals(cancion.id))
+            ..addColumns([
+              appDb.cancionListaReproduccion.idCancion,
+              appDb.cancionListaReproduccion.idListaRep,
+              appDb.valorColumna.id,
+              appDb.valorColumna.nombre,
+              appDb.valorColumna.estado,
+              appDb.valorColumna.idColumna,
+              appDb.cancionValorColumna.idCancion,
+              appDb.cancionValorColumna.idValorPropiedad
+            ]))
+          .getSingleOrNull();
+
+      valorColumna = resultado == null
+          ? null
+          : ValorColumnaData(
+              id: resultado.rawData.data["valor_columna.id"],
+              nombre: resultado.rawData.data["valor_columna.nombre"],
+              idColumna: resultado.rawData.data["valor_columna.idColumna"],
+              estado: resultado.rawData.data["valor_columna.estado"]);
+    }
+
+    return CancionColumnaPrincipal(
+        id: cancion.id,
+        nombre: cancion.nombre,
+        duracion: cancion.duracion,
+        estado: cancion.estado,
+        valorColumnaPrincipal: valorColumna
+        // ? null
+        // :
+        );
   }
 
   Future<int?> buscarIdColumnaPrincipal(int idLista) async {
@@ -67,56 +129,19 @@ class Reproductor {
     return columna.id;
   }
 
-  Future<void> reproducirLista(ListaReproduccionData lista, bool enOrd) async {
-    actListaReproducida(lista);
-    enOrden = enOrd;
+  Future<void> reproducirLista(
+      ListaReproduccionData lista,
+      bool enOrd,
+      List<CancionColumnas> nuevaListaCanciones,
+      Stream<List<CancionColumnas>> streamCanciones) async {
+    streamContEnOrden.actStream(enOrd);
 
-    if (_subscriptionCanciones != null) {
-      await _subscriptionCanciones!.cancel();
+    if (streamContListaReproducida.obtenerUltimo()?.id != lista.id) {
+      await actStreamListaCanciones(streamCanciones, nuevaListaCanciones);
     }
+    streamContListaReproducida.actStream(lista);
 
-    if (obtListaReproducida()?.id == listaRepBiblioteca.id) {
-      final streamFinal = appDb.select(appDb.cancion).watch();
-
-      _subscriptionCanciones = streamFinal.listen((lista) {
-        pilaCanciones.clear();
-        pilaCanciones.addAll(lista);
-        if (!enOrden) {
-          pilaCanciones.shuffle();
-        }
-      });
-
-      await streamFinal.first;
-    } else {
-      final streamBase = (appDb.select(appDb.cancion).join([
-        leftOuterJoin(
-            appDb.cancionListaReproduccion,
-            appDb.cancionListaReproduccion.idCancion
-                .equalsExp(appDb.cancion.id))
-      ])
-            ..where(appDb.cancionListaReproduccion.idListaRep
-                .equals((obtListaReproducida())!.id)))
-          .watch();
-
-      final streamFinal = streamBase.map((lista) => lista
-          .map((cancion) => CancionData(
-              id: cancion.rawData.data["cancion.id"],
-              nombre: cancion.rawData.data["cancion.nombre"],
-              duracion: cancion.rawData.data["cancion.duracion"],
-              estado: cancion.rawData.data["cancion.estado"]))
-          .toList());
-
-      streamFinal.listen((lista) {
-        pilaCanciones.clear();
-        pilaCanciones.addAll(lista);
-        if (!enOrden) {
-          pilaCanciones.shuffle();
-        }
-      });
-      await streamFinal.first;
-    }
-
-    if (enOrden) {
+    if (streamContEnOrden.obtenerUltimo()!) {
       await _reproducirCancionPos(0);
     } else {
       await moverCancionFinalPila(pilaCanciones.last);
@@ -129,14 +154,44 @@ class Reproductor {
   ///del [ProviderGeneral].
   ///Si el modo de reproduccion es al azar, se mueve la cancion a reproducir al final de la pila de canciones y se reproduce.
   Future<void> reproducirCancion(
-      CancionData cancion, ListaReproduccionData lista) async {
-    actListaReproducida(lista);
+      CancionData cancion,
+      ListaReproduccionData lista,
+      List<CancionColumnas> nuevaListaCanciones,
+      Stream<List<CancionColumnas>> streamCanciones) async {
+    final val = streamContListaReproducida.obtenerUltimo();
+    if (val?.id != lista.id || pilaCanciones.isEmpty) {
+      await actStreamListaCanciones(streamCanciones, nuevaListaCanciones);
+    }
+    streamContListaReproducida.actStream(lista);
 
-    if (enOrden) {
+    if (streamContEnOrden.obtenerUltimo()!) {
       int pos = pilaCanciones.indexWhere((can) => can.id == cancion.id);
       await _reproducirCancionPos(pos);
     } else {
       await moverCancionInicioPila(cancion);
+    }
+  }
+
+  Future<void> actStreamListaCanciones(Stream<List<CancionColumnas>> stream,
+      List<CancionColumnas> lstCanciones) async {
+    if (_subscriptionListaCanciones != null) {
+      await _subscriptionListaCanciones!.cancel();
+    }
+
+    _subscriptionListaCanciones = stream.listen((lista) {
+      pilaCanciones.clear();
+      pilaCanciones.addAll(lista.map((e) => CancionData(
+          id: e.id, nombre: e.nombre, duracion: e.duracion, estado: e.estado)));
+      if (!streamContEnOrden.obtenerUltimo()!) {
+        pilaCanciones.shuffle();
+      }
+    });
+
+    pilaCanciones.clear();
+    pilaCanciones.addAll(lstCanciones.map((e) => CancionData(
+        id: e.id, nombre: e.nombre, duracion: e.duracion, estado: e.estado)));
+    if (!streamContEnOrden.obtenerUltimo()!) {
+      pilaCanciones.shuffle();
     }
   }
 
@@ -163,8 +218,6 @@ class Reproductor {
     indexCancionAct = pos;
     CancionData cancion = pilaCanciones[indexCancionAct];
 
-    streamContCancionReproducida.add(cancion);
-
     await empezarReproduccion(cancion);
   }
 
@@ -174,7 +227,7 @@ class Reproductor {
   ///Si el modo de reproduccion es al azar,  se reproduce el Tope de la pila de canciones y se mueve al final.
   Future<void> reproducirSiguiente() async {
     int tamLista = pilaCanciones.length;
-    if (enOrden) {
+    if (streamContEnOrden.obtenerUltimo()!) {
       int proxId = indexCancionAct + 1;
       if (proxId == tamLista) {
         proxId = 0;
@@ -187,85 +240,91 @@ class Reproductor {
 
   ///Empieza a reproducir la lista indicada.
   Future<void> empezarReproduccion(CancionData can) async {
-    streamContCancionReproducida.add(can);
+    streamContCancionReproducida.actStream(await crearCancionColumnaPrincipal(
+        can, streamContListaReproducida.obtenerUltimo()!));
 
-    player.dispose();
-    player = AudioPlayer();
-    player.setVolume(volumen);
+    streamContReproduciendo.actStream(true);
 
-    await player.play(DeviceFileSource(rutaCan((obtCancionReproducida()!.id))));
-    reproduciendo = true;
-    activo = true;
+    if (_subscriptionCompletarReproduccion != null) {
+      await _subscriptionCompletarReproduccion!.cancel();
+    }
 
-    player.onPlayerComplete.listen((event) {
-      player.stop();
-      reproducirSiguiente();
+    if (player.state != PlayerState.completed) {
+      await player.stop();
+    }
+    await player.play(DeviceFileSource(
+        rutaCan((streamContCancionReproducida.obtenerUltimo()!.id))));
+
+    _subscriptionCompletarReproduccion =
+        player.onPlayerComplete.listen((event) async {
+      await reproducirSiguiente();
     });
 
     player.onPositionChanged.listen((Duration duracion) async {
-      posActual = duracion.inSeconds;
-      durActual = (await player.getDuration())?.inSeconds ?? 0;
+      streamContProgresoReproduccion.actStream(duracion.inSeconds);
     });
   }
 
   Future<void> detener() async {
     await player.stop();
-    streamContCancionReproducida.add(null);
 
-    actCancionReproducida(null);
+    streamContCancionReproducida.actStream(null);
   }
 
   void pausarReanudar() {
-    if (reproduciendo) {
+    if (streamContReproduciendo.obtenerUltimo()!) {
       pausar();
     } else {
       reanudar();
     }
 
-    reproduciendo = !reproduciendo;
+    streamContReproduciendo
+        .actStream(!streamContReproduciendo.obtenerUltimo()!);
   }
 
   void pausar() async {
-    if (await obtCancionReproducida() != null) {
+    if (streamContCancionReproducida.obtenerUltimo() != null) {
       player.pause();
     }
   }
 
   void reanudar() async {
-    if (await obtCancionReproducida() != null) {
+    if (streamContCancionReproducida.obtenerUltimo() != null) {
       player.resume();
     }
   }
 
   Future<void> moverA(Duration dur) async {
-    if (await obtCancionReproducida() != null) {
+    if (streamContCancionReproducida.obtenerUltimo() != null) {
       await player.seek(dur);
     }
   }
 
   Future<void> adelantar10s() async {
-    if (await obtCancionReproducida() != null) {
-      await player
-          .seek(Duration(seconds: (posActual + 10).clamp(0, durActual)));
+    if (streamContCancionReproducida.obtenerUltimo() != null) {
+      await player.seek(Duration(
+          seconds: (streamContProgresoReproduccion.obtenerUltimo()! + 10).clamp(
+              0, streamContCancionReproducida.obtenerUltimo()!.duracion)));
     }
   }
 
   Future<void> regresar10s() async {
-    if (await obtCancionReproducida() != null) {
-      await player
-          .seek(Duration(seconds: (posActual - 10).clamp(0, durActual)));
+    if (streamContCancionReproducida.obtenerUltimo() != null) {
+      await player.seek(Duration(
+          seconds: (streamContProgresoReproduccion.obtenerUltimo()! - 10).clamp(
+              0, streamContCancionReproducida.obtenerUltimo()!.duracion)));
     }
   }
 
   Future<void> cambiarVolumen(double nuevoVolumen) async {
-    volumen = nuevoVolumen;
-    await player.setVolume(volumen);
+    streamContVolumen.actStream(nuevoVolumen);
+    await player.setVolume(nuevoVolumen);
   }
 
   Future<void> reproducirAnterior() async {
-    if (await obtListaReproducida() == null) return;
+    if (streamContListaReproducida.obtenerUltimo() == null) return;
 
-    if (enOrden) {
+    if (streamContEnOrden.obtenerUltimo()!) {
       var nuevaPos = indexCancionAct - 1;
       nuevaPos = nuevaPos < 0 ? (pilaCanciones.length - 1) : nuevaPos;
       await _reproducirCancionPos(nuevaPos);

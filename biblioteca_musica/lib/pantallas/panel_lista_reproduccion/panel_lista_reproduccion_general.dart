@@ -1,5 +1,6 @@
 import 'package:biblioteca_musica/backend/controles/control_panel_lista_reproduccion.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
@@ -64,7 +65,8 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
         final listaSel = datos.item2;
         final mapaCancionesSel = datos.item3;
 
-        return BlocSelector<BlocReproductor, EstadoReproductor, CancionData?>(
+        return BlocSelector<BlocReproductor, EstadoReproductor,
+                CancionColumnaPrincipal?>(
             selector: (state) => state.cancionReproducida,
             builder: (context, cancionReproducida) {
               return Padding(

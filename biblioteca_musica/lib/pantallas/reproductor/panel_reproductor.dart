@@ -1,15 +1,15 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/misc/archivos.dart';
+import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
-import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
-import 'package:biblioteca_musica/main.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/widgets/btn_accion_reproductor.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class PanelReproductor extends StatefulWidget {
   const PanelReproductor({super.key});
@@ -24,13 +24,10 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<ProviderReproductor,
-        Tuple2<CancionData?, ValorColumnaData?>>(
-      selector: (_, provRep) => Tuple2(null, provRep.valorColumnaPrincipal),
-      builder: (_, datos, __) {
-        final cancionRep = datos.item1;
-        final valorColumnaPrincipal = datos.item2;
-
+    return BlocSelector<BlocReproductor, EstadoReproductor,
+        CancionColumnaPrincipal?>(
+      selector: (state) => state.cancionReproducida,
+      builder: (context, cancionRep) {
         return Container(
           height: 100,
           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -39,74 +36,67 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
               color: DecoColores.rosa, borderRadius: BorderRadius.circular(20)),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Selector<ProviderReproductor, int>(
-                      selector: (_, provRep) => provRep.posActual,
-                      builder: (_, pos, __) {
-                        return TextoPer(
-                            texto:
-                                duracionString(Duration(seconds: pos.toInt())),
+              BlocSelector<BlocReproductor, EstadoReproductor, int>(
+                  selector: (state) => state.progresoReproduccion,
+                  builder: (context, progresoRep) {
+                    return Row(
+                      children: [
+                        TextoPer(
+                            texto: duracionString(
+                                Duration(seconds: progresoRep.toInt())),
                             tam: 10,
-                            color: Colors.white);
-                      }),
-                  Expanded(
-                    child: SliderTheme(
-                        data: const SliderThemeData(
-                            showValueIndicator: ShowValueIndicator.always,
-                            overlayShape:
-                                RoundSliderOverlayShape(overlayRadius: 15)),
-                        child: Selector<ProviderReproductor, Tuple2<int, int>>(
-                            selector: (_, provRep) =>
-                                Tuple2(provRep.posActual, provRep.durActual),
-                            builder: (_, datos, __) {
-                              final posActualCancion = datos.item1;
-                              final durTotal = datos.item2;
+                            color: Colors.white),
+                        Expanded(
+                          child: SliderTheme(
+                              data: const SliderThemeData(
+                                  showValueIndicator: ShowValueIndicator.always,
+                                  overlayShape: RoundSliderOverlayShape(
+                                      overlayRadius: 15)),
+                              child: Builder(builder: (_) {
+                                final durTotal = cancionRep?.duracion ?? 0;
 
-                              if (!moviendoSlider) {
-                                posActual = posActualCancion.toDouble();
-                              }
+                                if (!moviendoSlider) {
+                                  posActual = 0.0 + progresoRep;
+                                }
 
-                              return Slider(
-                                activeColor: Deco.cGray0,
-                                inactiveColor: Deco.cGray1,
-                                thumbColor: Colors.white,
-                                value: posActual,
-                                label: duracionString(
-                                    Duration(seconds: posActual.toInt())),
-                                min: 0,
-                                max: (durTotal < 0 ? 0 : durTotal).toDouble(),
-                                onChangeStart: (posArrastrado) {
-                                  moviendoSlider = true;
-                                  posActual = posArrastrado;
-                                },
-                                onChangeEnd: (posArrastrado) async {
-                                  posActual = posArrastrado;
-
-                                  await provReproductor.moverA(Duration(
-                                      microseconds:
-                                          (posActual * 1000000).toInt()));
-                                  moviendoSlider = false;
-                                },
-                                onChanged: (posArrastrado) {
-                                  setState(() {
+                                return Slider(
+                                  activeColor: Deco.cGray0,
+                                  inactiveColor: Colors.black,
+                                  thumbColor: Colors.white,
+                                  value: posActual,
+                                  label: duracionString(
+                                      Duration(seconds: posActual.toInt())),
+                                  min: 0,
+                                  max: (durTotal < 0 ? 0 : durTotal).toDouble(),
+                                  onChangeStart: (posArrastrado) {
+                                    moviendoSlider = true;
                                     posActual = posArrastrado;
-                                  });
-                                },
-                              );
-                            })),
-                  ),
-                  Selector<ProviderReproductor, int>(
-                      selector: (_, provRep) => provRep.durActual,
-                      builder: (_, durTotal, __) {
-                        return TextoPer(
-                            texto: duracionString(Duration(
-                                seconds: (durTotal < 0 ? 0 : durTotal))),
+                                  },
+                                  onChangeEnd: (posArrastrado) async {
+                                    posActual = posArrastrado;
+
+                                    context.read<BlocReproductor>().add(
+                                        EvCambiarProgreso(
+                                            posArrastrado.toInt()));
+
+                                    moviendoSlider = false;
+                                  },
+                                  onChanged: (posArrastrado) {
+                                    setState(() {
+                                      posActual = posArrastrado;
+                                    });
+                                  },
+                                );
+                              })),
+                        ),
+                        TextoPer(
+                            texto: duracionString(
+                                Duration(seconds: (cancionRep?.duracion ?? 0))),
                             tam: 10,
-                            color: Colors.white);
-                      })
-                ],
-              ),
+                            color: Colors.white)
+                      ],
+                    );
+                  }),
               Row(
                 children: [
                   const Spacer(),
@@ -119,38 +109,48 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                     decoration: BoxDecoration(
                         color: DecoColores.rosaOscuro,
                         borderRadius: BorderRadius.circular(10)),
-                    child: Row(
-                      children: [
-                        ImagenRectRounded(
-                            sombra: false,
-                            radio: 10,
-                            tam: 60,
-                            url: valorColumnaPrincipal != null
-                                ? rutaImagen(valorColumnaPrincipal.id)
-                                : null),
-                        const SizedBox(width: 10),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 250,
-                              child: TextoPer(
-                                texto: cancionRep?.nombre ?? "--",
-                                tam: 20,
-                                color: Colors.white,
-                                weight: FontWeight.normal,
+                    child: BlocSelector<BlocReproductor, EstadoReproductor,
+                            CancionColumnaPrincipal?>(
+                        selector: (state) => state.cancionReproducida,
+                        builder: (context, cancionRep) {
+                          return Row(
+                            children: [
+                              ImagenRectRounded(
+                                sombra: false,
+                                radio: 10,
+                                tam: 60,
+                                // url: valorColumnaPrincipal != null
+                                //     ? rutaImagen(valorColumnaPrincipal.id)
+                                //     : null
                               ),
-                            ),
-                            TextoPer(
-                              texto: valorColumnaPrincipal?.nombre ?? "---",
-                              tam: 14,
-                              color: Deco.cGray1,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
+                              const SizedBox(width: 10),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 250,
+                                    child: TextoPer(
+                                      texto: cancionRep?.nombre ?? "--",
+                                      tam: 20,
+                                      color: Colors.white,
+                                      weight: FontWeight.normal,
+                                    ),
+                                  ),
+                                  TextoPer(
+                                    texto: cancionRep != null
+                                        ? cancionRep.valorColumnaPrincipal
+                                                ?.nombre ??
+                                            "---"
+                                        : "---",
+                                    tam: 14,
+                                    color: Deco.cGray1,
+                                  )
+                                ],
+                              )
+                            ],
+                          );
+                        }),
                   ),
 
                   const SizedBox(width: 20),
@@ -177,9 +177,10 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                                     color: DecoColores.rosaOscuro,
                                     border: Border.all(color: Deco.cGray1),
                                     borderRadius: BorderRadius.circular(30)),
-                                child: Selector<ProviderReproductor, double>(
-                                    selector: (_, provRep) => provRep.volumen,
-                                    builder: (_, volumen, __) {
+                                child: BlocSelector<BlocReproductor,
+                                        EstadoReproductor, double>(
+                                    selector: (state) => state.volumen,
+                                    builder: (_, volumen) {
                                       return Row(
                                         children: [
                                           Icon(
@@ -209,9 +210,10 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                                                   max: 1,
                                                   onChanged:
                                                       (nuevoVolumen) async {
-                                                    await provReproductor
-                                                        .cambiarVolumen(
-                                                            nuevoVolumen);
+                                                    context
+                                                        .read<BlocReproductor>()
+                                                        .add(EvCambiarVolumen(
+                                                            nuevoVolumen));
                                                   },
                                                 )),
                                           ),
@@ -226,66 +228,74 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                                     border: Border.all(color: Deco.cGray1),
                                     color: DecoColores.rosaOscuro,
                                     borderRadius: BorderRadius.circular(30)),
-                                child: Selector<ProviderReproductor,
-                                        Tuple2<bool, bool>>(
-                                    selector: (_, provRep) => Tuple2(
-                                        provRep.activo, provRep.reproduciendo),
-                                    builder: (_, data, __) {
-                                      final activo = data.item1;
-                                      final reproduciendo = data.item2;
+                                child: BlocSelector<BlocReproductor,
+                                        EstadoReproductor, bool>(
+                                    selector: (state) => state.reproduciendo,
+                                    builder: (_, reproduciendo) {
                                       return Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           BtnAccionReproductor(
-                                              enabled: reproduciendo || activo,
+                                              pausado: reproduciendo,
+                                              enabled: cancionRep != null,
                                               icono: Icons.skip_previous,
                                               onPressed: (_) async {
-                                                await provReproductor
-                                                    .reproducirAnterior();
+                                                context
+                                                    .read<BlocReproductor>()
+                                                    .add(EvRegresarCancion());
                                               }),
                                           const SizedBox(width: 5),
                                           BtnAccionReproductor(
-                                              enabled: reproduciendo || activo,
+                                              pausado: reproduciendo,
+                                              enabled: cancionRep != null,
                                               icono: Icons.fast_rewind,
                                               onPressed: (_) async {
-                                                await provReproductor
-                                                    .regresar10s();
+                                                context
+                                                    .read<BlocReproductor>()
+                                                    .add(EvRegresar10s());
                                               }),
                                           const SizedBox(width: 5),
                                           BtnAccionReproductor(
-                                              enabled: reproduciendo || activo,
+                                              pausado: reproduciendo,
+                                              enabled: cancionRep != null,
                                               icono: reproduciendo
                                                   ? Icons.pause
                                                   : Icons.play_arrow,
                                               onPressed: (_) async {
-                                                provReproductor
-                                                    .pausarReanudar();
+                                                context
+                                                    .read<BlocReproductor>()
+                                                    .add(EvTogglePausa());
                                               }),
                                           const SizedBox(width: 5),
                                           BtnAccionReproductor(
-                                              enabled: reproduciendo || activo,
+                                              pausado: reproduciendo,
+                                              enabled: cancionRep != null,
                                               icono: Icons.fast_forward,
                                               onPressed: (_) async {
-                                                await provReproductor
-                                                    .adelantar10s();
+                                                context
+                                                    .read<BlocReproductor>()
+                                                    .add(EvAvanzar10s());
                                               }),
                                           const SizedBox(width: 5),
                                           BtnAccionReproductor(
-                                              enabled: reproduciendo || activo,
+                                              pausado: reproduciendo,
+                                              enabled: cancionRep != null,
                                               icono: Icons.skip_next,
                                               onPressed: (_) async {
-                                                await provReproductor
-                                                    .reproducirSiguiente();
+                                                context
+                                                    .read<BlocReproductor>()
+                                                    .add(EvAvanzarCancion());
                                               }),
                                         ],
                                       );
                                     }),
                               ),
                               const Spacer(),
-                              Selector<ProviderReproductor, bool>(
-                                  selector: (_, provRep) => provRep.enOrden,
-                                  builder: (_, enOrden, __) {
+                              BlocSelector<BlocReproductor, EstadoReproductor,
+                                      bool>(
+                                  selector: (state) => state.enOrden,
+                                  builder: (_, enOrden) {
                                     return AnimatedSwitcher(
                                         duration:
                                             const Duration(milliseconds: 150),

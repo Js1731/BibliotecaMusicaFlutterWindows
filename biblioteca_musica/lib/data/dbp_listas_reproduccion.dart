@@ -52,4 +52,10 @@ class DBPListasReproduccion {
           ..where((tbl) => tbl.id.equals(idListaRep)))
         .go();
   }
+
+  void actColumnaPrincipal(int idColumna, int idListaRep) async {
+    appDb.update(appDb.listaReproduccion)
+      ..where((tbl) => tbl.id.equals(idListaRep))
+      ..write(ListaReproduccionCompanion(idColumnaPrincipal: Value(idColumna)));
+  }
 }

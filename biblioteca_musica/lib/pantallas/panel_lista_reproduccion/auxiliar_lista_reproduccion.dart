@@ -1,4 +1,5 @@
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_asignar_valores_columnas.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_columnas.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
@@ -9,9 +10,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../backend/datos/AppDb.dart';
 import '../../bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import '../../repositorios/repositorio_reproductor.dart';
 import '../../widgets/dialogos/dialogo_seleccionar_valor_columna.dart';
 
 class AuxiliarListaReproduccion {
+  final RepositorioReproductor _repositorioReproductor;
+  final RepositorioCanciones _repositorioCanciones;
+
+  AuxiliarListaReproduccion(
+      this._repositorioReproductor, this._repositorioCanciones);
+
   Future<void> importarCanciones(BuildContext context) async {
     FilePickerResult? lstArchivosSeleccionados =
         await FilePicker.platform.pickFiles(allowMultiple: true);
@@ -53,11 +61,15 @@ class AuxiliarListaReproduccion {
     if (resultados == null) return;
 
     final List<ColumnaData> columnas = resultados["columnas"];
-    final columnaPrincipal = resultados["colPrincipal"];
+    final ColumnaData? columnaPrincipal = resultados["colPrincipal"];
 
     if (context.mounted) {
       final bloc = context.read<BlocListaReproduccionSeleccionada>();
       bloc.add(EvActColumnasLista(columnas.map((e) => e.id).toList()));
+
+      if (columnaPrincipal != null) {
+        bloc.add(EvActColumnaPrincipal(columnaPrincipal));
+      }
     }
   }
 
@@ -95,5 +107,37 @@ class AuxiliarListaReproduccion {
                   .toList(),
               cancion.id));
     }
+  }
+
+  Future<void> reproducirCancion(
+      BuildContext context, CancionData cancion) async {
+    await _repositorioReproductor.reproducirCancion(
+        cancion,
+        context
+            .read<BlocListaReproduccionSeleccionada>()
+            .state
+            .listaReproduccionSeleccionada,
+        context.read<BlocListaReproduccionSeleccionada>().state.listaCanciones,
+        _repositorioCanciones.obtStreamCanciones()!);
+  }
+
+  Future<void> reproducirListaEnOrden(BuildContext context) async {
+    await _repositorioReproductor.reproducirListaOrden(
+        context
+            .read<BlocListaReproduccionSeleccionada>()
+            .state
+            .listaReproduccionSeleccionada,
+        context.read<BlocListaReproduccionSeleccionada>().state.listaCanciones,
+        _repositorioCanciones.obtStreamCanciones()!);
+  }
+
+  Future<void> reproducirListaAzar(BuildContext context) async {
+    await _repositorioReproductor.reproducirListaAzar(
+        context
+            .read<BlocListaReproduccionSeleccionada>()
+            .state
+            .listaReproduccionSeleccionada,
+        context.read<BlocListaReproduccionSeleccionada>().state.listaCanciones,
+        _repositorioCanciones.obtStreamCanciones()!);
   }
 }

@@ -6,7 +6,6 @@ import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
@@ -144,16 +143,15 @@ class ItemCancion extends BtnGenerico {
           if (cancion.estado == estadoSync ||
               cancion.estado == estadoLocal ||
               cancion.estado == estadoLocal) {
-            context.read<BlocReproductor>().add(EvReproducirCancion(
-                CancionData(
-                    id: cancion.id,
-                    nombre: cancion.nombre,
-                    duracion: cancion.duracion,
-                    estado: cancion.estado),
-                context
-                    .read<BlocListaReproduccionSeleccionada>()
-                    .state
-                    .listaReproduccionSeleccionada));
+            print("Empezar Evento por click");
+            await context.read<AuxiliarListaReproduccion>().reproducirCancion(
+                  context,
+                  CancionData(
+                      id: cancion.id,
+                      nombre: cancion.nombre,
+                      duracion: cancion.duracion,
+                      estado: cancion.estado),
+                );
           }
         }, onRightPressed: (context, position) async {
           List<PopupMenuEntry<int>> lstOpciones = [
