@@ -1,13 +1,18 @@
 import 'package:biblioteca_musica/backend/controles/control_panel_columna_lateral.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/CustomPainterAgregarLista.dart';
-import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
-import 'package:biblioteca_musica/pantallas/item_columna.dart';
+import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/columna_seleccionada/estado_columna_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/cubit_columnas.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+
+import 'item_columna.dart';
 
 class PanelColumnasLateral extends StatefulWidget {
   const PanelColumnasLateral({super.key});
@@ -17,16 +22,6 @@ class PanelColumnasLateral extends StatefulWidget {
 }
 
 class EstadoPanelColumnasLateral extends State<PanelColumnasLateral> {
-  ContPanelColumnaLateral controlador = ContPanelColumnaLateral();
-  late Stream<List<ColumnaData>> streamColumnas;
-
-  @override
-  void initState() {
-    super.initState();
-
-    streamColumnas = controlador.crearStreamPropiedades();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,25 +67,32 @@ class EstadoPanelColumnasLateral extends State<PanelColumnasLateral> {
 
           //LISTA DE COLUMNAS
           Expanded(
-              child: StreamBuilder<List<ColumnaData>>(
-            stream: streamColumnas,
-            builder: (context, snapshot) => snapshot.hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final columna = snapshot.data![index];
-                      return ItemColumna(
-                        columna: columna,
-                        onPressed: (_) {
-                          Provider.of<ProviderPanelColumnas>(context,
-                                  listen: false)
-                              .seleccionarColumna(columna);
-                        },
-                      );
-                    },
-                  )
-                : const SizedBox(),
-          ))
+              child: BlocSelector<BlocColumnaSeleccionada,
+                      EstadoColumnaSeleccionada, ColumnaData?>(
+                  selector: (state) => state.columnaSeleccionada,
+                  builder: (context, columnaSeleccionada) {
+                    return BlocSelector<BlocColumnasSistema,
+                            EstadoColumnasSistema, List<ColumnaData>>(
+                        selector: (state) => state.columnas,
+                        builder: (context, columnas) {
+                          return ListView.builder(
+                            itemCount: columnas.length,
+                            itemBuilder: (context, index) {
+                              final columna = columnas[index];
+                              return ItemColumna(
+                                seleccionada:
+                                    columnaSeleccionada?.id == columna.id,
+                                columna: columna,
+                                onPressed: (_) {
+                                  context
+                                      .read<BlocColumnaSeleccionada>()
+                                      .add(EvSeleccionarColumna(columna));
+                                },
+                              );
+                            },
+                          );
+                        });
+                  }))
         ],
       ),
     );

@@ -1,9 +1,10 @@
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
+import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 ///Boton ubicado en el PanelLateral, Se utiliza para acceder a paneles adicionales, como Opciones, Columnas, etc.
@@ -16,9 +17,9 @@ class ItemPanelLateralSubMenu extends BtnGenerico {
       required IconData icono,
       super.key})
       : super(
-            builder: (hover, context) => Selector<ProviderGeneral, Panel?>(
-                selector: (_, p) => p.panelSel,
-                builder: (context, panelSel, child) {
+            builder: (hover, context) =>
+                BlocBuilder<CubitPanelSeleccionado, Panel?>(
+                    builder: (context, panelSel) {
                   return Container(
                     margin: EdgeInsets.only(
                       top: 2,
@@ -68,9 +69,6 @@ class ItemPanelLateralSubMenu extends BtnGenerico {
                   );
                 }),
             onPressed: (context) async {
-              provGeneral.cambiarPanelCentral(panel);
-              Provider.of<ProviderPanelColumnas>(context, listen: false)
-                  .seleccionarColumna(
-                      (await provGeneral.obtTodasColumnas()).first);
+              context.read<CubitPanelSeleccionado>().cambiarPanel(panel);
             });
 }

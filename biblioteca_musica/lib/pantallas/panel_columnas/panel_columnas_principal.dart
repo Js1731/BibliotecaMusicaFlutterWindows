@@ -1,9 +1,10 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
-import 'package:biblioteca_musica/pantallas/panel_columnas_central.dart';
-import 'package:biblioteca_musica/pantallas/panel_columnas_lateral.dart';
+import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/columna_seleccionada/estado_columna_seleccionada.dart';
+import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_central.dart';
+import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_lateral.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PanelColumnasPrincipal extends StatefulWidget {
   const PanelColumnasPrincipal({super.key});
@@ -17,9 +18,10 @@ class EstadoPanelColumnasPrincipal extends State<PanelColumnasPrincipal> {
   Widget build(BuildContext context) {
     return Row(children: [
       const PanelColumnasLateral(),
-      Selector<ProviderPanelColumnas, ColumnaData?>(
-          selector: (_, provPanelProp) => provPanelProp.tipoPropiedadSel,
-          builder: (_, columnaSel, __) => Expanded(
+      BlocSelector<BlocColumnaSeleccionada, EstadoColumnaSeleccionada,
+              ColumnaData?>(
+          selector: (state) => state.columnaSeleccionada,
+          builder: (_, columnaSel) => Expanded(
               child: columnaSel != null
                   ? const PanelColumnasCentral()
                   : const SizedBox()))

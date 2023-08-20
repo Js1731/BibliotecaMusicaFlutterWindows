@@ -6,6 +6,8 @@ import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
 import 'package:biblioteca_musica/backend/providers/provider_log.dart';
 import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
+import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/evento_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
@@ -85,7 +87,10 @@ Future<void> main() async {
                   context.read<RepositorioCanciones>(),
                   context.read<RepositorioColumnas>(),
                   context.read<RepositorioListasReproduccion>())
-                ..add(EvSeleccionarLista(listaRepBiblioteca)))
+                ..add(EvSeleccionarLista(listaRepBiblioteca))),
+          BlocProvider(
+              create: (context) =>
+                  BlocColumnaSeleccionada(context.read<RepositorioColumnas>()))
         ], child: const MyApp())),
   );
 

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/pantallas/item_valor_columna.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
 import 'package:biblioteca_musica/widgets/btn_color.dart';
 import 'package:biblioteca_musica/widgets/dialogos/abrir_dialogo.dart';
@@ -11,6 +10,8 @@ import 'package:biblioteca_musica/widgets/form/txt_field.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
+
+import '../../pantallas/panel_columnas/item_valor_columna.dart';
 
 ///Abre un dialogo para que el usuario edite la imagen y el nombre de un [ValorColumna].
 ///

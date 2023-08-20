@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/panel_lateral/estado_panel_lateral.dart';
+import 'item_panel_lateral_sub_menu.dart';
 
 ///Panel donde se puede seleccionar una Lista de reproduccion para ver sus canciones y cualquier Panel Adicional.
 
@@ -205,23 +206,23 @@ class _ConstructorPanelLateral extends StatelessWidget {
                             }),
 
                             //BOTON PARA MOSTRAR INTERFAZ DE JUEGOS
-                            // ItemPanelLateralSubMenu(
-                            //   texto: "Columnas",
-                            //   icono: Icons.library_books,
-                            //   panel: Panel.propiedades,
-                            //   colorPanel: DecoColores.rosa,
-                            //   colorTextoSel: Colors.white,
-                            // ),
+                            ItemPanelLateralSubMenu(
+                              texto: "Columnas",
+                              icono: Icons.library_books,
+                              panel: Panel.propiedades,
+                              colorPanel: DecoColores.rosa,
+                              colorTextoSel: Colors.white,
+                            ),
 
-                            // const SizedBox(height: 5),
+                            const SizedBox(height: 5),
 
-                            // //BOTON PARA MOSTRAR INTERFAZ DE CONFIGURACION
-                            // ItemPanelLateralSubMenu(
-                            //   texto: "Ajustes",
-                            //   icono: Icons.settings,
-                            //   panel: Panel.ajustes,
-                            //   colorPanel: Colors.white,
-                            // ),
+                            //BOTON PARA MOSTRAR INTERFAZ DE CONFIGURACION
+                            ItemPanelLateralSubMenu(
+                              texto: "Ajustes",
+                              icono: Icons.settings,
+                              panel: Panel.ajustes,
+                              colorPanel: Colors.white,
+                            ),
                           ],
                         ),
                       ),

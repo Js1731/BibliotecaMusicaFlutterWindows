@@ -17,4 +17,9 @@ class RepositorioColumnas {
   Stream<List<ColumnaData>> crearStreamColumnas() {
     return _dbpColumnas.crearStreamColumnas();
   }
+
+  Stream<List<ValorColumnaData>> crearStreamValoresColumna(
+      ColumnaData columna) {
+    return _dbpColumnas.crearStreamValorColumna(columna);
+  }
 }

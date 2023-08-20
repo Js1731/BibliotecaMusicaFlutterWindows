@@ -33,4 +33,10 @@ class DBPColumnas {
   Future<List<ColumnaData>> obtColumnasSistema() async {
     return await (appDb.select(appDb.columna)).get();
   }
+
+  Stream<List<ValorColumnaData>> crearStreamValorColumna(ColumnaData columna) {
+    return (appDb.select(appDb.valorColumna)
+          ..where((tbl) => tbl.idColumna.equals(columna.id)))
+        .watch();
+  }
 }
