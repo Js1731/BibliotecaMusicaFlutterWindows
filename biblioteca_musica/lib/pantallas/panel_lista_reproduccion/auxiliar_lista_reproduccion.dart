@@ -1,4 +1,5 @@
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_asignar_valores_columnas.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_columnas.dart';
@@ -139,5 +140,18 @@ class AuxiliarListaReproduccion {
             .listaReproduccionSeleccionada,
         context.read<BlocListaReproduccionSeleccionada>().state.listaCanciones,
         _repositorioCanciones.obtStreamCanciones()!);
+  }
+
+  Future<void> eliminarLista(BuildContext context) async {
+    bool? confirmar = await abrirDialogoConfirmar(
+        context,
+        "Eliminar ${context.read<BlocListaReproduccionSeleccionada>().state.listaReproduccionSeleccionada.nombre}",
+        "¿Estas seguro?");
+
+    if (confirmar == null) return;
+
+    if (context.mounted) {
+      context.read<BlocListaReproduccionSeleccionada>().add(EvEliminarLista());
+    }
   }
 }

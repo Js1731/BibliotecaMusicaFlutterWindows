@@ -1,7 +1,4 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/misc/CustomPainterAgregarLista.dart';
-import 'package:biblioteca_musica/backend/misc/CustomPainterKOPI.dart';
-import 'package:biblioteca_musica/backend/misc/CustomPainterPanelLateral.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
@@ -20,6 +17,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/panel_lateral/estado_panel_lateral.dart';
+import '../../painters/custom_painter_agregar_lista.dart';
+import '../../painters/custom_painter_KOPI.dart';
+import '../../painters/custom_painter_panel_lateral.dart';
 import 'item_panel_lateral_sub_menu.dart';
 
 ///Panel donde se puede seleccionar una Lista de reproduccion para ver sus canciones y cualquier Panel Adicional.

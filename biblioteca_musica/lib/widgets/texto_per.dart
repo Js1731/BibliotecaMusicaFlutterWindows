@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class TextoPer extends Text {
   TextoPer(
       {required String texto,
-      required double tam,
+      double tam = 12,
       FontWeight weight = FontWeight.normal,
       TextAlign align = TextAlign.left,
       Color? color,

@@ -14,14 +14,14 @@ class CustomPainterAgregarLista extends CustomPainter {
         size.height / 2,
         Paint()
           ..color = hover
-              ? aumnetarBrillo(DecoColores.rosaClaro, 20)
+              ? aumnetarBrillo(DecoColores.rosaClaro, 0.2)
               : DecoColores.rosaClaro);
     canvas.drawRect(
         Rect.fromPoints(
             Offset(size.height / 2, 0), Offset(size.width, size.height)),
         Paint()
           ..color = hover
-              ? aumnetarBrillo(DecoColores.rosaClaro, 20)
+              ? aumnetarBrillo(DecoColores.rosaClaro, 0.2)
               : DecoColores.rosaClaro);
   }
 

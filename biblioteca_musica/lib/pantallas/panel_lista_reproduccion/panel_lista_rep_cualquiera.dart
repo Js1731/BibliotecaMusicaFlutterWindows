@@ -79,8 +79,8 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                         texto: "Eliminar",
                         onPressed: (context) async {
                           context
-                              .read<BlocListaReproduccionSeleccionada>()
-                              .add(EvEliminarLista());
+                              .read<AuxiliarListaReproduccion>()
+                              .eliminarLista(context);
                         }),
                   ]),
                 ],

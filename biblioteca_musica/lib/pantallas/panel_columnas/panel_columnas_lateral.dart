@@ -1,6 +1,5 @@
 import 'package:biblioteca_musica/backend/controles/control_panel_columna_lateral.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/misc/CustomPainterAgregarLista.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/estado_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../../painters/custom_painter_agregar_lista.dart';
 import 'item_columna.dart';
 
 class PanelColumnasLateral extends StatefulWidget {

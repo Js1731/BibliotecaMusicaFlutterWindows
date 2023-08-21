@@ -1,4 +1,3 @@
-import 'package:biblioteca_musica/backend/misc/CustomPainerPanelCentral.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_principal.dart';
@@ -15,6 +14,8 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+
+import '../painters/custom_painter_panel_central.dart';
 
 final GlobalKey<PantPrincipalState> keyPantPrincipal = GlobalKey();
 

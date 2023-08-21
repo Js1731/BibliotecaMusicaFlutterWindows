@@ -57,10 +57,10 @@ String removerDigitos(String input) {
   return input.replaceAll(RegExp(r'\d'), '');
 }
 
-Color aumnetarBrillo(Color color, int cantidad) {
-  int rojo = (color.red + cantidad).clamp(0, 255);
-  int verde = (color.green + cantidad).clamp(0, 255);
-  int azul = (color.blue + cantidad).clamp(0, 255);
+Color aumnetarBrillo(Color color, double fact) {
+  int rojo = (color.red + (color.red * fact).round()).clamp(0, 255);
+  int verde = (color.green + (color.green * fact).round()).clamp(0, 255);
+  int azul = (color.blue + (color.blue * fact).round()).clamp(0, 255);
 
   return Color.fromARGB(color.alpha, rojo, verde, azul);
 }
