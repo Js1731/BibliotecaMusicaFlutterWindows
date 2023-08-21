@@ -1,6 +1,10 @@
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/backend/providers/provider_general.dart';
+import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_asignar_valores_columnas.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_columnas.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
@@ -11,15 +15,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../backend/datos/AppDb.dart';
 import '../../bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import '../../dialogos/dialogo_ingresar_texto.dart';
 import '../../repositorios/repositorio_reproductor.dart';
 import '../../widgets/dialogos/dialogo_seleccionar_valor_columna.dart';
 
 class AuxiliarListaReproduccion {
   final RepositorioReproductor _repositorioReproductor;
   final RepositorioCanciones _repositorioCanciones;
+  final RepositorioColumnas _repositorioColumnas;
 
-  AuxiliarListaReproduccion(
-      this._repositorioReproductor, this._repositorioCanciones);
+  AuxiliarListaReproduccion(this._repositorioReproductor,
+      this._repositorioCanciones, this._repositorioColumnas);
 
   Future<void> importarCanciones(BuildContext context) async {
     FilePickerResult? lstArchivosSeleccionados =
@@ -152,6 +158,21 @@ class AuxiliarListaReproduccion {
 
     if (context.mounted) {
       context.read<BlocListaReproduccionSeleccionada>().add(EvEliminarLista());
+      context
+          .read<CubitPanelSeleccionado>()
+          .cambiarPanel(Panel.listaRepBiblioteca);
+      context
+          .read<BlocListaReproduccionSeleccionada>()
+          .add(EvSeleccionarLista(listaRepBiblioteca));
     }
+  }
+
+  Future<void> agregarColumna(BuildContext context) async {
+    String? nuevoNombre = await abrirDialogoIngresarTexto(
+        context, "Nueva Columna", "Ingresa el nombre de la nueva columna");
+
+    if (nuevoNombre == null) return;
+
+    _repositorioColumnas.agregarColumna(nuevoNombre);
   }
 }

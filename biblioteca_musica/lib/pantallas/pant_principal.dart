@@ -1,13 +1,17 @@
+import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_principal.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_cualquiera.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_todo.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_biblioteca.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/panel_reproductor.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -35,14 +39,16 @@ class PantPrincipalState extends State<PantPrincipal> {
         return Provider(
             create: (context) => AuxiliarListaReproduccion(
                 context.read<RepositorioReproductor>(),
-                context.read<RepositorioCanciones>()),
-            child: PanellistaRepBiblioteca());
+                context.read<RepositorioCanciones>(),
+                context.read<RepositorioColumnas>()),
+            child: PanelBiblioteca());
 
       case Panel.listasRep:
         return Provider(
             create: (context) => AuxiliarListaReproduccion(
                 context.read<RepositorioReproductor>(),
-                context.read<RepositorioCanciones>()),
+                context.read<RepositorioCanciones>(),
+                context.read<RepositorioColumnas>()),
             child: PanelListaRepCualquiera());
 
       case Panel.propiedades:
@@ -70,17 +76,26 @@ class PantPrincipalState extends State<PantPrincipal> {
 
                       //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
 
-                      BlocBuilder<CubitPanelSeleccionado, Panel>(
-                        builder: (context, panel) => Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                                top: 10, right: 10, bottom: 10),
-                            child: CustomPaint(
-                                painter: CustomPainerPanelCentral(),
-                                child: construirPanelCentral(context, panel)),
-                          ),
-                        ),
-                      ),
+                      BlocSelector<
+                              BlocListaReproduccionSeleccionada,
+                              EstadoListaReproduccionSelecconada,
+                              ListaReproduccionData?>(
+                          selector: (state) =>
+                              state.listaReproduccionSeleccionada,
+                          builder: (context, listaSeleccionada) {
+                            return BlocBuilder<CubitPanelSeleccionado, Panel>(
+                              builder: (context, panel) => Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                      top: 10, right: 10, bottom: 10),
+                                  child: CustomPaint(
+                                      painter: CustomPainerPanelCentral(),
+                                      child: construirPanelCentral(
+                                          context, panel)),
+                                ),
+                              ),
+                            );
+                          }),
                     ]),
                   ),
                   //const PanelBarraLog(),

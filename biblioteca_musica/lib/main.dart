@@ -11,7 +11,7 @@ import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_sele
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/evento_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
-import 'package:biblioteca_musica/bloc/cubit_columnas.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
@@ -28,6 +28,8 @@ import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/columnas_sistema/eventos_columnas_sistema.dart';
 
 Future<void> iniciarServidor() async {
   var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
@@ -90,7 +92,7 @@ Future<void> main() async {
                 ..add(EvSeleccionarLista(listaRepBiblioteca))),
           BlocProvider(
               create: (context) =>
-                  BlocColumnaSeleccionada(context.read<RepositorioColumnas>()))
+                  BlocColumnaSeleccionada(context.read<RepositorioColumnas>())),
         ], child: const MyApp())),
   );
 

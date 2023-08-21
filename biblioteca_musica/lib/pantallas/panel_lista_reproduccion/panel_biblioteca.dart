@@ -1,55 +1,39 @@
-import 'package:biblioteca_musica/backend/controles/control_panel_columna_lateral.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/bloc/cubit_columnas.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/btn_importar_canciones.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/btn_recortar_nombres.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/btn_reproducir_orden.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PanellistaRepBiblioteca extends PanelListaReproduccion {
-  PanellistaRepBiblioteca({super.key})
+import '../../bloc/columnas_sistema/estado_columnas_sistema.dart';
+import 'btn_reproducir_azar.dart';
+
+class PanelBiblioteca extends PanelListaReproduccion {
+  PanelBiblioteca({super.key})
       : super(
             builderOpcionesNormales: (context, controlador) => [
                   SeccionCintaOpciones(lstItems: [
                     const TextoCintaOpciones(texto: "Reproducir"),
 
                     //REPRODUCIR EN ORDEN
-                    BotonCintaOpciones(
-                        icono: Icons.play_arrow,
-                        texto: "Orden",
-                        onPressed: (context) async {
-                          await context
-                              .read<AuxiliarListaReproduccion>()
-                              .reproducirListaEnOrden(context);
-                        }),
+                    BtnReproducirOrden(),
 
                     //REPRODUCIR AL AZAR
-                    BotonCintaOpciones(
-                        icono: Icons.shuffle,
-                        texto: "Azar",
-                        onPressed: (context) async {
-                          await context
-                              .read<AuxiliarListaReproduccion>()
-                              .reproducirListaAzar(context);
-                        }),
+                    BtnReproducirAzar(),
                   ]),
                   const SizedBox(width: 10),
                   SeccionCintaOpciones(
                     lstItems: [
                       //IMPORTAR CANCIONES
-                      BotonCintaOpciones(
-                          icono: Icons.folder_copy,
-                          texto: "Importar Canciones",
-                          onPressed: (_) async {
-                            await context
-                                .read<AuxiliarListaReproduccion>()
-                                .importarCanciones(context);
-                          }),
+                      BtnImportarCanciones()
                     ],
                   ),
                 ],
@@ -104,7 +88,9 @@ class PanellistaRepBiblioteca extends PanelListaReproduccion {
                           texto: "Asignar Columnas...",
                           onSelected: (columnaSel) async {
                             if (columnaSel.id == -1) {
-                              await agregarColumna();
+                              await context
+                                  .read<AuxiliarListaReproduccion>()
+                                  .agregarColumna(context);
                             } else {
                               await context
                                   .read<AuxiliarListaReproduccion>()
@@ -131,14 +117,7 @@ class PanellistaRepBiblioteca extends PanelListaReproduccion {
                     }),
 
                     //RECORTAR NOMBRES
-                    BotonCintaOpciones(
-                        icono: Icons.content_cut_rounded,
-                        texto: "Recortar Nombres",
-                        onPressed: (_) async {
-                          await context
-                              .read<AuxiliarListaReproduccion>()
-                              .recortarNombres(context);
-                        }),
+                    BtnRecortarNombres()
                   ]),
 
                   const Spacer(),

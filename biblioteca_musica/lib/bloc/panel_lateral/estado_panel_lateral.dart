@@ -11,4 +11,8 @@ class EstadoPanelLateral extends Equatable {
 
   EstadoPanelLateral copiarCon({List<ListaReproduccionData>? listaRep}) =>
       EstadoPanelLateral(listasReproduccion: listaRep ?? listasReproduccion);
+
+  List<ListaReproduccionData> obtListasRepExcepto(int idListaExcep) =>
+      List<ListaReproduccionData>.from(listasReproduccion)
+        ..removeWhere((lista) => lista.id == idListaExcep);
 }

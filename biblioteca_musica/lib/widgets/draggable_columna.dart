@@ -47,7 +47,10 @@ class EstadoDraggableColumna extends State<DraggableColumna> {
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 //SELECCIONAR COMO FAVORITO
+
                 IconButton(
+                    padding: EdgeInsets.zero,
+                    iconSize: 20,
                     onPressed: widget.onSelPrincipal,
                     splashRadius: 20,
                     color: widget.esPrincipal ? Deco.cRosa0 : Deco.cGray1,
@@ -60,6 +63,7 @@ class EstadoDraggableColumna extends State<DraggableColumna> {
 
                 //ELIMINAR COLUMNA DE LA LISTA
                 IconButton(
+                    padding: EdgeInsets.zero,
                     onPressed: widget.onQuitar,
                     iconSize: 20,
                     splashRadius: 20,

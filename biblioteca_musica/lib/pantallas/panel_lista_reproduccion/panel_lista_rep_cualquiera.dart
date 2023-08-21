@@ -1,16 +1,18 @@
-import 'package:biblioteca_musica/backend/controles/control_panel_columna_lateral.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/btn_recortar_nombres.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/btn_reproducir_azar.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'btn_reproducir_orden.dart';
 
 class PanelListaRepCualquiera extends PanelListaReproduccion {
   PanelListaRepCualquiera({super.key})
@@ -20,24 +22,10 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                     const TextoCintaOpciones(texto: "Reproducir"),
 
                     //REPRODUCIR EN ORDEN
-                    BotonCintaOpciones(
-                        icono: Icons.play_arrow,
-                        texto: "Orden",
-                        onPressed: (context) async {
-                          await context
-                              .read<AuxiliarListaReproduccion>()
-                              .reproducirListaEnOrden(context);
-                        }),
+                    BtnReproducirOrden(),
 
                     //REPRODUCIR AL AZAR
-                    BotonCintaOpciones(
-                        icono: Icons.shuffle,
-                        texto: "Azar",
-                        onPressed: (context) async {
-                          context
-                              .read<AuxiliarListaReproduccion>()
-                              .reproducirListaAzar(context);
-                        }),
+                    BtnReproducirAzar(),
                   ]),
                   const SizedBox(width: 10),
                   SeccionCintaOpciones(lstItems: [
@@ -62,17 +50,8 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                   const Spacer(),
                   SeccionCintaOpciones(lstItems: [
                     //RENOMBRAR LISTA
-                    BotonCintaOpciones(
-                        icono: Icons.edit,
-                        texto: "Renombrar",
-                        onPressed: (context) async {
-                          final bloc =
-                              context.read<BlocListaReproduccionSeleccionada>();
+                    BtnRecortarNombres(),
 
-                          bloc.add(EvRenombrarLista(await mostrarDialogoTexto(
-                                  context, "Nuevo Nombre") ??
-                              bloc.state.listaReproduccionSeleccionada.nombre));
-                        }),
                     //ELIMINAR LISTA
                     BotonCintaOpciones(
                         icono: Icons.delete,
@@ -110,17 +89,14 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                       icono: Icons.playlist_add_outlined,
                       enabled: cantCancSel > 0,
                       itemBuilder: (_) {
-                        return (List<ListaReproduccionData>.from(context
+                        return List<ListaReproduccionData>.from(context
                                 .read<BlocPanelLateral>()
                                 .state
-                                .listasReproduccion)
-                              ..removeWhere((element) =>
-                                  element.id ==
-                                  context
-                                      .read<BlocListaReproduccionSeleccionada>()
-                                      .state
-                                      .listaReproduccionSeleccionada
-                                      .id))
+                                .obtListasRepExcepto(context
+                                    .read<BlocListaReproduccionSeleccionada>()
+                                    .state
+                                    .listaReproduccionSeleccionada
+                                    .id))
                             .map<PopupMenuItem<int>>((lista) => PopupMenuItem(
                                   value: lista.id,
                                   child: Text(lista.nombre),
@@ -141,7 +117,9 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                         texto: "Asignar Columnas",
                         onSelected: (columnaSel) async {
                           if (columnaSel.id == -1) {
-                            await agregarColumna();
+                            await context
+                                .read<AuxiliarListaReproduccion>()
+                                .agregarColumna(context);
                           } else {
                             await context
                                 .read<AuxiliarListaReproduccion>()
@@ -171,14 +149,7 @@ class PanelListaRepCualquiera extends PanelListaReproduccion {
                         }),
 
                     //RECORTAR NOMBRES
-                    BotonCintaOpciones(
-                        icono: Icons.cut,
-                        texto: "Recortar Nombres",
-                        onPressed: (_) async {
-                          await context
-                              .read<AuxiliarListaReproduccion>()
-                              .recortarNombres(context);
-                        }),
+                    BtnRecortarNombres()
                   ]),
 
                   const Spacer(),

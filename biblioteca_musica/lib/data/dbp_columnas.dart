@@ -39,4 +39,10 @@ class DBPColumnas {
           ..where((tbl) => tbl.idColumna.equals(columna.id)))
         .watch();
   }
+
+  void agregarColumna(String nombreNuevaColumna) {
+    appDb
+        .into(appDb.columna)
+        .insert(ColumnaCompanion.insert(nombre: nombreNuevaColumna));
+  }
 }

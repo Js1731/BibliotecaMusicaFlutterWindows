@@ -10,6 +10,7 @@ import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/main.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/gestor_columnas.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_cancion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_columna_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
@@ -170,53 +171,55 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                                 child: Row(
                                   children: [
                                     //NOMBRE
-                                    Expanded(
-                                        child: ItemColumnaListaReproduccion(
-                                            idColumna: -1,
-                                            nombre: "Nombre",
-                                            align: TextAlign.left,
-                                            contPanelList: widget.controlador)),
+                                    // Expanded(
+                                    //     child: ItemColumnaListaReproduccion(
+                                    //         idColumna: -1,
+                                    //         nombre: "Nombre",
+                                    //         align: TextAlign.left,
+                                    //         contPanelList: widget.controlador)),
 
                                     //COLUMNAS
-                                    for (ColumnaData prop in lstColumnas)
-                                      Expanded(
-                                          child: ItemColumnaListaReproduccion(
-                                        nombre: prop.nombre,
-                                        idColumna: prop.id,
-                                        contPanelList: widget.controlador,
-                                      )),
+                                    // for (ColumnaData prop in lstColumnas)
+                                    //   Expanded(
+                                    //       child: ItemColumnaListaReproduccion(
+                                    //     nombre: prop.nombre,
+                                    //     idColumna: prop.id,
+                                    //     contPanelList: widget.controlador,
+                                    //   )),
+
+                                    Expanded(child: GestorColumnas()),
 
                                     //DURACION
-                                    Expanded(
-                                        child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Expanded(
-                                          child: ItemColumnaListaReproduccion(
-                                            idColumna: -2,
-                                            nombre: "Duración",
-                                            align: TextAlign.right,
-                                            contPanelList: widget.controlador,
-                                          ),
-                                        ),
-                                        if (listaSel.id !=
-                                            listaRepBiblioteca.id)
-                                          IconButton(
-                                              padding: EdgeInsets.zero,
-                                              onPressed: () async {
-                                                await context
-                                                    .read<
-                                                        AuxiliarListaReproduccion>()
-                                                    .actColumnasListaRep(
-                                                        context);
-                                              },
-                                              color: Deco.cGray1,
-                                              icon: const Icon(
-                                                  Icons.more_vert_rounded,
-                                                  size: 20),
-                                              splashRadius: 14)
-                                      ],
-                                    )),
+                                    // Expanded(
+                                    //     child: Row(
+                                    //   mainAxisAlignment: MainAxisAlignment.end,
+                                    //   children: [
+                                    //     Expanded(
+                                    //       child: ItemColumnaListaReproduccion(
+                                    //         idColumna: -2,
+                                    //         nombre: "Duración",
+                                    //         align: TextAlign.right,
+                                    //         contPanelList: widget.controlador,
+                                    //       ),
+                                    //     ),
+                                    //     if (listaSel.id !=
+                                    //         listaRepBiblioteca.id)
+                                    //       IconButton(
+                                    //           padding: EdgeInsets.zero,
+                                    //           onPressed: () async {
+                                    //             await context
+                                    //                 .read<
+                                    //                     AuxiliarListaReproduccion>()
+                                    //                 .actColumnasListaRep(
+                                    //                     context);
+                                    //           },
+                                    //           color: Deco.cGray1,
+                                    //           icon: const Icon(
+                                    //               Icons.more_vert_rounded,
+                                    //               size: 20),
+                                    //           splashRadius: 14)
+                                    //   ],
+                                    // )),
                                   ],
                                 ),
                               );

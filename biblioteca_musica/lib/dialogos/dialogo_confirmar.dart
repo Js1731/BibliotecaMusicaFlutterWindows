@@ -1,7 +1,7 @@
 import 'package:biblioteca_musica/dialogos/dialogo_generico.dart';
 import 'package:biblioteca_musica/painters/custom_painter_dialogo_confirmar.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/form/btn_simple.dart';
+import 'package:biblioteca_musica/widgets/btn_flotante.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/texto_per.dart';
@@ -74,7 +74,7 @@ class _EstadoDialogoConfirmar extends EstadoDialogoGenerico<DialogoConfirmar> {
                     });
                   }),
                   builder: (context, snapshot) {
-                    return BtnSimple(
+                    return BtnFlotante(
                       enabled: activarBoton,
                       texto: "Eliminar",
                       onPressed: () {

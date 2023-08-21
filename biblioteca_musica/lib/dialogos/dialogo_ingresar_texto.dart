@@ -1,6 +1,6 @@
 import 'package:biblioteca_musica/dialogos/dialogo_generico.dart';
 import 'package:biblioteca_musica/painters/custom_painter_dialogo.dart';
-import 'package:biblioteca_musica/widgets/form/btn_simple.dart';
+import 'package:biblioteca_musica/widgets/btn_flotante.dart';
 import 'package:biblioteca_musica/widgets/form/txt_field.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +66,7 @@ class _EstadoDialogoIngresarTexto
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BtnSimple(
+              BtnFlotante(
                 texto: "Agregar",
                 onPressed: () {
                   Navigator.of(context).pop(textoIngresado);

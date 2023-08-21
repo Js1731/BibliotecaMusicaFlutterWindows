@@ -22,4 +22,8 @@ class RepositorioColumnas {
       ColumnaData columna) {
     return _dbpColumnas.crearStreamValorColumna(columna);
   }
+
+  void agregarColumna(String nombreNuevaColumna) {
+    _dbpColumnas.agregarColumna(nombreNuevaColumna);
+  }
 }

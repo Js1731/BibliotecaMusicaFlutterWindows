@@ -3,7 +3,8 @@ import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/estado_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/cubit_columnas.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
+import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_columnas_lateral.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../../bloc/columnas_sistema/estado_columnas_sistema.dart';
 import '../../painters/custom_painter_agregar_lista.dart';
 import 'item_columna.dart';
 
@@ -47,7 +49,9 @@ class EstadoPanelColumnasLateral extends State<PanelColumnasLateral> {
               Align(
                 alignment: Alignment.centerRight,
                 child: BtnGenerico(onPressed: (_) async {
-                  await agregarColumna();
+                  await context
+                      .read<AuxiliarColumnasLateral>()
+                      .agregarColumna(context);
                 }, builder: (hover, context) {
                   return CustomPaint(
                     painter: CustomPainterAgregarLista(hover),

@@ -82,7 +82,7 @@ Future<Map<String, dynamic>?> abrirDialogoColumnas(
           children: [
             const Divider(color: Deco.cGray, height: 3),
             SizedBox(
-              height: 55,
+              height: 30,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
