@@ -46,190 +46,174 @@ class _ConstructorPanelLateral extends StatelessWidget {
         margin: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
         child: CustomPaint(
           painter: CustomPainterPanelLateral(),
-          child: Column(children: [
-            Expanded(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //BANNER
-                    CustomPaint(
-                      painter: CustomPainterKOPI(),
-                      child: Container(
-                        height: 60,
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Row(children: [
-                          Image.asset(
-                            "assets/recursos/kopi_icono.png",
-                            width: 40,
-                            height: 40,
-                            isAntiAlias: true,
-                            filterQuality: FilterQuality.medium,
-                          ),
-                          const SizedBox(width: 5),
-                          TextoPer(
-                            texto: "KOPI",
-                            tam: 40,
-                            color: DecoColores.rosaClaro,
-                          )
-                        ]),
-                      ),
-                    ),
+          child: BlocBuilder<BlocPanelLateral, EstadoPanelLateral>(
+              builder: (context, estadoPanelLateral) {
+            return BlocSelector<BlocReproductor, EstadoReproductor,
+                    ListaReproduccionData>(
+                selector: (state) => state.listaReproduccionReproducida,
+                builder: (context, listaReproducida) {
+                  return BlocSelector<
+                          BlocListaReproduccionSeleccionada,
+                          EstadoListaReproduccionSelecconada,
+                          ListaReproduccionData>(
+                      selector: (state) => state.listaReproduccionSeleccionada,
+                      builder: (context, listaRepSeleccionada) {
+                        return BlocBuilder<CubitPanelSeleccionado, Panel>(
+                            builder: (context, panelSeleccionado) {
+                          return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //BANNER
+                                CustomPaint(
+                                  painter: CustomPainterKOPI(),
+                                  child: Container(
+                                    height: 60,
+                                    padding: const EdgeInsets.only(left: 15),
+                                    child: Row(children: [
+                                      Image.asset(
+                                        "assets/recursos/kopi_icono.png",
+                                        width: 40,
+                                        height: 40,
+                                        isAntiAlias: true,
+                                        filterQuality: FilterQuality.medium,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      TextoPer(
+                                        texto: "KOPI",
+                                        tam: 40,
+                                        color: DecoColores.rosaClaro,
+                                      )
+                                    ]),
+                                  ),
+                                ),
 
-                    //ITEM PARA VER LISTA CON TODAS LAS CANCIONES
-                    BlocSelector<BlocReproductor, EstadoReproductor,
-                        ListaReproduccionData>(
-                      selector: (state) => state.listaReproduccionReproducida,
-                      builder: (context, listaReproducida) =>
-                          BlocBuilder<CubitPanelSeleccionado, Panel>(
-                              builder: (context, panelSeleccionado) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            top: 5,
-                            bottom: 5,
-                            left: 10,
-                          ),
-                          child: ItemListaReproduccion(
-                            lst: listaRepBiblioteca,
-                            reproduciendo:
-                                listaReproducida.id == listaRepBiblioteca.id,
-                            seleccionado:
-                                panelSeleccionado == Panel.listaRepBiblioteca,
-                          ),
-                        );
-                      }),
-                    ),
+                                //ITEM PARA VER LISTA CON TODAS LAS CANCIONES
 
-                    //BARRA AGREGAR LISTA
-                    Container(
-                      height: 25,
-                      color: DecoColores.rosaClaro1,
-                      child: Stack(children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: TextoPer(
-                              texto: "Listas", tam: 16, color: Colors.white),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: BtnGenerico(onPressed: (_) async {
-                            await context
-                                .read<AuxiliarPanelLateral>()
-                                .agregarLista(context);
-                          }, builder: (hover, context) {
-                            return CustomPaint(
-                              painter: CustomPainterAgregarLista(hover),
-                              child: Container(
-                                width: 80,
-                                alignment: Alignment.centerRight,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                height: double.maxFinite,
-                                child: TextoPer(
-                                    texto: "Nuevo +",
-                                    tam: 16,
-                                    color: Colors.white),
-                              ),
-                            );
-                          }),
-                        )
-                      ]),
-                    ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 5,
+                                    bottom: 5,
+                                    left: 10,
+                                  ),
+                                  child: ItemListaReproduccion(
+                                    lst: listaRepBiblioteca,
+                                    reproduciendo: listaReproducida.id ==
+                                        listaRepBiblioteca.id,
+                                    seleccionado: listaRepSeleccionada.id ==
+                                        listaRepBiblioteca.id,
+                                  ),
+                                ),
 
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                          bottom: 10,
-                          left: 10,
-                        ),
-                        child: Column(
-                          children: [
-                            if (db)
-                              ElevatedButton(
-                                  onPressed: () async {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DriftDbViewer(appDb)));
-                                  },
-                                  child: Text("Drift")),
+                                //BARRA AGREGAR LISTA
+                                Container(
+                                  height: 25,
+                                  color: DecoColores.rosaClaro1,
+                                  child: Stack(children: [
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: TextoPer(
+                                          texto: "Listas",
+                                          tam: 16,
+                                          color: Colors.white),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: BtnGenerico(onPressed: (_) async {
+                                        await context
+                                            .read<AuxiliarPanelLateral>()
+                                            .agregarLista(context);
+                                      }, builder: (hover, context) {
+                                        return CustomPaint(
+                                          painter:
+                                              CustomPainterAgregarLista(hover),
+                                          child: Container(
+                                            width: 80,
+                                            alignment: Alignment.centerRight,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5),
+                                            height: double.maxFinite,
+                                            child: TextoPer(
+                                                texto: "Nuevo +",
+                                                tam: 16,
+                                                color: Colors.white),
+                                          ),
+                                        );
+                                      }),
+                                    )
+                                  ]),
+                                ),
 
-                            //LISTA DE LISTAS DE REPRODUCCION
-                            BlocBuilder<BlocPanelLateral, EstadoPanelLateral>(
-                                builder: (context, estadoPanelLateral) {
-                              return BlocSelector<
-                                      BlocListaReproduccionSeleccionada,
-                                      EstadoListaReproduccionSelecconada,
-                                      ListaReproduccionData>(
-                                  selector: (state) =>
-                                      state.listaReproduccionSeleccionada,
-                                  builder: (context, listaRepSeleccionada) {
-                                    return BlocSelector<
-                                            BlocReproductor,
-                                            EstadoReproductor,
-                                            ListaReproduccionData>(
-                                        selector: (state) =>
-                                            state.listaReproduccionReproducida,
-                                        builder: (context, listaReproducida) =>
-                                            BlocBuilder<CubitPanelSeleccionado,
-                                                    Panel>(
-                                                builder: (context,
-                                                    panelSeleccionado) {
-                                              return Expanded(
-                                                child: ListView.builder(
-                                                  itemCount: estadoPanelLateral
-                                                      .listasReproduccion
-                                                      .length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    final lista = estadoPanelLateral
-                                                            .listasReproduccion[
-                                                        index];
-                                                    return ItemListaReproduccion(
-                                                      lst: lista,
-                                                      reproduciendo: lista.id ==
-                                                          listaReproducida.id,
-                                                      seleccionado:
-                                                          panelSeleccionado ==
-                                                                  Panel
-                                                                      .listasRep &&
-                                                              listaRepSeleccionada
-                                                                      .id ==
-                                                                  lista.id,
-                                                    );
-                                                  },
-                                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 10,
+                                      left: 10,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        if (db)
+                                          ElevatedButton(
+                                              onPressed: () async {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DriftDbViewer(
+                                                                appDb)));
+                                              },
+                                              child: Text("Drift")),
+
+                                        //LISTA DE LISTAS DE REPRODUCCION
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount: estadoPanelLateral
+                                                .listasReproduccion.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              final lista = estadoPanelLateral
+                                                  .listasReproduccion[index];
+                                              return ItemListaReproduccion(
+                                                lst: lista,
+                                                reproduciendo: lista.id ==
+                                                    listaReproducida.id,
+                                                seleccionado:
+                                                    panelSeleccionado ==
+                                                            Panel.listasRep &&
+                                                        listaRepSeleccionada
+                                                                .id ==
+                                                            lista.id,
                                               );
-                                            }));
-                                  });
-                            }),
+                                            },
+                                          ),
+                                        ),
 
-                            //BOTON PARA MOSTRAR INTERFAZ DE JUEGOS
-                            ItemPanelLateralSubMenu(
-                              texto: "Columnas",
-                              icono: Icons.library_books,
-                              panel: Panel.propiedades,
-                              colorPanel: DecoColores.rosa,
-                              colorTextoSel: Colors.white,
-                            ),
+                                        //BOTON PARA MOSTRAR INTERFAZ DE JUEGOS
+                                        ItemPanelLateralSubMenu(
+                                          texto: "Columnas",
+                                          icono: Icons.library_books,
+                                          panel: Panel.propiedades,
+                                          colorPanel: DecoColores.rosa,
+                                          colorTextoSel: Colors.white,
+                                        ),
 
-                            const SizedBox(height: 5),
+                                        const SizedBox(height: 5),
 
-                            //BOTON PARA MOSTRAR INTERFAZ DE CONFIGURACION
-                            ItemPanelLateralSubMenu(
-                              texto: "Ajustes",
-                              icono: Icons.settings,
-                              panel: Panel.ajustes,
-                              colorPanel: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ]),
-            ),
-          ]),
+                                        //BOTON PARA MOSTRAR INTERFAZ DE CONFIGURACION
+                                        ItemPanelLateralSubMenu(
+                                          texto: "Ajustes",
+                                          icono: Icons.settings,
+                                          panel: Panel.ajustes,
+                                          colorPanel: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ]);
+                        });
+                      });
+                });
+          }),
         ));
   }
 }

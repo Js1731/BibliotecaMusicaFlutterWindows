@@ -111,8 +111,12 @@ class BlocListaReproduccionSeleccionada extends Bloc<
 
     final nuevoMapa = Map<int, bool>.from(mapa);
     nuevoMapa[evento.idCancion] = !nuevoMapa[evento.idCancion]!;
+    final seleccionandoCanciones =
+        nuevoMapa.values.where((element) => element == true).isNotEmpty;
 
-    emit(state.copiarCon(nuevoMapaCancionesSeleccionadas: nuevoMapa));
+    emit(state.copiarCon(
+        nuevoMapaCancionesSeleccionadas: nuevoMapa,
+        selCanciones: seleccionandoCanciones));
   }
 
   void _onToggleSeleccionarTodo(EvToggleSeleccionarTodo evento,
@@ -129,7 +133,12 @@ class BlocListaReproduccionSeleccionada extends Bloc<
       nuevoMapa.updateAll((key, value) => true);
     }
 
-    emit(state.copiarCon(nuevoMapaCancionesSeleccionadas: nuevoMapa));
+    final seleccionandoCanciones =
+        nuevoMapa.values.where((element) => element == true).isNotEmpty;
+
+    emit(state.copiarCon(
+        nuevoMapaCancionesSeleccionadas: nuevoMapa,
+        selCanciones: seleccionandoCanciones));
   }
 
   void _onImportarCanciones(EvImportarCanciones evento,

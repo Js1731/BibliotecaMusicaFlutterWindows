@@ -1,11 +1,13 @@
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
+import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
+import 'package:biblioteca_musica/dialogos/dialogo_gestionar_columnas_cancion.dart';
+import 'package:biblioteca_musica/dialogos/dialogo_seleccionar_valor_columna.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
-import 'package:biblioteca_musica/widgets/dialogos/dialogo_asignar_valores_columnas.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_columnas.dart';
 import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
 import 'package:file_picker/file_picker.dart';
@@ -43,7 +45,7 @@ class AuxiliarListaReproduccion {
   Future<void> asignarValoresColumnaACanciones(
       BuildContext context, ColumnaData col) async {
     ValorColumnaData? valorColumnaSel =
-        await abrirDialogoSeleccionarValorColumna(col, null);
+        await abrirDialogoSeleccionarValorColumna(context, col);
 
     if (valorColumnaSel == null) return;
     if (context.mounted) {
@@ -59,17 +61,8 @@ class AuxiliarListaReproduccion {
             await mostrarDialogoTexto(context, "Filtro") ?? ""));
   }
 
-  Future<void> actColumnasListaRep(BuildContext context) async {
-    final resultados = await abrirDialogoColumnas(context
-        .read<BlocListaReproduccionSeleccionada>()
-        .state
-        .listaReproduccionSeleccionada);
-
-    if (resultados == null) return;
-
-    final List<ColumnaData> columnas = resultados["columnas"];
-    final ColumnaData? columnaPrincipal = resultados["colPrincipal"];
-
+  Future<void> actColumnasListaRep(BuildContext context,
+      List<ColumnaData> columnas, ColumnaData? columnaPrincipal) async {
     if (context.mounted) {
       final bloc = context.read<BlocListaReproduccionSeleccionada>();
       bloc.add(EvActColumnasLista(columnas.map((e) => e.id).toList()));
@@ -97,10 +90,7 @@ class AuxiliarListaReproduccion {
   Future<void> asignarValoresColumnasDetallado(
       BuildContext context, CancionColumnas cancion) async {
     Map<ColumnaData, ValorColumnaData?>? mapa =
-        await abrirDialogoAsignarPropiedad(context
-            .read<BlocListaReproduccionSeleccionada>()
-            .state
-            .lstColumnas);
+        await abrirDialogoGestionarColumnasCancion(context, cancion);
 
     if (mapa == null) return;
 
@@ -157,10 +147,6 @@ class AuxiliarListaReproduccion {
     if (confirmar == null) return;
 
     if (context.mounted) {
-      context.read<BlocListaReproduccionSeleccionada>().add(EvEliminarLista());
-      context
-          .read<CubitPanelSeleccionado>()
-          .cambiarPanel(Panel.listaRepBiblioteca);
       context
           .read<BlocListaReproduccionSeleccionada>()
           .add(EvSeleccionarLista(listaRepBiblioteca));

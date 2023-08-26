@@ -33,7 +33,7 @@ Future<Map<ColumnaData, ValorColumnaData?>?> abrirDialogoAsignarPropiedad(
             return ItemValorColumnaEditableDialogo(
                 onPressed: () async {
                   ValorColumnaData? valorSel =
-                      await abrirDialogoSeleccionarValorColumna(
+                      await abrirDialogoSeleccionarValorColumn(
                           columna, mapaValoresAsignados[columna]);
 
                   if (valorSel == null) return;

@@ -54,15 +54,8 @@ class ItemListaReproduccion extends BtnGenerico {
             ],
           );
         }, onPressed: (context) {
-          if (lst.id == listaRepBiblioteca.id) {
-            context
-                .read<CubitPanelSeleccionado>()
-                .cambiarPanel(Panel.listaRepBiblioteca);
-          } else {
-            context
-                .read<CubitPanelSeleccionado>()
-                .cambiarPanel(Panel.listasRep);
-          }
+          context.read<CubitPanelSeleccionado>().cambiarPanel(Panel.listasRep);
+
           context
               .read<BlocListaReproduccionSeleccionada>()
               .add(EvSeleccionarLista(lst));

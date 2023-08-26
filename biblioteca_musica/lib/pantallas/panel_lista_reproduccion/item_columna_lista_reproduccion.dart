@@ -13,7 +13,8 @@ class ItemColumnaListaReproduccion extends BtnGenerico {
       align = TextAlign.center,
       required String nombre,
       required int idColumna,
-      required ContPanelListaReproduccion contPanelList,
+      bool esColumnaOrden = false,
+      bool esAscendente = true,
       bool esPrincipal = false})
       : super(
             builder: (hover, context) => Container(
@@ -22,7 +23,35 @@ class ItemColumnaListaReproduccion extends BtnGenerico {
                       color: hover ? Deco.cGray0 : Colors.transparent),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: TextoPer(texto: nombre, tam: 15, align: align),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        esPrincipal
+                            ? const Icon(
+                                Icons.star,
+                                size: 20,
+                                color: DecoColores.gris,
+                              )
+                            : const SizedBox(width: 20),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child:
+                                TextoPer(texto: nombre, tam: 15, align: align),
+                          ),
+                        ),
+                        esColumnaOrden
+                            ? Icon(
+                                !esAscendente
+                                    ? Icons.arrow_drop_up_outlined
+                                    : Icons.arrow_drop_down,
+                                size: 30,
+                                color: DecoColores.gris,
+                              )
+                            : const SizedBox(width: 30),
+                      ],
+                    ),
                   ),
                 ),
             onPressed: (context) {

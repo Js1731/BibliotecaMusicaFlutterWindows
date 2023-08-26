@@ -20,6 +20,9 @@ abstract class EstadoDialogoGenerico<T extends DialogoGenerico>
     extends State<T> {
   bool animacionInicial = false;
 
+  late double ancho;
+  late double altura;
+
   Widget constructorContenido(BuildContext context) {
     throw Exception(
         "No se definio un constructor del contenido de este dialogo o no se asigno el estado correcto en el metodo Create del widget.");
@@ -28,6 +31,9 @@ abstract class EstadoDialogoGenerico<T extends DialogoGenerico>
   @override
   void initState() {
     super.initState();
+
+    ancho = widget.ancho;
+    altura = widget.altura;
 
     Future.delayed(
       const Duration(seconds: 0),
@@ -41,24 +47,38 @@ abstract class EstadoDialogoGenerico<T extends DialogoGenerico>
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.ancho,
-      height: widget.altura + widget.espacioAltura,
-      child: Stack(
-        children: [
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 100),
-            top: animacionInicial ? widget.espacioAltura / 2 : 0,
-            child: CustomPaint(
-                painter: widget.customPainter,
-                child: Container(
-                    width: widget.ancho,
-                    height: widget.altura,
-                    padding:
-                        const EdgeInsets.only(left: 10, top: 10, right: 10),
-                    child: constructorContenido(context))),
-          ),
-        ],
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: ancho,
+      height: altura + widget.espacioAltura,
+      curve: Curves.easeOutExpo,
+      child: Center(
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Stack(
+            children: [
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 200),
+                top: animacionInicial ? widget.espacioAltura : 0,
+                child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutExpo,
+                    width: ancho < constraints.maxWidth
+                        ? constraints.maxWidth
+                        : ancho,
+                    height: altura,
+                    child: CustomPaint(
+                        painter: widget.customPainter,
+                        child: Container(
+                            width: ancho,
+                            padding: const EdgeInsets.only(
+                              top: 10,
+                            ),
+                            child:
+                                Center(child: constructorContenido(context))))),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

@@ -9,21 +9,23 @@ class EstadoListaReproduccionSelecconada extends Equatable {
   final Map<int, bool> mapaCancionesSeleccionadas;
   final Map<int, Map<String, String>?> mapValorColumnaCancion;
   final List<ColumnaData> lstColumnas;
-  final int cancionesSeleccionadas = 0;
+  final bool seleccionandoCanciones;
 
   const EstadoListaReproduccionSelecconada(
       {this.listaCanciones = const [],
       this.listaReproduccionSeleccionada = listaRepBiblioteca,
       this.mapaCancionesSeleccionadas = const {},
       this.mapValorColumnaCancion = const {},
-      this.lstColumnas = const []});
+      this.lstColumnas = const [],
+      this.seleccionandoCanciones = false});
 
   EstadoListaReproduccionSelecconada copiarCon(
       {ListaReproduccionData? nuevaListaSel,
       List<CancionColumnas>? nuevalistaCanciones,
       Map<int, bool>? nuevoMapaCancionesSeleccionadas,
       Map<int, Map<String, String>?>? nuevoMapaValoresColumnaCancion,
-      List<ColumnaData>? nuevaListaColumnas}) {
+      List<ColumnaData>? nuevaListaColumnas,
+      bool? selCanciones}) {
     final nuevoEstado = EstadoListaReproduccionSelecconada(
         listaReproduccionSeleccionada:
             nuevaListaSel ?? listaReproduccionSeleccionada,
@@ -32,7 +34,8 @@ class EstadoListaReproduccionSelecconada extends Equatable {
             nuevoMapaValoresColumnaCancion ?? mapValorColumnaCancion,
         mapaCancionesSeleccionadas:
             nuevoMapaCancionesSeleccionadas ?? mapaCancionesSeleccionadas,
-        lstColumnas: nuevaListaColumnas ?? lstColumnas);
+        lstColumnas: nuevaListaColumnas ?? lstColumnas,
+        seleccionandoCanciones: selCanciones ?? seleccionandoCanciones);
     return nuevoEstado;
   }
 

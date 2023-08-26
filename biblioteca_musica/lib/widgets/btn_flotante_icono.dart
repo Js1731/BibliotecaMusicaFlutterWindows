@@ -6,6 +6,7 @@ import 'package:biblioteca_musica/backend/misc/utiles.dart';
 class BtnFlotanteIcono extends StatefulWidget {
   final Color color;
   final double tam;
+  final double tamIcono;
   final VoidCallback onPressed;
   final bool enabled;
   final IconData? icono;
@@ -14,6 +15,7 @@ class BtnFlotanteIcono extends StatefulWidget {
       {required this.onPressed,
       this.icono,
       this.tam = 25,
+      this.tamIcono = 25,
       this.enabled = true,
       this.color = DecoColores.rosaClaro,
       super.key});
@@ -61,7 +63,7 @@ class _EstadoBtnFlotante extends State<BtnFlotanteIcono> {
                       child: Icon(
                     widget.icono,
                     color: Colors.white,
-                    size: widget.tam / 1.1,
+                    size: widget.tamIcono / 1.1,
                   )),
                 ),
               ),

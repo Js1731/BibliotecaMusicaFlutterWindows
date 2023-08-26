@@ -1,5 +1,6 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/providers/provider_general.dart';
+import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
@@ -7,8 +8,9 @@ import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_princi
 import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_rep_cualquiera.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_biblioteca.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_lista_cualquiera.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_biblioteca.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/panel_reproductor.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
@@ -35,21 +37,15 @@ class PantPrincipalState extends State<PantPrincipal> {
 
   Widget? construirPanelCentral(BuildContext context, Panel panel) {
     switch (panel) {
-      case Panel.listaRepBiblioteca:
-        return Provider(
-            create: (context) => AuxiliarListaReproduccion(
-                context.read<RepositorioReproductor>(),
-                context.read<RepositorioCanciones>(),
-                context.read<RepositorioColumnas>()),
-            child: PanelBiblioteca());
-
       case Panel.listasRep:
-        return Provider(
-            create: (context) => AuxiliarListaReproduccion(
-                context.read<RepositorioReproductor>(),
-                context.read<RepositorioCanciones>(),
-                context.read<RepositorioColumnas>()),
-            child: PanelListaRepCualquiera());
+        return BlocProvider(
+            create: (context) => CubitGestorColumnas(),
+            child: Provider(
+                create: (context) => AuxiliarListaReproduccion(
+                    context.read<RepositorioReproductor>(),
+                    context.read<RepositorioCanciones>(),
+                    context.read<RepositorioColumnas>()),
+                child: PanelListaReproduccion()));
 
       case Panel.propiedades:
         return const PanelColumnasPrincipal();

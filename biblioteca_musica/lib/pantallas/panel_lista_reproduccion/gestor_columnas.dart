@@ -1,12 +1,14 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/columnas_sistema/estado_columnas_sistema.dart';
+import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/btn_flotante_icono.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/btn_flotante.dart';
+import 'package:biblioteca_musica/widgets/btn_flotante_generico.dart';
+import 'package:biblioteca_musica/widgets/plantilla_flotante.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,6 +30,9 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
   @override
   void initState() {
     super.initState();
+
+    columnasSeleccionadas =
+        context.read<BlocListaReproduccionSeleccionada>().state.lstColumnas;
   }
 
   List<ColumnaData> obtColumasSinSeleccionar(
@@ -142,9 +147,18 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
                       setState(() {});
                     }
                   },
-                  child: const Icon(
-                    Icons.add_circle_rounded,
-                    color: Deco.cGray1,
+                  child: PlantillaFlotante(
+                    altura: 20,
+                    ancho: 20,
+                    constructorContenido: (hover) => Container(
+                      decoration:
+                          BtnDecoration(hover, true, Colors.grey.shade600),
+                      child: Icon(
+                        Icons.add,
+                        size: 20,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -158,15 +172,33 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
                 const SizedBox(width: 10),
                 BtnFlotanteIcono(
                   color: DecoColores.rosaClaro1,
-                  onPressed: () {},
+                  onPressed: () async {
+                    await context
+                        .read<AuxiliarListaReproduccion>()
+                        .actColumnasListaRep(
+                            context, columnasSeleccionadas, columnaPrincipal);
+
+                    if (context.mounted) {
+                      context
+                          .read<CubitGestorColumnas>()
+                          .esconderGestorColumnas();
+                    }
+                  },
                   icono: Icons.check,
                   tam: 20,
+                  tamIcono: 15,
                 ),
 
+                const SizedBox(width: 10),
                 BtnFlotanteIcono(
-                  onPressed: () {},
+                  onPressed: () {
+                    context
+                        .read<CubitGestorColumnas>()
+                        .esconderGestorColumnas();
+                  },
                   icono: Icons.close,
                   tam: 20,
+                  tamIcono: 15,
                 )
               ],
             ),

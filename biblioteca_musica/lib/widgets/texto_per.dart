@@ -7,12 +7,13 @@ class TextoPer extends Text {
       FontWeight weight = FontWeight.normal,
       TextAlign align = TextAlign.left,
       Color? color,
+      int filasTexto = 1,
       super.key})
       : super(texto,
             textAlign: align,
             overflow: TextOverflow.ellipsis,
             softWrap: true,
-            maxLines: 1,
+            maxLines: filasTexto,
             style: TextStyle(
                 fontStyle: FontStyle.normal,
                 decoration: TextDecoration.none,

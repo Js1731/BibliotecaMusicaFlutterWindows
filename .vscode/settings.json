@@ -27,5 +27,6 @@
         "biblioteca_musica/.dart_tool": true,
         "**/.vscode": true
     },
-    "explorerExclude.backup": {}
+    "explorerExclude.backup": {},
+    "dotnet.defaultSolution": "disable"
 }

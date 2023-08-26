@@ -22,7 +22,7 @@ Future<List<ValorColumnaData>> obtValoresColumna(
 ///Abre una interfaz para seleccionar un Valor Columna posible de una Columna.
 ///
 ///Permite utilizar una barra de busqueda para filtrar por nombre los Valores.
-Future abrirDialogoSeleccionarValorColumna(
+Future abrirDialogoSeleccionarValorColumn(
     ColumnaData columna, ValorColumnaData? valori) async {
   //
   ValorColumnaData? valorSel = valori;

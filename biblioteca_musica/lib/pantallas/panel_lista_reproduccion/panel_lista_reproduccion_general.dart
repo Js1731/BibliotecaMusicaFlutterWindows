@@ -10,6 +10,10 @@ import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/main.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_biblioteca.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/cinta_opciones_lista.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_lista_cualquiera.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/encabezado_columnas.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/gestor_columnas.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_cancion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_columna_lista_reproduccion.dart';
@@ -25,32 +29,23 @@ import 'package:tuple/tuple.dart';
 ///Tiene dos cintas de opciones, una para las opciones normales de la lista, y otra para las
 ///opciones cuando hay canciones seleccionadas.
 ///Se pueden configurar el contenido de ambas cintas.
-abstract class PanelListaReproduccion extends StatefulWidget {
+class PanelListaReproduccion extends StatefulWidget {
   final ContPanelListaReproduccion controlador = ContPanelListaReproduccion();
-  final List<Widget> Function(
-          BuildContext context, ContPanelListaReproduccion controlador)
-      builderOpcionesNormales;
-  final List<Widget> Function(
-      BuildContext context,
-      ContPanelListaReproduccion controlador,
-      int cantCancionesSeleccionadas,
-      int totalCanciones) builderOpcionesSeleccion;
 
   ///Crea un panel para mostrar el contenido de una lista de reproduccion.
   ///
   ///<p>Para configurar el contenido de la cinta de opciones normales usar [builderOpcionesNormales]
   ///<p>Para configurar el contenido de la cinta cuando se seleccionan canciones usar [builderOpcionesSeleccion],
   ///los ultimos enteros del builder son [cantidad de canciones seleccionadas y Total de canciones de la lista]
-  PanelListaReproduccion(
-      {required this.builderOpcionesNormales,
-      required this.builderOpcionesSeleccion,
-      super.key});
+  PanelListaReproduccion({super.key});
 
   @override
   State<StatefulWidget> createState() => EstadoPanelListaReproduccion();
 }
 
 class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
+  bool modoActColumnas = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocSelector<
@@ -119,111 +114,15 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
 
                         const SizedBox(height: 5),
 
-                        //BARRA DE OPCIONES
-                        BlocSelector<
-                                BlocListaReproduccionSeleccionada,
-                                EstadoListaReproduccionSelecconada,
-                                Map<int, bool>>(
-                            selector: (state) =>
-                                state.mapaCancionesSeleccionadas,
-                            builder: (_, datos) {
-                              final int cantCancionesSel = context
-                                  .read<BlocListaReproduccionSeleccionada>()
-                                  .state
-                                  .obtCancionesSeleccionadas()
-                                  .length;
-                              final int cantTotalCanciones = context
-                                  .read<BlocListaReproduccionSeleccionada>()
-                                  .state
-                                  .obtCantidadCancionesTotal();
-                              return AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 200),
-                                transitionBuilder: (child, animation) =>
-                                    FadeTransition(
-                                        opacity: animation, child: child),
-                                child: CintaOpciones(
-                                  key: ValueKey(cantCancionesSel != 0),
-                                  lstOpciones: cantCancionesSel == 0
-                                      ? widget.builderOpcionesNormales(
-                                          context, widget.controlador)
-                                      : widget.builderOpcionesSeleccion(
-                                          context,
-                                          widget.controlador,
-                                          cantCancionesSel,
-                                          cantTotalCanciones),
-                                ),
-                              );
-                            }),
+                        //CINTA DE OPCIONES
+                        const CintaOpcionesLista(),
 
                         const SizedBox(height: 10),
                         const Divider(color: Colors.black38, height: 2),
                         const SizedBox(height: 5),
 
                         //COLUMNAS DE LA LISTA DE REPRODUCCION
-                        BlocSelector<
-                                BlocListaReproduccionSeleccionada,
-                                EstadoListaReproduccionSelecconada,
-                                List<ColumnaData>>(
-                            selector: (state) => state.lstColumnas,
-                            builder: (_, lstColumnas) {
-                              return SizedBox(
-                                height: 25,
-                                child: Row(
-                                  children: [
-                                    //NOMBRE
-                                    // Expanded(
-                                    //     child: ItemColumnaListaReproduccion(
-                                    //         idColumna: -1,
-                                    //         nombre: "Nombre",
-                                    //         align: TextAlign.left,
-                                    //         contPanelList: widget.controlador)),
-
-                                    //COLUMNAS
-                                    // for (ColumnaData prop in lstColumnas)
-                                    //   Expanded(
-                                    //       child: ItemColumnaListaReproduccion(
-                                    //     nombre: prop.nombre,
-                                    //     idColumna: prop.id,
-                                    //     contPanelList: widget.controlador,
-                                    //   )),
-
-                                    Expanded(child: GestorColumnas()),
-
-                                    //DURACION
-                                    // Expanded(
-                                    //     child: Row(
-                                    //   mainAxisAlignment: MainAxisAlignment.end,
-                                    //   children: [
-                                    //     Expanded(
-                                    //       child: ItemColumnaListaReproduccion(
-                                    //         idColumna: -2,
-                                    //         nombre: "Duración",
-                                    //         align: TextAlign.right,
-                                    //         contPanelList: widget.controlador,
-                                    //       ),
-                                    //     ),
-                                    //     if (listaSel.id !=
-                                    //         listaRepBiblioteca.id)
-                                    //       IconButton(
-                                    //           padding: EdgeInsets.zero,
-                                    //           onPressed: () async {
-                                    //             await context
-                                    //                 .read<
-                                    //                     AuxiliarListaReproduccion>()
-                                    //                 .actColumnasListaRep(
-                                    //                     context);
-                                    //           },
-                                    //           color: Deco.cGray1,
-                                    //           icon: const Icon(
-                                    //               Icons.more_vert_rounded,
-                                    //               size: 20),
-                                    //           splashRadius: 14)
-                                    //   ],
-                                    // )),
-                                  ],
-                                ),
-                              );
-                            }),
+                        const EncabezadoColumnas(),
 
                         const SizedBox(height: 5),
                         const Divider(color: Colors.black38, height: 2),

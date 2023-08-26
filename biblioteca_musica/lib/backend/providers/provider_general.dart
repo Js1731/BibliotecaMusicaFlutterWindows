@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../bloc/reproductor/evento_reproductor.dart';
 
-enum Panel { listasRep, listaRepBiblioteca, propiedades, ajustes }
+enum Panel { listasRep, propiedades, ajustes }
 
 ProviderGeneral provGeneral = ProviderGeneral();
 
@@ -216,10 +216,6 @@ class ProviderGeneral extends ChangeNotifier {
     await actualizarListaCanciones();
     await actualizarColumnasListaRepSel();
     await actualizarValoresColumnaCancion();
-
-    cambiarPanelCentral(listaSel == listaRepBiblioteca
-        ? Panel.listaRepBiblioteca
-        : Panel.listasRep);
 
     notifyListeners();
   }
