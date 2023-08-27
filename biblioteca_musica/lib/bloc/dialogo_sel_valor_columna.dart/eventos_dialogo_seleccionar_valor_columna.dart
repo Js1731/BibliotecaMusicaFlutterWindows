@@ -18,3 +18,9 @@ class EvSeleccionarValorColumna extends EventoDialogoSeleccionarValorColumna {
 
   EvSeleccionarValorColumna(this.valorColSel);
 }
+
+class EvTogglePanelAgregarColumna extends EventoDialogoSeleccionarValorColumna {
+  final bool mostrar;
+
+  EvTogglePanelAgregarColumna(this.mostrar);
+}

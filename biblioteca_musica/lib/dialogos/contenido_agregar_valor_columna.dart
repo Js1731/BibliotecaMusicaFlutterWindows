@@ -77,10 +77,12 @@ class _EstadoContenidoAgregarValorColumna
                       alignment: Alignment.centerLeft,
                       child: widget.btnVolver,
                     ),
-                    Center(
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(left: 30),
                       child: TextoPer(
                         texto: "Agregar ${widget.columna.nombre}",
-                        tam: 20,
+                        tam: 16,
                         weight: FontWeight.bold,
                       ),
                     ),

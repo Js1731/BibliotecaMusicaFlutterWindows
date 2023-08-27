@@ -5,22 +5,31 @@ class EstadoBlocDialogoSeleccionarValorColumna extends Equatable {
   final ValorColumnaData? valorColumnaSeleccionado;
   final List<ValorColumnaData> sugerenciasValorColumna;
   final String criterio;
+  final bool mostrarPanelAgregarColumna;
 
   const EstadoBlocDialogoSeleccionarValorColumna(
-      {required this.valorColumnaSeleccionado,
+      {required this.mostrarPanelAgregarColumna,
+      required this.valorColumnaSeleccionado,
       required this.sugerenciasValorColumna,
       required this.criterio});
 
   EstadoBlocDialogoSeleccionarValorColumna copiarCon(
           {ValorColumnaData? valorColSel,
           List<ValorColumnaData>? sugValorCol,
-          String? crit}) =>
+          String? crit,
+          bool? mostrarAgCol}) =>
       EstadoBlocDialogoSeleccionarValorColumna(
+          mostrarPanelAgregarColumna:
+              mostrarAgCol ?? mostrarPanelAgregarColumna,
           valorColumnaSeleccionado: valorColSel ?? valorColumnaSeleccionado,
           sugerenciasValorColumna: sugValorCol ?? sugerenciasValorColumna,
           criterio: crit ?? criterio);
 
   @override
-  List<Object?> get props =>
-      [valorColumnaSeleccionado, sugerenciasValorColumna, criterio];
+  List<Object?> get props => [
+        valorColumnaSeleccionado,
+        sugerenciasValorColumna,
+        criterio,
+        mostrarPanelAgregarColumna
+      ];
 }

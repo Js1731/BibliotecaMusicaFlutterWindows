@@ -17,11 +17,13 @@ class BlocDialogoSeleccionarValorColumna extends Bloc<
 
   BlocDialogoSeleccionarValorColumna(this._repositorioColumnas, this._columna)
       : super(const EstadoBlocDialogoSeleccionarValorColumna(
+            mostrarPanelAgregarColumna: false,
             criterio: "",
             sugerenciasValorColumna: [],
             valorColumnaSeleccionado: null)) {
     on<EvBuscarSugerencias>(_onBuscarSugerencias, transformer: restartable());
     on<EvSeleccionarValorColumna>(_onSeleccionarValorColumna);
+    on<EvTogglePanelAgregarColumna>(_onTogglePanelAgregarColumna);
   }
 
   FutureOr<void> _onBuscarSugerencias(EvBuscarSugerencias event,
@@ -45,5 +47,10 @@ class BlocDialogoSeleccionarValorColumna extends Bloc<
       Emitter<EstadoBlocDialogoSeleccionarValorColumna> emit) {
     emit(state.copiarCon(valorColSel: event.valorColSel));
     add(EvBuscarSugerencias(state.criterio));
+  }
+
+  FutureOr<void> _onTogglePanelAgregarColumna(EvTogglePanelAgregarColumna event,
+      Emitter<EstadoBlocDialogoSeleccionarValorColumna> emit) {
+    emit(state.copiarCon(mostrarAgCol: event.mostrar));
   }
 }

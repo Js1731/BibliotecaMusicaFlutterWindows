@@ -11,3 +11,16 @@ class EvEscucharColumnasCancion extends EventoDialogoGestorColumnasCancion {
 
   EvEscucharColumnasCancion(this.idCancion);
 }
+
+class EvSeleccionarColumna extends EventoDialogoGestorColumnasCancion {
+  final ColumnaData columnaDataSel;
+
+  EvSeleccionarColumna(this.columnaDataSel);
+}
+
+class EvToggleMostrarSelectorColumna
+    extends EventoDialogoGestorColumnasCancion {
+  final bool mostrar;
+
+  EvToggleMostrarSelectorColumna(this.mostrar);
+}

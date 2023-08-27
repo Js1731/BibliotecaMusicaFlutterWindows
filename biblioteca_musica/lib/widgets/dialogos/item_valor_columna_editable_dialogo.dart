@@ -8,12 +8,15 @@ class ItemValorColumnaEditableDialogo extends StatelessWidget {
   final ColumnaData columna;
   final ValorColumnaData? valorColumna;
   final VoidCallback onPressed;
+  final bool enabled;
 
-  const ItemValorColumnaEditableDialogo(
-      {super.key,
-      required this.onPressed,
-      required this.columna,
-      required this.valorColumna});
+  const ItemValorColumnaEditableDialogo({
+    super.key,
+    required this.onPressed,
+    required this.columna,
+    required this.valorColumna,
+    this.enabled = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,7 @@ class ItemValorColumnaEditableDialogo extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 BtnFlotanteIcono(
+                    enabled: enabled,
                     onPressed: onPressed,
                     tamIcono: 15,
                     tam: 20,

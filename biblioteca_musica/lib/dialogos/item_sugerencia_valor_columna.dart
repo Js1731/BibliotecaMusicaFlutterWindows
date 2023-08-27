@@ -61,8 +61,9 @@ class _EstadoItemSugerenciaValorColumna
                   child: TextoPer(
                       texto: widget.valorColumna.nombre,
                       tam: 16,
-                      color:
-                          widget.seleccionado ? DecoColores.rosa : Colors.black,
+                      color: widget.seleccionado
+                          ? DecoColores.rosaClaro
+                          : Colors.black,
                       weight: widget.seleccionado
                           ? FontWeight.bold
                           : FontWeight.normal),

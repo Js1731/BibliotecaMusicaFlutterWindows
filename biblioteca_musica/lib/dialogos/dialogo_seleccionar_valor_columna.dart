@@ -58,43 +58,12 @@ class _EstadoDialogoSeleccionarValorColumna
     extends EstadoDialogoGenerico<DialogoSeleccionarValorColumna> {
   @override
   Widget constructorContenido(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Row(
-        children: [
-          Expanded(
-              child: ContenidoSeleccionarValorColumna(
-            columna: widget.columna,
-            onAgregarValorColumna: () {
-              setState(() {
-                ancho = 560;
-              });
-            },
-          )),
-          if (constraints.maxWidth > 400)
-            Expanded(
-                child: ContenidoAgregarValorColumna(
-              btnVolver: BtnFlotanteIcono(
-                  onPressed: () {
-                    setState(() {
-                      ancho = 250;
-                    });
-                  },
-                  icono: Icons.arrow_back_rounded,
-                  tam: 20,
-                  tamIcono: 15),
-              columna: widget.columna,
-              onAgregarValorColumna: (nuevoValorColuma) {
-                context
-                    .read<BlocDialogoSeleccionarValorColumna>()
-                    .add(EvSeleccionarValorColumna(nuevoValorColuma));
-
-                setState(() {
-                  ancho = 250;
-                });
-              },
-            ))
-        ],
-      );
-    });
+    return ContenidoSeleccionarValorColumna(
+      onSeleccionarValorColumna: (valorColumna) {
+        Navigator.of(context).pop(valorColumna);
+      },
+      columna: widget.columna,
+      onAgregarValorColumna: () {},
+    );
   }
 }

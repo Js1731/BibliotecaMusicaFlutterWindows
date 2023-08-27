@@ -10,14 +10,30 @@ class BlocDialogoGestorColumnasCancion extends Bloc<
   final RepositorioColumnas _repositorioColumnas;
 
   BlocDialogoGestorColumnasCancion(this._repositorioColumnas)
-      : super(const EstadoDialogoGestorColumnasCancion({})) {
+      : super(const EstadoDialogoGestorColumnasCancion(
+            mostrarSelectorValorColumna: false,
+            columnaSel: null,
+            mapaColumnas: {})) {
     on<EvEscucharColumnasCancion>(_onEscucharColumnasCancion);
+    on<EvSeleccionarColumna>(_onSeleccionarColumna);
+    on<EvToggleMostrarSelectorColumna>(_onToggleMostrarSelectorColumna);
   }
 
   FutureOr<void> _onEscucharColumnasCancion(EvEscucharColumnasCancion event,
       Emitter<EstadoDialogoGestorColumnasCancion> emit) async {
     await emit.forEach(
         _repositorioColumnas.crearStreamValoresColumnaCancion(event.idCancion),
-        onData: (nuevaData) => EstadoDialogoGestorColumnasCancion(nuevaData));
+        onData: (nuevoMapa) => state.copiarCon(nuevoMapaColumna: nuevoMapa));
+  }
+
+  FutureOr<void> _onSeleccionarColumna(EvSeleccionarColumna event,
+      Emitter<EstadoDialogoGestorColumnasCancion> emit) {
+    emit(state.copiarCon(nuevaColumnaSel: event.columnaDataSel));
+  }
+
+  FutureOr<void> _onToggleMostrarSelectorColumna(
+      EvToggleMostrarSelectorColumna event,
+      Emitter<EstadoDialogoGestorColumnasCancion> emit) {
+    emit(state.copiarCon(mostrarSelValCol: event.mostrar));
   }
 }
