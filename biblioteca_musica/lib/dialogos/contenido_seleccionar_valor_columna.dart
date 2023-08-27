@@ -117,7 +117,8 @@ class _EstadoContenidoSeleccionarValorColumna
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 10),
                     child: BtnFlotanteSimple(
-                        enabled: state.valorColumnaSeleccionado != null,
+                        enabled: state.valorColumnaSeleccionado != null &&
+                            !state.mostrarPanelAgregarColumna,
                         ancho: 260,
                         onPressed: () {
                           if (state.valorColumnaSeleccionado != null) {

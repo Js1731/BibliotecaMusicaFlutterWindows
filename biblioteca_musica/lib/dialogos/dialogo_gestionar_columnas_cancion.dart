@@ -7,11 +7,14 @@ import 'package:biblioteca_musica/bloc/dialogo_sel_valor_columna.dart/eventos_di
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/bloc_dimesiones_panel.dart';
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/estado_dimensiones_panel.dart';
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/evento_dimensiones_panel.dart';
+import 'package:biblioteca_musica/dialogos/contenido_agregar_columna.dart';
 import 'package:biblioteca_musica/dialogos/contenido_agregar_valor_columna.dart';
 import 'package:biblioteca_musica/dialogos/contenido_seleccionar_valor_columna.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_generico.dart';
 import 'package:biblioteca_musica/painters/custom_painter_dialogo_sel_valor_columna.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
+import 'package:biblioteca_musica/widgets/btn_flotante_simple.dart';
 import 'package:biblioteca_musica/widgets/dialogos/item_valor_columna_editable_dialogo.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +33,8 @@ Future<Map<ColumnaData, ValorColumnaData?>?>
             backgroundColor: Colors.transparent,
             child: BlocProvider(
                 create: (context) => BlocDialogoGestorColumnasCancion(
-                    context.read<RepositorioColumnas>())
+                    context.read<RepositorioColumnas>(),
+                    context.read<RepositorioCanciones>())
                   ..add(EvEscucharColumnasCancion(cancion.id)),
                 child: DialogoGestionarColumnasCancion(cancion: cancion)),
           ));
@@ -71,7 +75,7 @@ class _EstadoDialogoGestionarColumnasCancion
                     tam: 20,
                     weight: FontWeight.bold,
                   ),
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: TextoPer(
                       texto:
@@ -80,6 +84,20 @@ class _EstadoDialogoGestionarColumnasCancion
                       tam: 14,
                     ),
                   ),
+                  BtnFlotanteSimple(
+                      enabled: !state.mostrarAgregarColumna &&
+                          !state.mostrarSelectorValorColumna,
+                      ancho: 260,
+                      onPressed: () {
+                        context
+                            .read<BlocDimensionesPanel>()
+                            .add(EvExpandirAncho(300));
+                        context
+                            .read<BlocDialogoGestorColumnasCancion>()
+                            .add(EvToggleMostrarAgregarColumna(true));
+                      },
+                      texto: "Agregar Columna"),
+                  const SizedBox(height: 15),
                   Expanded(
                     child: ListView.builder(
                         itemCount: state.mapaColumnas.keys.toList().length,
@@ -107,7 +125,14 @@ class _EstadoDialogoGestionarColumnasCancion
                                 valorColumna: valorColumna),
                           );
                         }),
-                  )
+                  ),
+                  BtnFlotanteSimple(
+                      ancho: 260,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      texto: "Cerrar"),
+                  const SizedBox(height: 10)
                 ],
               ),
             )),
@@ -125,7 +150,21 @@ class _EstadoDialogoGestionarColumnasCancion
                                     state.columnaSel!)
                                   ..add(EvBuscarSugerencias("")),
                             child: ContenidoSeleccionarValorColumna(
-                                onSeleccionarValorColumna: (valorColumna) {},
+                                onSeleccionarValorColumna: (valorColumna) {
+                                  context
+                                      .read<BlocDialogoGestorColumnasCancion>()
+                                      .add(EvAsignarValorColumna(
+                                          valorColumna.id,
+                                          state.columnaSel!.id,
+                                          widget.cancion.id));
+                                  context
+                                      .read<BlocDimensionesPanel>()
+                                      .add(EvContraerAncho(300));
+                                  context
+                                      .read<BlocDialogoGestorColumnasCancion>()
+                                      .add(EvToggleMostrarSelectorColumna(
+                                          false));
+                                },
                                 btnVolver: BtnFlotanteIcono(
                                     onPressed: () {
                                       context
@@ -143,6 +182,28 @@ class _EstadoDialogoGestionarColumnasCancion
                                 onAgregarValorColumna: () {},
                                 columna: state.columnaSel!)));
                   }),
+            if (state.mostrarAgregarColumna)
+              Expanded(
+                  child: ContenidoAgregarColumna(
+                      context.read<RepositorioColumnas>(),
+                      onAgregarColumna: () {
+                context.read<BlocDimensionesPanel>().add(EvContraerAncho(300));
+                context
+                    .read<BlocDialogoGestorColumnasCancion>()
+                    .add(EvToggleMostrarAgregarColumna(false));
+              },
+                      btnVolver: BtnFlotanteIcono(
+                          onPressed: () {
+                            context
+                                .read<BlocDimensionesPanel>()
+                                .add(EvContraerAncho(300));
+                            context
+                                .read<BlocDialogoGestorColumnasCancion>()
+                                .add(EvToggleMostrarAgregarColumna(false));
+                          },
+                          icono: Icons.arrow_back_rounded,
+                          tam: 20,
+                          tamIcono: 15)))
           ],
         );
       });

@@ -31,34 +31,44 @@ class DBPColumnas {
 
   Stream<Map<ColumnaData, ValorColumnaData?>>
       crearStreamMapaValoresColumnaCancion(int idCancion) {
-    return crearStreamColumnas().asyncMap((listaColumnas) async {
-      Map<ColumnaData, ValorColumnaData?> mapa = {};
-      for (ColumnaData columna in listaColumnas) {
-        final resultados = await (appDb.select(appDb.cancionValorColumna).join([
-          leftOuterJoin(
-              appDb.valorColumna,
-              appDb.cancionValorColumna.idValorPropiedad
-                  .equalsExp(appDb.valorColumna.id))
-        ])
-              ..where(appDb.cancionValorColumna.idCancion.equals(idCancion) &
-                  appDb.valorColumna.idColumna.equals(columna.id)))
-            .getSingleOrNull();
+    return appDb
+        .customSelect("SELECT * FROM Columna",
+            readsFrom: {appDb.columna, appDb.cancionValorColumna})
+        .watch()
+        .asyncMap((listaColumnas) async {
+          Map<ColumnaData, ValorColumnaData?> mapa = {};
+          for (QueryRow rawcolumna in listaColumnas) {
+            final columna = ColumnaData(
+                id: rawcolumna.data["id"], nombre: rawcolumna.data["nombre"]);
 
-        if (resultados != null) {
-          final data = resultados.rawData.data;
-          final valorColumna = ValorColumnaData(
-              id: data["valor_columna.id"],
-              nombre: data["valor_columna.nombre"],
-              idColumna: data["valor_columna.idColumna"],
-              estado: data["valor_columna.estado"]);
-          mapa[columna] = valorColumna;
-        } else {
-          mapa[columna] = null;
-        }
-      }
+            final resultados = await (appDb
+                    .select(appDb.cancionValorColumna)
+                    .join([
+              leftOuterJoin(
+                  appDb.valorColumna,
+                  appDb.cancionValorColumna.idValorPropiedad
+                      .equalsExp(appDb.valorColumna.id))
+            ])
+                  ..where(
+                      appDb.cancionValorColumna.idCancion.equals(idCancion) &
+                          appDb.valorColumna.idColumna.equals(columna.id)))
+                .getSingleOrNull();
 
-      return mapa;
-    });
+            if (resultados != null) {
+              final data = resultados.rawData.data;
+              final valorColumna = ValorColumnaData(
+                  id: data["valor_columna.id"],
+                  nombre: data["valor_columna.nombre"],
+                  idColumna: data["valor_columna.idColumna"],
+                  estado: data["valor_columna.estado"]);
+              mapa[columna] = valorColumna;
+            } else {
+              mapa[columna] = null;
+            }
+          }
+
+          return mapa;
+        });
   }
 
   Future<List<ColumnaData>> obtColumnasSistema() async {

@@ -169,6 +169,10 @@ class DBPCanciones {
                 idCancion: idCan, idListaRep: idListaRep))));
   }
 
+  ///Asigna los Valores Columna a las Canciones indicadas
+  ///
+  ///Se eliminan las asociaciones con otros valores de columna de la columna indicada,
+  ///y asocia las canciones a el valor columna ingresado.
   Future<void> actValorColumnaCanciones(int idColumna, int idValorColumna,
       List<int> lstCancionesSeleccionadas) async {
     //

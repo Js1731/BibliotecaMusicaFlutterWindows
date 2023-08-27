@@ -32,27 +32,30 @@ class ItemValorColumnaEditableDialogo extends StatelessWidget {
           ),
 
           //VALOR COLUMNA
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  child: TextoPer(
-                      texto: valorColumna?.nombre ?? "(...)",
-                      tam: 14,
-                      align: TextAlign.right),
-                ),
-                const SizedBox(width: 10),
-                BtnFlotanteIcono(
-                    enabled: enabled,
-                    onPressed: onPressed,
-                    tamIcono: 15,
-                    tam: 20,
-                    icono: Icons.edit),
-              ],
-            ),
-          ),
+          LayoutBuilder(builder: (context, constraint) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (constraint.maxWidth > 120)
+                    SizedBox(
+                      child: TextoPer(
+                          texto: valorColumna?.nombre ?? "(...)",
+                          tam: 14,
+                          align: TextAlign.right),
+                    ),
+                  const SizedBox(width: 10),
+                  BtnFlotanteIcono(
+                      enabled: enabled,
+                      onPressed: onPressed,
+                      tamIcono: 15,
+                      tam: 20,
+                      icono: Icons.edit),
+                ],
+              ),
+            );
+          }),
           //COLUMNA
           Container(
               width: 120,

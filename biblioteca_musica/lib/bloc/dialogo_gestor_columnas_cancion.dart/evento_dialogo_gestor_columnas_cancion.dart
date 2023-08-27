@@ -24,3 +24,17 @@ class EvToggleMostrarSelectorColumna
 
   EvToggleMostrarSelectorColumna(this.mostrar);
 }
+
+class EvAsignarValorColumna extends EventoDialogoGestorColumnasCancion {
+  final int idValorColumna;
+  final int idColumna;
+  final int idCancion;
+
+  EvAsignarValorColumna(this.idValorColumna, this.idColumna, this.idCancion);
+}
+
+class EvToggleMostrarAgregarColumna extends EventoDialogoGestorColumnasCancion {
+  final bool mostrar;
+
+  EvToggleMostrarAgregarColumna(this.mostrar);
+}
