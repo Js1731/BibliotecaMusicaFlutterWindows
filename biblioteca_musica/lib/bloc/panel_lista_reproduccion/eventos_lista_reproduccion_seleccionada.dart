@@ -76,14 +76,23 @@ class EvActValorColumnaCanciones extends EventoListaReproduccionSeleccionada {
 class EvRecortarNombresCancionesSeleccionadas
     extends EventoListaReproduccionSeleccionada {
   final String filtro;
+  final List<int> canciones;
 
-  EvRecortarNombresCancionesSeleccionadas(this.filtro);
+  EvRecortarNombresCancionesSeleccionadas(this.filtro, this.canciones);
 }
 
-class EvEliminarCancionesLista extends EventoListaReproduccionSeleccionada {}
+class EvEliminarCancionesLista extends EventoListaReproduccionSeleccionada {
+  final List<int> canciones;
+
+  EvEliminarCancionesLista(this.canciones);
+}
 
 class EvEliminarCancionesTotalmente
-    extends EventoListaReproduccionSeleccionada {}
+    extends EventoListaReproduccionSeleccionada {
+  final List<int> canciones;
+
+  EvEliminarCancionesTotalmente(this.canciones);
+}
 
 class EvRenombrarCancion extends EventoListaReproduccionSeleccionada {
   final int idCancion;
@@ -101,7 +110,7 @@ class EvActValoresColumnaCancionUnica
 }
 
 class EvActColumnaPrincipal extends EventoListaReproduccionSeleccionada {
-  final ColumnaData columna;
+  final int idColumna;
 
-  EvActColumnaPrincipal(this.columna);
+  EvActColumnaPrincipal(this.idColumna);
 }

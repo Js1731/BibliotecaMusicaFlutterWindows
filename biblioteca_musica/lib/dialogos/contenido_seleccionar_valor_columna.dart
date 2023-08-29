@@ -47,10 +47,12 @@ class _EstadoContenidoSeleccionarValorColumna
         padding: const EdgeInsets.only(left: 10, bottom: 0),
         child: Row(
           children: [
+            ///CONTENIDO SELECCIONAR VALOR COLUMNA
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ///TITULO
                   SizedBox(
                     width: double.maxFinite,
                     height: 30,
@@ -70,6 +72,8 @@ class _EstadoContenidoSeleccionarValorColumna
                       ],
                     ),
                   ),
+
+                  ///TEXTFIELD PARA BUSCAR
                   Padding(
                     padding:
                         const EdgeInsets.only(top: 10, bottom: 10, right: 10),
@@ -83,6 +87,8 @@ class _EstadoContenidoSeleccionarValorColumna
                           hint: "Buscar ${widget.columna.nombre}..."),
                     ),
                   ),
+
+                  ///BOTON PARA AGREGAR VALOR COLUMNA
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: BtnFlotanteSimple(
@@ -98,6 +104,8 @@ class _EstadoContenidoSeleccionarValorColumna
                         },
                         texto: "Agregar ${widget.columna.nombre}"),
                   ),
+
+                  ///LISTA SUGERENCIAS
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(right: 10),
@@ -114,6 +122,8 @@ class _EstadoContenidoSeleccionarValorColumna
                       ),
                     ),
                   ),
+
+                  ///BOTON SELECCIONAR VALOR COLUMNA
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 10),
                     child: BtnFlotanteSimple(
@@ -133,6 +143,8 @@ class _EstadoContenidoSeleccionarValorColumna
                 ],
               ),
             ),
+
+            //CONTENIDO AGREGAR VALOR COLUMNA
             if (state.mostrarPanelAgregarColumna)
               Expanded(
                   child: ContenidoAgregarValorColumna(

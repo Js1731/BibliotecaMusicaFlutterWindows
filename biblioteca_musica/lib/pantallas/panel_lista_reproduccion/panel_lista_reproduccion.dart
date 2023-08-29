@@ -1,4 +1,3 @@
-import 'package:biblioteca_musica/backend/controles/control_panel_lista_reproduccion.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
@@ -7,22 +6,15 @@ import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_repro
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
-import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
-import 'package:biblioteca_musica/main.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_biblioteca.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/cinta_opciones_lista.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_lista_cualquiera.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/encabezado_columnas.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/gestor_columnas.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_cancion.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/item_columna_lista_reproduccion.dart';
-import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
+
+import 'opciones/cinta_opciones_lista.dart';
 
 ///Panel para mostrar el contenido de una lista de reproduccion
 ///
@@ -30,14 +22,12 @@ import 'package:tuple/tuple.dart';
 ///opciones cuando hay canciones seleccionadas.
 ///Se pueden configurar el contenido de ambas cintas.
 class PanelListaReproduccion extends StatefulWidget {
-  final ContPanelListaReproduccion controlador = ContPanelListaReproduccion();
-
   ///Crea un panel para mostrar el contenido de una lista de reproduccion.
   ///
   ///<p>Para configurar el contenido de la cinta de opciones normales usar [builderOpcionesNormales]
   ///<p>Para configurar el contenido de la cinta cuando se seleccionan canciones usar [builderOpcionesSeleccion],
   ///los ultimos enteros del builder son [cantidad de canciones seleccionadas y Total de canciones de la lista]
-  PanelListaReproduccion({super.key});
+  const PanelListaReproduccion({super.key});
 
   @override
   State<StatefulWidget> createState() => EstadoPanelListaReproduccion();
@@ -59,7 +49,6 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
       builder: (_, datos) {
         final canciones = datos.item1;
         final listaSel = datos.item2;
-        final mapaCancionesSel = datos.item3;
 
         return BlocSelector<BlocReproductor, EstadoReproductor,
                 CancionColumnaPrincipal?>(
@@ -131,36 +120,45 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                         //LISTA DE CANCIONES
                         Expanded(
                             child: canciones.isNotEmpty
-                                ? BlocBuilder<BlocReproductor,
-                                        EstadoReproductor>(
-                                    builder: (context, state) {
-                                    final cancionReproducida =
-                                        state.cancionReproducida;
-                                    return ListView.builder(
-                                        itemCount: canciones.length,
-                                        itemBuilder: (_, index) {
-                                          CancionColumnas cancion =
-                                              canciones[index];
+                                ? BlocSelector<
+                                        BlocListaReproduccionSeleccionada,
+                                        EstadoListaReproduccionSelecconada,
+                                        Map<int, bool>>(
+                                    selector: (state) =>
+                                        state.mapaCancionesSeleccionadas,
+                                    builder: (context, mapaCancionesSel) {
+                                      return BlocBuilder<BlocReproductor,
+                                              EstadoReproductor>(
+                                          builder: (context, state) {
+                                        final cancionReproducida =
+                                            state.cancionReproducida;
+                                        return ListView.builder(
+                                            itemCount: canciones.length,
+                                            itemBuilder: (_, index) {
+                                              CancionColumnas cancion =
+                                                  canciones[index];
 
-                                          return Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                vertical: 6),
-                                            child: ItemCancion(
-                                                contPanelListaRep:
-                                                    widget.controlador,
-                                                cancion: cancion,
-                                                idLst: listaSel.id,
-                                                modoSeleccion: provListaRep
-                                                        .cantCancionesSel !=
-                                                    0,
-                                                seleccionado: mapaCancionesSel[
-                                                        cancion.id] ??
-                                                    false,
-                                                reproduciendo: cancion.id ==
-                                                    cancionReproducida?.id),
-                                          );
-                                        });
-                                  })
+                                              return Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 6),
+                                                child: ItemCancion(
+                                                    cancion: cancion,
+                                                    idLst: listaSel.id,
+                                                    modoSeleccion:
+                                                        mapaCancionesSel[
+                                                                cancion.id] ??
+                                                            false,
+                                                    seleccionado:
+                                                        mapaCancionesSel[
+                                                                cancion.id] ??
+                                                            false,
+                                                    reproduciendo: cancion.id ==
+                                                        cancionReproducida?.id),
+                                              );
+                                            });
+                                      });
+                                    })
                                 : const SizedBox())
                       ]));
             });

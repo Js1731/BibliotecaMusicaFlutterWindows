@@ -3,20 +3,20 @@ import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.da
 import 'package:biblioteca_musica/bloc/columnas_sistema/estado_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/btn_flotante_icono.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/btn_flotante_generico.dart';
 import 'package:biblioteca_musica/widgets/plantilla_flotante.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../widgets/draggable_columna.dart';
+import 'draggable_columna.dart';
 import '../../widgets/texto_per.dart';
 
 class GestorColumnas extends StatefulWidget {
-  const GestorColumnas({super.key});
+  final int? idColumnaPrincipal;
+
+  const GestorColumnas({super.key, this.idColumnaPrincipal});
 
   @override
   State<StatefulWidget> createState() => _EstadoGestorColumnas();
@@ -24,12 +24,14 @@ class GestorColumnas extends StatefulWidget {
 
 class _EstadoGestorColumnas extends State<GestorColumnas> {
   final ScrollController outerController = ScrollController();
-  ColumnaData? columnaPrincipal;
+  int? idColumnaPrincipal;
   List<ColumnaData> columnasSeleccionadas = [];
 
   @override
   void initState() {
     super.initState();
+
+    idColumnaPrincipal = widget.idColumnaPrincipal;
 
     columnasSeleccionadas =
         context.read<BlocListaReproduccionSeleccionada>().state.lstColumnas;
@@ -101,12 +103,12 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
                           },
                           onSelPrincipal: () {
                             setState(() {
-                              columnaPrincipal = columnasSeleccionadas[i];
+                              idColumnaPrincipal = columnasSeleccionadas[i].id;
                             });
                           },
                           index: i,
-                          esPrincipal: columnasSeleccionadas[i].id ==
-                              columnaPrincipal?.id,
+                          esPrincipal:
+                              columnasSeleccionadas[i].id == idColumnaPrincipal,
                           nombre: columnasSeleccionadas[i].nombre,
                           outerController: outerController,
                         )
@@ -176,7 +178,7 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
                     await context
                         .read<AuxiliarListaReproduccion>()
                         .actColumnasListaRep(
-                            context, columnasSeleccionadas, columnaPrincipal);
+                            context, columnasSeleccionadas, idColumnaPrincipal);
 
                     if (context.mounted) {
                       context

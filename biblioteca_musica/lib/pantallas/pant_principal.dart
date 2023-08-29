@@ -1,5 +1,4 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
@@ -8,9 +7,7 @@ import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_princi
 import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_lista_cualquiera.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_biblioteca.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
+import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/panel_reproductor.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
@@ -32,8 +29,31 @@ class PantPrincipal extends StatefulWidget {
   State createState() => PantPrincipalState();
 }
 
-class PantPrincipalState extends State<PantPrincipal> {
+class PantPrincipalState extends State<PantPrincipal>
+    with SingleTickerProviderStateMixin {
   bool iniciado = false;
+
+  late AnimationController animCont;
+  late Animation anim2;
+
+  @override
+  void initState() {
+    super.initState();
+
+    animCont = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+      lowerBound: 0,
+      upperBound: 0,
+    );
+
+    anim2 = animCont.drive(TweenSequence([
+      TweenSequenceItem(tween: Tween(begin: 0, end: 0.5), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: 1, end: 0), weight: 2)
+    ]));
+
+    animCont.forward();
+  }
 
   Widget? construirPanelCentral(BuildContext context, Panel panel) {
     switch (panel) {
@@ -47,7 +67,7 @@ class PantPrincipalState extends State<PantPrincipal> {
                     context.read<RepositorioColumnas>()),
                 child: PanelListaReproduccion()));
 
-      case Panel.propiedades:
+      case Panel.columnas:
         return const PanelColumnasPrincipal();
       default:
         return const SizedBox();
@@ -80,17 +100,34 @@ class PantPrincipalState extends State<PantPrincipal> {
                               state.listaReproduccionSeleccionada,
                           builder: (context, listaSeleccionada) {
                             return BlocBuilder<CubitPanelSeleccionado, Panel>(
-                              builder: (context, panel) => Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(
-                                      top: 10, right: 10, bottom: 10),
-                                  child: CustomPaint(
-                                      painter: CustomPainerPanelCentral(),
-                                      child: construirPanelCentral(
-                                          context, panel)),
+                                builder: (context, panel) {
+                              return Expanded(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 10, right: 10, bottom: 10),
+                                      child: CustomPaint(
+                                          painter: CustomPainerPanelCentral(),
+                                          child: construirPanelCentral(
+                                              context, panel)),
+                                    ),
+                                    AnimatedBuilder(
+                                      animation: anim2,
+                                      builder: (context, child) {
+                                        return Opacity(
+                                            opacity: animCont.value,
+                                            child: child);
+                                      },
+                                      child: Container(
+                                        key: ValueKey(panel),
+                                        color: Colors.amber,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            );
+                              );
+                            });
                           }),
                     ]),
                   ),

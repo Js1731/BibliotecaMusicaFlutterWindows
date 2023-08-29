@@ -1,8 +1,6 @@
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/plantilla_flotante.dart';
-import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
-import 'package:biblioteca_musica/backend/misc/utiles.dart';
 
 class BtnFlotanteGenerico extends StatefulWidget {
   final Color color;

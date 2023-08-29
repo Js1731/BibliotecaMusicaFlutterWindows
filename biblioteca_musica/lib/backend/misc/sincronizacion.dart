@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/backend/providers/provider_log.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:path/path.dart';
@@ -442,29 +440,29 @@ Future<void> sincronizarArchivos() async {
   for (var cancion in lstCanciones) {
     switch (cancion.estado) {
       case estadoLocal:
-        provBarraLog.texto("Sincronizando", "Subiendo ${cancion.id}.mp3");
+        //provBarraLog.texto("Sincronizando", "Subiendo ${cancion.id}.mp3");
 
         await cambiarEstadoCancion([cancion.id], estadoSubiendo);
-        await provGeneral.actualizarListaCanciones();
+        //await provGeneral.actualizarListaCanciones();
 
         await subirArchivo("${cancion.id}.mp3");
-        provBarraLog.texto("Sincronizando", "${cancion.id}.mp3 subido.");
+        //provBarraLog.texto("Sincronizando", "${cancion.id}.mp3 subido.");
 
         await cambiarEstadoCancion([cancion.id], estadoSync);
-        await provGeneral.actualizarListaCanciones();
+        //await provGeneral.actualizarListaCanciones();
 
         break;
       case estadoServidor:
-        provBarraLog.texto("Sincronizando", "Descargando ${cancion.id}.mp3");
+        //provBarraLog.texto("Sincronizando", "Descargando ${cancion.id}.mp3");
         await cambiarEstadoCancion([cancion.id], estadoDescargando);
 
-        await provGeneral.actualizarListaCanciones();
+        //await provGeneral.actualizarListaCanciones();
         await descargarArchivo("${cancion.id}.mp3", TipoArchivo.musica);
 
-        provBarraLog.texto("Sincronizando", "${cancion.id}.mp3 descargando.");
+        //provBarraLog.texto("Sincronizando", "${cancion.id}.mp3 descargando.");
 
         await cambiarEstadoCancion([cancion.id], estadoSync);
-        await provGeneral.actualizarListaCanciones();
+        //await provGeneral.actualizarListaCanciones();
         break;
     }
   }
@@ -475,13 +473,13 @@ Future<void> sincronizarArchivos() async {
     switch (imagen.estado) {
       case estadoLocal:
         try {
-          provBarraLog.texto("Sincronizando", "Subiendo ${imagen.id}.jpg.");
+          //provBarraLog.texto("Sincronizando", "Subiendo ${imagen.id}.jpg.");
           await cambiarEstadoImagen([imagen.id], estadoSubiendo);
-          await provGeneral.actualizarListaCanciones();
+          //await provGeneral.actualizarListaCanciones();
           await subirArchivo("${imagen.id}.jpg");
-          provBarraLog.texto("Sincronizando", "${imagen.id}.jpg. subido.");
+          //provBarraLog.texto("Sincronizando", "${imagen.id}.jpg. subido.");
           await cambiarEstadoImagen([imagen.id], estadoSync);
-          await provGeneral.actualizarListaCanciones();
+          //await provGeneral.actualizarListaCanciones();
         } catch (e) {
           break;
         }
@@ -489,13 +487,13 @@ Future<void> sincronizarArchivos() async {
         break;
       case estadoServidor:
         try {
-          provBarraLog.texto("Sincronizando", "Descargando ${imagen.id}.jpg.");
+          //provBarraLog.texto("Sincronizando", "Descargando ${imagen.id}.jpg.");
           await cambiarEstadoImagen([imagen.id], estadoDescargando);
-          await provGeneral.actualizarListaCanciones();
+          //await provGeneral.actualizarListaCanciones();
           await descargarArchivo("${imagen.id}.jpg", TipoArchivo.musica);
-          provBarraLog.texto("Sincronizando", "${imagen.id}.jpg. descargado.");
+          //provBarraLog.texto("Sincronizando", "${imagen.id}.jpg. descargado.");
           await cambiarEstadoImagen([imagen.id], estadoSync);
-          await provGeneral.actualizarListaCanciones();
+          //await provGeneral.actualizarListaCanciones();
         } catch (e) {
           break;
         }
@@ -504,42 +502,42 @@ Future<void> sincronizarArchivos() async {
     }
   }
 
-  provBarraLog.texto("Sincronizando", "Archivos Sincronizados.");
+  //provBarraLog.texto("Sincronizando", "Archivos Sincronizados.");
 }
 
 Future<void> sincronizar() async {
   try {
-    provBarraLog.cambiarEstadoSinc(false);
+    //provBarraLog.cambiarEstadoSinc(false);
 
     await cancelarDescargaSubida();
 
-    provBarraLog.texto("Sincronizando", "Iniciando Sincronización...");
+    //provBarraLog.texto("Sincronizando", "Iniciando Sincronización...");
     int versionServidor = await obtNumeroVersionServidor();
     int versionLocal = await obtNumeroVersionLocal();
 
     if (versionLocal > versionServidor) {
       await reemplazarDatosServidor();
       await sincronizarLocalServidor();
-      await provGeneral.actualizarListaCanciones();
+      //await provGeneral.actualizarListaCanciones();
       await actNumeroVersionServidor(versionLocal);
     } else if (versionLocal < versionServidor) {
       await reemplazarDatosLocal();
       await sincronizarServidorLocal();
-      await provGeneral.actualizarListaCanciones();
+      //await provGeneral.actualizarListaCanciones();
       await actNumeroVersionLocal(versionServidor);
     }
 
-    provBarraLog.texto("Sincronizando", "Datos Sincronizados.");
-    provBarraLog.cambiarEstadoSinc(true);
+    //provBarraLog.texto("Sincronizando", "Datos Sincronizados.");
+    //provBarraLog.cambiarEstadoSinc(true);
 
     sincronizarArchivos();
   } catch (error) {
     if (error is DioException) {
-      provBarraLog.texto(
-          "Error", "Hubo un error con la comunicación con el servidor.");
+      //provBarraLog.texto(
+      //    "Error", "Hubo un error con la comunicación con el servidor.");
       return;
     } else {
-      provBarraLog.texto("Error", "Hubo un error durante la sincronización.");
+      //provBarraLog.texto("Error", "Hubo un error durante la sincronización.");
       rethrow;
     }
   }

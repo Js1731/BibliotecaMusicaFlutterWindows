@@ -1,9 +1,7 @@
-import 'package:biblioteca_musica/backend/controles/control_panel_lista_reproduccion.dart';
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/backend/misc/utiles.dart';
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
@@ -20,13 +18,11 @@ class ItemCancion extends BtnGenerico {
   final bool reproduciendo;
   final bool seleccionado;
   final bool modoSeleccion;
-  final ContPanelListaReproduccion contPanelListaRep;
 
   ItemCancion(
       {required this.cancion,
       required this.idLst,
       required this.seleccionado,
-      required this.contPanelListaRep,
       required this.modoSeleccion,
       required this.reproduciendo,
       super.key})
@@ -54,62 +50,69 @@ class ItemCancion extends BtnGenerico {
                         : const BoxDecoration(),
             child: Row(
               children: [
-                //CHECKBOX
-                Checkbox(
-                    shape: const CircleBorder(),
-                    splashRadius: 15,
-                    activeColor: Deco.cRosa0,
-                    side: BorderSide(
-                        color: reproduciendo
-                            ? hover
-                                ? Colors.white
-                                : Deco.cMorado2
-                            : hover
-                                ? Deco.cGray
-                                : Colors.white),
-                    value: seleccionado,
-                    onChanged: (nuevoValor) {
-                      context
-                          .read<BlocListaReproduccionSeleccionada>()
-                          .add(EvToggleSelCancion(cancion.id));
-                    }),
-
-                if (cancion.estado == estadoLocal)
-                  const Icon(
-                    Icons.file_upload_rounded,
-                    color: Deco.cGray,
-                  ),
-
-                if (cancion.estado == estadoServidor)
-                  const Icon(
-                    Icons.file_download_rounded,
-                    color: Deco.cGray,
-                  ),
-
-                if (cancion.estado == estadoSubiendo)
-                  const Icon(
-                    Icons.file_upload_rounded,
-                    color: Deco.cRosa0,
-                  ),
-
-                if (cancion.estado == estadoDescargando)
-                  const Icon(
-                    Icons.file_download_rounded,
-                    color: Deco.cRosa0,
-                  ),
-
-                if (cancion.estado != estadoSync) const SizedBox(width: 10),
-
                 //NOMBRE DE LA CANCION
                 Expanded(
-                  child: _TextoItemCancion(
-                    texto: cancion.nombre,
-                    hover: hover,
-                    reproduciendo: reproduciendo,
-                    local: cancion.estado == estadoSync ||
-                        cancion.estado == estadoLocal ||
-                        cancion.estado == estadoLocal,
-                    align: TextAlign.left,
+                  child: Row(
+                    children: [
+                      //CHECKBOX
+                      Checkbox(
+                          shape: const CircleBorder(),
+                          splashRadius: 15,
+                          activeColor: Deco.cRosa0,
+                          side: BorderSide(
+                              color: reproduciendo
+                                  ? hover
+                                      ? Colors.white
+                                      : Deco.cMorado2
+                                  : hover
+                                      ? Deco.cGray
+                                      : Colors.white),
+                          value: seleccionado,
+                          onChanged: (nuevoValor) {
+                            context
+                                .read<BlocListaReproduccionSeleccionada>()
+                                .add(EvToggleSelCancion(cancion.id));
+                          }),
+
+                      if (cancion.estado == estadoLocal)
+                        const Icon(
+                          Icons.file_upload_rounded,
+                          color: Deco.cGray,
+                        ),
+
+                      if (cancion.estado == estadoServidor)
+                        const Icon(
+                          Icons.file_download_rounded,
+                          color: Deco.cGray,
+                        ),
+
+                      if (cancion.estado == estadoSubiendo)
+                        const Icon(
+                          Icons.file_upload_rounded,
+                          color: Deco.cRosa0,
+                        ),
+
+                      if (cancion.estado == estadoDescargando)
+                        const Icon(
+                          Icons.file_download_rounded,
+                          color: Deco.cRosa0,
+                        ),
+
+                      if (cancion.estado != estadoSync)
+                        const SizedBox(width: 10),
+
+                      Expanded(
+                        child: _TextoItemCancion(
+                          texto: cancion.nombre,
+                          hover: hover,
+                          reproduciendo: reproduciendo,
+                          local: cancion.estado == estadoSync ||
+                              cancion.estado == estadoLocal ||
+                              cancion.estado == estadoLocal,
+                          align: TextAlign.left,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -143,7 +146,6 @@ class ItemCancion extends BtnGenerico {
           if (cancion.estado == estadoSync ||
               cancion.estado == estadoLocal ||
               cancion.estado == estadoLocal) {
-            print("Empezar Evento por click");
             await context.read<AuxiliarListaReproduccion>().reproducirCancion(
                   context,
                   CancionData(
@@ -159,13 +161,17 @@ class ItemCancion extends BtnGenerico {
                 value: 1,
                 child: Row(children: [
                   Icon(Icons.view_column, color: Deco.cGray1),
+                  SizedBox(width: 15),
                   Text("Columnas"),
                 ])),
-            const PopupMenuDivider(),
+            const PopupMenuDivider(
+              height: 10,
+            ),
             const PopupMenuItem(
                 value: 3,
                 child: Row(children: [
                   Icon(Icons.delete_forever, color: Deco.cGray1),
+                  SizedBox(width: 15),
                   Text("Eliminar Totalmente")
                 ]))
           ];
@@ -178,6 +184,7 @@ class ItemCancion extends BtnGenerico {
                     child: Row(children: [
                       Icon(Icons.drive_file_rename_outline_rounded,
                           color: Deco.cGray1),
+                      SizedBox(width: 15),
                       Text("Renombrar")
                     ])));
           } else {
@@ -186,18 +193,23 @@ class ItemCancion extends BtnGenerico {
                 const PopupMenuItem(
                     value: 4,
                     child: Row(children: [
-                      Icon(Icons.drive_file_rename_outline_rounded,
-                          color: Deco.cGray1),
+                      Icon(Icons.cut, color: Deco.cGray1),
+                      SizedBox(width: 15),
                       Text("Recortar")
                     ])));
           }
-          if (!(provGeneral.listaSel == listaRepBiblioteca && modoSeleccion)) {
+          if (context
+                  .read<BlocListaReproduccionSeleccionada>()
+                  .state
+                  .listaReproduccionSeleccionada !=
+              listaRepBiblioteca) {
             lstOpciones.insert(
                 lstOpciones.length - 1,
                 const PopupMenuItem(
                     value: 2,
                     child: Row(children: [
                       Icon(Icons.delete, color: Deco.cGray1),
+                      SizedBox(width: 15),
                       Text("Eliminar de esta lista")
                     ])));
           }
@@ -218,24 +230,43 @@ class ItemCancion extends BtnGenerico {
                     .asignarValoresColumnasDetallado(context, cancion);
                 break;
 
-              // case 2:
-              //   await contPanelListaRep.eliminarCancionesDeLista(
-              //       modoSeleccion
-              //           ? provListaRep.mapaSel.keys.toList()
-              //           : [cancion.id],
-              //       idLst);
-              //   break;
+              case 2:
+                context
+                    .read<AuxiliarListaReproduccion>()
+                    .eliminarCancionesLista(
+                        context,
+                        modoSeleccion
+                            ? context
+                                .read<BlocListaReproduccionSeleccionada>()
+                                .state
+                                .obtCancionesSeleccionadas()
+                            : [cancion.id]);
 
-              // case 3:
-              //   await contPanelListaRep.eliminarCancionesTotalmente(
-              //       modoSeleccion
-              //           ? provListaRep.mapaSel.keys.toList()
-              //           : [cancion.id]);
-              //   break;
+                break;
 
-              // case 4:
-              //   await contPanelListaRep.recortarNombresCanciones();
-              //   break;
+              case 3:
+                context
+                    .read<AuxiliarListaReproduccion>()
+                    .eliminarCancionesTotalmente(
+                        context,
+                        modoSeleccion
+                            ? context
+                                .read<BlocListaReproduccionSeleccionada>()
+                                .state
+                                .obtCancionesSeleccionadas()
+                            : [cancion.id]);
+                break;
+
+              case 4:
+                await context.read<AuxiliarListaReproduccion>().recortarNombres(
+                    context,
+                    modoSeleccion
+                        ? context
+                            .read<BlocListaReproduccionSeleccionada>()
+                            .state
+                            .obtCancionesSeleccionadas()
+                        : [cancion.id]);
+                break;
             }
           });
         });

@@ -28,7 +28,7 @@ class EvToggleMostrarSelectorColumna
 class EvAsignarValorColumna extends EventoDialogoGestorColumnasCancion {
   final int idValorColumna;
   final int idColumna;
-  final int idCancion;
+  final List<int> idCancion;
 
   EvAsignarValorColumna(this.idValorColumna, this.idColumna, this.idCancion);
 }

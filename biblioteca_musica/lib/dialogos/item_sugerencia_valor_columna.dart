@@ -50,6 +50,7 @@ class _EstadoItemSugerenciaValorColumna
                 color: hover ? Colors.black26 : Colors.black12),
             child: Row(
               children: [
+                //IMAGEN DEL VALOR COLUMNA
                 ImagenRectRounded(
                   url: rutaImagen(widget.valorColumna.id),
                   radio: 5,
@@ -57,6 +58,8 @@ class _EstadoItemSugerenciaValorColumna
                   tam: altura.toDouble() - 10,
                 ),
                 const SizedBox(width: 10),
+
+                ///NOMBRE DEL VALOR COLUMNA
                 Expanded(
                   child: TextoPer(
                       texto: widget.valorColumna.nombre,

@@ -1,5 +1,10 @@
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+enum Panel {
+  listasRep,
+  ajustes,
+  columnas,
+}
 
 class CubitPanelSeleccionado extends Cubit<Panel> {
   CubitPanelSeleccionado() : super(Panel.listasRep);

@@ -4,19 +4,17 @@ import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_repro
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/btn_recortar_nombres.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/btn_reproducir_azar.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/opciones_lista_generica.dart';
-import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion_general.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+import 'btn_recortar_nombres.dart';
+import 'btn_reproducir_azar.dart';
 import 'btn_reproducir_orden.dart';
+import 'opciones_lista_generica.dart';
 
 class OpcionesListaCualquiera extends OpcionesListaGenerica {
   const OpcionesListaCualquiera({super.key});
@@ -130,39 +128,15 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
             }),
 
         ///ASIGNAR VALORES COLUMNA A LAS CANCIONES SELECCIONADAS
-        BotonPopUpMenuCintaOpciones<ColumnaData>(
-            icono: Icons.view_column,
-            texto: "Asignar Columnas",
-            onSelected: (columnaSel) async {
-              if (columnaSel.id == -1) {
-                await context
-                    .read<AuxiliarListaReproduccion>()
-                    .agregarColumna(context);
-              } else {
-                await context
-                    .read<AuxiliarListaReproduccion>()
-                    .asignarValoresColumnaACanciones(context, columnaSel);
-              }
-            },
-            itemBuilder: (_) {
-              final columnas = context
-                  .read<BlocListaReproduccionSeleccionada>()
-                  .state
-                  .lstColumnas;
-
-              List<PopupMenuEntry<ColumnaData>> popupitems = [
-                const PopupMenuItem(
-                    value: ColumnaData(id: -1, nombre: "Nueva Columna"),
-                    child: Row(children: [
-                      Icon(Icons.add, color: Deco.cGray1),
-                      Text("Nueva Columna"),
-                    ])),
-                ...columnas.map((col) => PopupMenuItem<ColumnaData>(
-                    value: col, child: Text(col.nombre)))
-              ];
-
-              return popupitems;
-            }),
+        BotonCintaOpciones(
+          icono: Icons.view_column,
+          texto: "Asignar Columnas...",
+          onPressed: (context) async {
+            await context
+                .read<AuxiliarListaReproduccion>()
+                .asignarValoresColumnaACanciones(context);
+          },
+        ),
 
         //RECORTAR NOMBRES
         BtnRecortarNombres()
@@ -181,13 +155,17 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
                 ],
             onSelected: (opSel) async {
               if (opSel == 0) {
-                context
-                    .read<BlocListaReproduccionSeleccionada>()
-                    .add(EvEliminarCancionesLista());
+                context.read<BlocListaReproduccionSeleccionada>().add(
+                    EvEliminarCancionesLista(context
+                        .read<BlocListaReproduccionSeleccionada>()
+                        .state
+                        .obtCancionesSeleccionadas()));
               } else {
-                context
-                    .read<BlocListaReproduccionSeleccionada>()
-                    .add(EvEliminarCancionesTotalmente());
+                context.read<BlocListaReproduccionSeleccionada>().add(
+                    EvEliminarCancionesTotalmente(context
+                        .read<BlocListaReproduccionSeleccionada>()
+                        .state
+                        .obtCancionesSeleccionadas()));
               }
             })
       ])

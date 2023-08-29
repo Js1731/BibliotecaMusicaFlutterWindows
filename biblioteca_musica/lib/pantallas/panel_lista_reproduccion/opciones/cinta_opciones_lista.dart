@@ -1,11 +1,9 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuple/tuple.dart';
-
-import '../../bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
-import '../../bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
-import '../../bloc/reproductor/evento_reproductor.dart';
+import '../../../bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
+import '../../../bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'opciones_biblioteca.dart';
 import 'opciones_lista_cualquiera.dart';
 

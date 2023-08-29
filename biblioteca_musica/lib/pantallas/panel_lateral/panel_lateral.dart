@@ -1,5 +1,4 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
@@ -187,11 +186,11 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                           ),
                                         ),
 
-                                        //BOTON PARA MOSTRAR INTERFAZ DE JUEGOS
+                                        //BOTON PARA MOSTRAR INTERFAZ DE COLUMNAS
                                         ItemPanelLateralSubMenu(
                                           texto: "Columnas",
                                           icono: Icons.library_books,
-                                          panel: Panel.propiedades,
+                                          panel: Panel.columnas,
                                           colorPanel: DecoColores.rosa,
                                           colorTextoSel: Colors.white,
                                         ),

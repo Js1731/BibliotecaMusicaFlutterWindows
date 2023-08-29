@@ -106,6 +106,10 @@ class RepositorioCanciones {
 
   void eliminarCancionesTotalmente(List<int> cancionesSeleccionadas) {
     _dbpCanciones.eliminarCancionesTotalemnte(cancionesSeleccionadas);
+
+    for (int cancion in cancionesSeleccionadas) {
+      eliminarArchivo("$cancion.mp3");
+    }
   }
 
   Future<void> renombrarCancion(int idCancion, String nuevoNombre) async {

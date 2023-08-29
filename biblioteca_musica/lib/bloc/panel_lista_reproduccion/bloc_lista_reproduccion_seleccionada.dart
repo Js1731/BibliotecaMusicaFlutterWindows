@@ -199,14 +199,12 @@ class BlocListaReproduccionSeleccionada extends Bloc<
   void _eliminarCancionesLista(EvEliminarCancionesLista event,
       Emitter<EstadoListaReproduccionSelecconada> emit) {
     _repositorioCanciones.eliminarCancionesLista(
-        state.listaReproduccionSeleccionada.id,
-        state.obtCancionesSeleccionadas());
+        state.listaReproduccionSeleccionada.id, event.canciones);
   }
 
   void _eliminarCancionesTotalmente(EvEliminarCancionesTotalmente event,
       Emitter<EstadoListaReproduccionSelecconada> emit) {
-    _repositorioCanciones
-        .eliminarCancionesTotalmente(state.obtCancionesSeleccionadas());
+    _repositorioCanciones.eliminarCancionesTotalmente(event.canciones);
   }
 
   void _renombrarCancion(EvRenombrarCancion event,
@@ -224,7 +222,7 @@ class BlocListaReproduccionSeleccionada extends Bloc<
   void _onActColumnaPrincipal(EvActColumnaPrincipal event,
       Emitter<EstadoListaReproduccionSelecconada> emit) async {
     _repositorioListasReproduccion.actColumnaPrincipal(
-        event.columna.id, state.listaReproduccionSeleccionada.id);
+        event.idColumna, state.listaReproduccionSeleccionada.id);
 
     emit(state.copiarCon(
         nuevaListaSel: ListaReproduccionData(
@@ -233,6 +231,6 @@ class BlocListaReproduccionSeleccionada extends Bloc<
             ordenAscendente:
                 state.listaReproduccionSeleccionada.ordenAscendente,
             idColumnaOrden: state.listaReproduccionSeleccionada.idColumnaOrden,
-            idColumnaPrincipal: event.columna.id)));
+            idColumnaPrincipal: event.idColumna)));
   }
 }

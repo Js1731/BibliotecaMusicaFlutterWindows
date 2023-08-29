@@ -46,7 +46,7 @@ class BlocDialogoGestorColumnasCancion extends Bloc<
   FutureOr<void> _onAsignarValorColumna(EvAsignarValorColumna event,
       Emitter<EstadoDialogoGestorColumnasCancion> emit) {
     _repositorioCanciones.actValorColumnaCanciones(
-        event.idColumna, event.idValorColumna, [event.idCancion]);
+        event.idColumna, event.idValorColumna, event.idCancion);
   }
 
   FutureOr<void> _onToggleAgregarColumna(EvToggleMostrarAgregarColumna event,

@@ -1,25 +1,17 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/dialogo_sel_valor_columna.dart/bloc_dialogo_seleccionar_columnas.dart';
-import 'package:biblioteca_musica/bloc/dialogo_sel_valor_columna.dart/estado_dialogo_seleccionar_valor_columna.dart';
 import 'package:biblioteca_musica/bloc/dialogo_sel_valor_columna.dart/eventos_dialogo_seleccionar_valor_columna.dart';
-import 'package:biblioteca_musica/dialogos/contenido_agregar_valor_columna.dart';
 import 'package:biblioteca_musica/dialogos/contenido_seleccionar_valor_columna.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_generico.dart';
-import 'package:biblioteca_musica/dialogos/item_sugerencia_valor_columna.dart';
-import 'package:biblioteca_musica/painters/custom_painter_dialogo.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
-import 'package:biblioteca_musica/widgets/btn_flotante_icono.dart';
-import 'package:biblioteca_musica/widgets/btn_flotante_simple.dart';
-import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/form/txt_field.dart';
-import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
-import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../painters/custom_painter_dialogo_sel_valor_columna.dart';
 
+///Abre un dialogo para seleccionar un valor columna
+///
+///Retorna el valor columna seleccionado
 Future<ValorColumnaData?> abrirDialogoSeleccionarValorColumna(
     BuildContext context, ColumnaData columna) async {
   return showDialog(

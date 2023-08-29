@@ -14,6 +14,7 @@ class BlocColumnasSistema
       : super(const EstadoColumnasSistema([])) {
     on<EvEscucharColumnasSistema>(_onEscucharColumnasSistema);
     on<EvAgregarColumna>(_onAgregarColumna);
+    on<EvAgregarValorColumna>(_onAgregarValorColumna);
   }
 
   void _onEscucharColumnasSistema(EvEscucharColumnasSistema event,
@@ -25,5 +26,11 @@ class BlocColumnasSistema
   void _onAgregarColumna(
       EvAgregarColumna event, Emitter<EstadoColumnasSistema> emit) {
     _repositorioColumnas.agregarColumna(event.nombreNuevaColumna);
+  }
+
+  FutureOr<void> _onAgregarValorColumna(
+      EvAgregarValorColumna event, Emitter<EstadoColumnasSistema> emit) {
+    _repositorioColumnas.agregarValorColumna(
+        event.nombreValorColumna, event.idColumna, event.urlImagen);
   }
 }

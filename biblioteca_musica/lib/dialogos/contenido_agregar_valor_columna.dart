@@ -2,9 +2,7 @@ import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path/path.dart';
 
 import '../widgets/btn_flotante_icono.dart';
 import '../widgets/btn_flotante_simple.dart';
@@ -34,7 +32,7 @@ class _EstadoContenidoAgregarValorColumna
   final _formKey = GlobalKey<FormState>();
   final txtController = TextEditingController();
 
-  Future<void> buscarImagen() async {
+  Future<void> _buscarImagen() async {
     final FilePickerResult? resultados = await FilePicker.platform.pickFiles();
 
     if (resultados == null) return;
@@ -44,7 +42,7 @@ class _EstadoContenidoAgregarValorColumna
     });
   }
 
-  Future<void> agregarValorColumna(BuildContext context) async {
+  Future<void> _agregarValorColumna(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final valorColumnaNuevo = await context
           .read<RepositorioColumnas>()
@@ -68,7 +66,8 @@ class _EstadoContenidoAgregarValorColumna
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              Container(
+              ///TITULO
+              SizedBox(
                 width: double.maxFinite,
                 height: 30,
                 child: Stack(
@@ -90,6 +89,8 @@ class _EstadoContenidoAgregarValorColumna
                 ),
               ),
               const SizedBox(height: 10),
+
+              ///IMAGEN DE VALOR COLUMNA
               SizedBox(
                 height: 100,
                 width: 100,
@@ -107,7 +108,7 @@ class _EstadoContenidoAgregarValorColumna
                         alignment: Alignment.topRight,
                         child: BtnFlotanteIcono(
                           onPressed: () async {
-                            await buscarImagen();
+                            await _buscarImagen();
                           },
                           icono: Icons.file_open,
                           color: Colors.black38,
@@ -119,16 +120,22 @@ class _EstadoContenidoAgregarValorColumna
                 ),
               ),
               const SizedBox(height: 10),
+
+              ///RUTA
               TextoPer(
                   texto: urlSel ??
                       "Selecciona una imagen para el ${widget.columna.nombre}",
                   color: Colors.black26),
               const SizedBox(height: 10),
+
+              ///DESCRIPCION
               TextoPer(
                 texto: "Ingrese el nombre del ${widget.columna.nombre}",
                 tam: 14,
               ),
               const SizedBox(height: 10),
+
+              ///TEXTFIELD PARA EL NOMBRE
               TextFormField(
                 controller: txtController,
                 validator: (value) {
@@ -141,10 +148,12 @@ class _EstadoContenidoAgregarValorColumna
                     hint: "Ej. Nuevo ${widget.columna.nombre}"),
               ),
               const Spacer(),
+
+              ///BOTON AGREGAR VALOR
               BtnFlotanteSimple(
                   ancho: 250,
                   onPressed: () {
-                    agregarValorColumna(context);
+                    _agregarValorColumna(context);
                   },
                   texto: "Agregar"),
               const SizedBox(height: 10)

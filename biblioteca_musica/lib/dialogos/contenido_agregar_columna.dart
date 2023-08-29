@@ -1,33 +1,30 @@
-import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/eventos_columnas_sistema.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../widgets/btn_flotante_icono.dart';
 import '../widgets/btn_flotante_simple.dart';
 import '../widgets/decoracion_.dart';
 import '../widgets/form/txt_field.dart';
-import '../widgets/imagen_round_rect.dart';
 import '../widgets/texto_per.dart';
 
 class ContenidoAgregarColumna extends StatelessWidget {
-  final RepositorioColumnas _repositorioColumnas;
   final _formkey = GlobalKey<FormState>();
   final VoidCallback onAgregarColumna;
-
   final Widget btnVolver;
-
   final TextEditingController txtController = TextEditingController();
 
-  ContenidoAgregarColumna(
-    this._repositorioColumnas, {
+  ContenidoAgregarColumna({
     super.key,
     required this.btnVolver,
     required this.onAgregarColumna,
   });
 
-  void agregarColumna() {
+  void _agregarColumna(BuildContext context) {
     if (_formkey.currentState!.validate()) {
-      _repositorioColumnas.agregarColumna(txtController.text);
+      context
+          .read<BlocColumnasSistema>()
+          .add(EvAgregarColumna(txtController.text));
       onAgregarColumna();
     }
   }
@@ -44,7 +41,8 @@ class ContenidoAgregarColumna extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              Container(
+              ///TITULO
+              SizedBox(
                 width: double.maxFinite,
                 height: 30,
                 child: Stack(
@@ -66,11 +64,15 @@ class ContenidoAgregarColumna extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
+
+              //DESCRIPCION
               TextoPer(
                 texto: "Ingrese el nombre de la nueva columna",
                 tam: 14,
               ),
               const SizedBox(height: 10),
+
+              //TEXTFIELD PARA NOMBRE
               TextFormField(
                 controller: txtController,
                 validator: (value) {
@@ -83,10 +85,12 @@ class ContenidoAgregarColumna extends StatelessWidget {
                     const CustomTxtFieldDecoration(hint: "Ej. Nueva Columna"),
               ),
               const Spacer(),
+
+              ///BOTON AGREGAR
               BtnFlotanteSimple(
                   ancho: 250,
                   onPressed: () {
-                    agregarColumna();
+                    _agregarColumna(context);
                   },
                   texto: "Agregar"),
               const SizedBox(height: 10)

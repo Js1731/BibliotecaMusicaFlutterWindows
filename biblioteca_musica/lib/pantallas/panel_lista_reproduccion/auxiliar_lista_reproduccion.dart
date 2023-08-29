@@ -1,15 +1,9 @@
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
-import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_gestionar_columnas_cancion.dart';
-import 'package:biblioteca_musica/dialogos/dialogo_seleccionar_valor_columna.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
-import 'package:biblioteca_musica/widgets/dialogos/dialogo_columnas.dart';
-import 'package:biblioteca_musica/widgets/dialogos/dialogo_texto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +13,6 @@ import '../../bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import '../../dialogos/dialogo_ingresar_texto.dart';
 import '../../repositorios/repositorio_reproductor.dart';
-import '../../widgets/dialogos/dialogo_seleccionar_valor_columna.dart';
 
 class AuxiliarListaReproduccion {
   final RepositorioReproductor _repositorioReproductor;
@@ -42,41 +35,43 @@ class AuxiliarListaReproduccion {
     }
   }
 
-  Future<void> asignarValoresColumnaACanciones(
-      BuildContext context, ColumnaData col) async {
-    ValorColumnaData? valorColumnaSel =
-        await abrirDialogoSeleccionarValorColumna(context, col);
-
-    if (valorColumnaSel == null) return;
-    if (context.mounted) {
-      context.read<BlocListaReproduccionSeleccionada>().add(
-          EvActValorColumnaCanciones(
-              valorColumnaSel.id, valorColumnaSel.idColumna));
-    }
+  Future<void> asignarValoresColumnaACanciones(BuildContext context) async {
+    await abrirDialogoGestionarColumnasCancion(
+        context,
+        context
+            .read<BlocListaReproduccionSeleccionada>()
+            .state
+            .obtCancionesSelecionadasCompleta());
   }
 
-  Future<void> recortarNombres(BuildContext context) async {
+  Future<void> recortarNombres(
+      BuildContext context, List<int> canciones) async {
     context.read<BlocListaReproduccionSeleccionada>().add(
         EvRecortarNombresCancionesSeleccionadas(
-            await mostrarDialogoTexto(context, "Filtro") ?? ""));
+            await abrirDialogoIngresarTexto(context, "Recortar Canciones",
+                    "Ingresa un texto que eliminar de los nombres de las canciones.",
+                    altura: 180) ??
+                "",
+            canciones));
   }
 
   Future<void> actColumnasListaRep(BuildContext context,
-      List<ColumnaData> columnas, ColumnaData? columnaPrincipal) async {
+      List<ColumnaData> columnas, int? idColumnaPrincipal) async {
     if (context.mounted) {
       final bloc = context.read<BlocListaReproduccionSeleccionada>();
       bloc.add(EvActColumnasLista(columnas.map((e) => e.id).toList()));
 
-      if (columnaPrincipal != null) {
-        bloc.add(EvActColumnaPrincipal(columnaPrincipal));
+      if (idColumnaPrincipal != null) {
+        bloc.add(EvActColumnaPrincipal(idColumnaPrincipal));
       }
     }
   }
 
   Future<void> renombrarCancion(
       BuildContext context, CancionColumnas cancion) async {
-    String? nuevoNombre = await mostrarDialogoTexto(context, "Nuevo Nombre",
-        txtIni: cancion.nombre);
+    String? nuevoNombre = await abrirDialogoIngresarTexto(
+        context, "Nuevo Nombre", "Ingresa el nuevo nombre de la cancion.",
+        hint: "Ej. Nuevo Nombre", txtIni: cancion.nombre);
 
     if (nuevoNombre == null) return;
 
@@ -89,20 +84,19 @@ class AuxiliarListaReproduccion {
 
   Future<void> asignarValoresColumnasDetallado(
       BuildContext context, CancionColumnas cancion) async {
-    Map<ColumnaData, ValorColumnaData?>? mapa =
-        await abrirDialogoGestionarColumnasCancion(context, cancion);
-
-    if (mapa == null) return;
-
-    if (context.mounted) {
-      context.read<BlocListaReproduccionSeleccionada>().add(
-          EvActValoresColumnaCancionUnica(
-              mapa.values
-                  .where((element) => element != null)
-                  .toList()
-                  .map((e) => e!)
-                  .toList(),
-              cancion.id));
+    if (context
+            .read<BlocListaReproduccionSeleccionada>()
+            .state
+            .obtCantidadCancionesSeleccionadas() ==
+        0) {
+      await abrirDialogoGestionarColumnasCancion(context, [cancion]);
+    } else {
+      await abrirDialogoGestionarColumnasCancion(
+          context,
+          context
+              .read<BlocListaReproduccionSeleccionada>()
+              .state
+              .obtCancionesSelecionadasCompleta());
     }
   }
 
@@ -160,5 +154,27 @@ class AuxiliarListaReproduccion {
     if (nuevoNombre == null) return;
 
     _repositorioColumnas.agregarColumna(nuevoNombre);
+  }
+
+  Future<void> eliminarCancionesTotalmente(
+      BuildContext context, List<int> canciones) async {
+    final confirmar = await abrirDialogoConfirmar(
+        context,
+        "Eliminar Totalmente",
+        "Quieres eliminar ${canciones.length} canciones del sistema. Seran eliminadas de todas las listas de reproduccion.");
+
+    if (confirmar == null) return;
+
+    if (context.mounted) {
+      context
+          .read<BlocListaReproduccionSeleccionada>()
+          .add(EvEliminarCancionesTotalmente(canciones));
+    }
+  }
+
+  void eliminarCancionesLista(BuildContext context, List<int> list) {
+    context
+        .read<BlocListaReproduccionSeleccionada>()
+        .add(EvEliminarCancionesLista(list));
   }
 }

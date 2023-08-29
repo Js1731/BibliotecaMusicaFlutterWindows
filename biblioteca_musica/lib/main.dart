@@ -2,19 +2,14 @@ import 'dart:io';
 
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
-import 'package:biblioteca_musica/backend/providers/provider_log.dart';
-import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
-import 'package:biblioteca_musica/bloc/panel_lateral/evento_panel_lateral.dart';
-import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/evento_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/data/dbp_canciones.dart';
 import 'package:biblioteca_musica/data/dbp_columnas.dart';
@@ -35,15 +30,9 @@ Future<void> iniciarServidor() async {
   var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
 
   await server.forEach((HttpRequest request) async {
-    provBarraLog.texto("Servidor",
-        "Servidor encontrado en ${request.connectionInfo!.remoteAddress.address}");
     await actIpServidor(request.connectionInfo!.remoteAddress.address);
   });
 }
-
-ProviderListaReproduccion provListaRep = ProviderListaReproduccion();
-ProviderReproductor provReproductor =
-    ProviderReproductor(providerGeneral: provGeneral);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
