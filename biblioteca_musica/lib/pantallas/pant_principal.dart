@@ -33,28 +33,6 @@ class PantPrincipalState extends State<PantPrincipal>
     with SingleTickerProviderStateMixin {
   bool iniciado = false;
 
-  late AnimationController animCont;
-  late Animation anim2;
-
-  @override
-  void initState() {
-    super.initState();
-
-    animCont = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-      lowerBound: 0,
-      upperBound: 0,
-    );
-
-    anim2 = animCont.drive(TweenSequence([
-      TweenSequenceItem(tween: Tween(begin: 0, end: 0.5), weight: 1),
-      TweenSequenceItem(tween: Tween(begin: 1, end: 0), weight: 2)
-    ]));
-
-    animCont.forward();
-  }
-
   Widget? construirPanelCentral(BuildContext context, Panel panel) {
     switch (panel) {
       case Panel.listasRep:
@@ -102,29 +80,14 @@ class PantPrincipalState extends State<PantPrincipal>
                             return BlocBuilder<CubitPanelSeleccionado, Panel>(
                                 builder: (context, panel) {
                               return Expanded(
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10, right: 10, bottom: 10),
-                                      child: CustomPaint(
-                                          painter: CustomPainerPanelCentral(),
-                                          child: construirPanelCentral(
-                                              context, panel)),
-                                    ),
-                                    AnimatedBuilder(
-                                      animation: anim2,
-                                      builder: (context, child) {
-                                        return Opacity(
-                                            opacity: animCont.value,
-                                            child: child);
-                                      },
-                                      child: Container(
-                                        key: ValueKey(panel),
-                                        color: Colors.amber,
-                                      ),
-                                    ),
-                                  ],
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                      top: 10, right: 10, bottom: 10),
+                                  child: CustomPaint(
+                                      key: ValueKey(panel),
+                                      painter: CustomPainerPanelCentral(),
+                                      child: construirPanelCentral(
+                                          context, panel)),
                                 ),
                               );
                             });

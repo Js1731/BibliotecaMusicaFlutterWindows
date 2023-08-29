@@ -7,15 +7,16 @@ import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_rep
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
-import 'package:biblioteca_musica/pantallas/panel_lateral/item_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
+import 'package:biblioteca_musica/widgets/item_panel_lateral.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/panel_lateral/estado_panel_lateral.dart';
+import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import '../../painters/custom_painter_agregar_lista.dart';
 import '../../painters/custom_painter_KOPI.dart';
 import '../../painters/custom_painter_panel_lateral.dart';
@@ -94,12 +95,23 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                     bottom: 5,
                                     left: 10,
                                   ),
-                                  child: ItemListaReproduccion(
-                                    lst: listaRepBiblioteca,
-                                    reproduciendo: listaReproducida.id ==
-                                        listaRepBiblioteca.id,
-                                    seleccionado: listaRepSeleccionada.id ==
-                                        listaRepBiblioteca.id,
+                                  child: ItemPanelLateral(
+                                    texto: listaRepBiblioteca.nombre,
+                                    seleccionado:
+                                        panelSeleccionado == Panel.listasRep &&
+                                            listaRepSeleccionada.id ==
+                                                listaRepBiblioteca.id,
+                                    onPressed: () {
+                                      context
+                                          .read<CubitPanelSeleccionado>()
+                                          .cambiarPanel(Panel.listasRep);
+
+                                      context
+                                          .read<
+                                              BlocListaReproduccionSeleccionada>()
+                                          .add(EvSeleccionarLista(
+                                              listaRepBiblioteca));
+                                    },
                                   ),
                                 ),
 
@@ -171,16 +183,27 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                                 int index) {
                                               final lista = estadoPanelLateral
                                                   .listasReproduccion[index];
-                                              return ItemListaReproduccion(
-                                                lst: lista,
-                                                reproduciendo: lista.id ==
-                                                    listaReproducida.id,
+                                              return ItemPanelLateral(
+                                                texto: lista.nombre,
                                                 seleccionado:
                                                     panelSeleccionado ==
                                                             Panel.listasRep &&
                                                         listaRepSeleccionada
                                                                 .id ==
                                                             lista.id,
+                                                onPressed: () {
+                                                  context
+                                                      .read<
+                                                          CubitPanelSeleccionado>()
+                                                      .cambiarPanel(
+                                                          Panel.listasRep);
+
+                                                  context
+                                                      .read<
+                                                          BlocListaReproduccionSeleccionada>()
+                                                      .add(EvSeleccionarLista(
+                                                          lista));
+                                                },
                                               );
                                             },
                                           ),

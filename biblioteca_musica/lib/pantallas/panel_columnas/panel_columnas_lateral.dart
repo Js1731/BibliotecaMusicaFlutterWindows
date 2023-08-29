@@ -6,13 +6,13 @@ import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.da
 import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_columnas_lateral.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
+import 'package:biblioteca_musica/widgets/item_panel_lateral.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/columnas_sistema/estado_columnas_sistema.dart';
 import '../../painters/custom_painter_agregar_lista.dart';
-import 'item_columna.dart';
 
 class PanelColumnasLateral extends StatefulWidget {
   const PanelColumnasLateral({super.key});
@@ -21,11 +21,27 @@ class PanelColumnasLateral extends StatefulWidget {
   State<StatefulWidget> createState() => EstadoPanelColumnasLateral();
 }
 
-class EstadoPanelColumnasLateral extends State<PanelColumnasLateral> {
+class EstadoPanelColumnasLateral extends State<PanelColumnasLateral>
+    with SingleTickerProviderStateMixin {
+  late AnimationController animCont;
+
+  @override
+  void initState() {
+    super.initState();
+
+    animCont = AnimationController(
+        duration: const Duration(milliseconds: 100), vsync: this)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    animCont.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: animCont.value * 170,
       decoration: const BoxDecoration(
           color: DecoColores.rosa,
           borderRadius: BorderRadius.only(
@@ -77,26 +93,36 @@ class EstadoPanelColumnasLateral extends State<PanelColumnasLateral> {
                             EstadoColumnasSistema, List<ColumnaData>>(
                         selector: (state) => state.columnas,
                         builder: (context, columnas) {
-                          return ListView.builder(
-                            itemCount: columnas.length,
-                            itemBuilder: (context, index) {
-                              final columna = columnas[index];
-                              return ItemColumna(
-                                seleccionada:
-                                    columnaSeleccionada?.id == columna.id,
-                                columna: columna,
-                                onPressed: (_) {
-                                  context
-                                      .read<BlocColumnaSeleccionada>()
-                                      .add(EvSeleccionarColumna(columna));
-                                },
-                              );
-                            },
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: ListView.builder(
+                              itemCount: columnas.length,
+                              itemBuilder: (context, index) {
+                                final columna = columnas[index];
+                                return ItemPanelLateral(
+                                  seleccionado:
+                                      columnaSeleccionada?.id == columna.id,
+                                  texto: columna.nombre,
+                                  onPressed: () {
+                                    context
+                                        .read<BlocColumnaSeleccionada>()
+                                        .add(EvSeleccionarColumna(columna));
+                                  },
+                                );
+                              },
+                            ),
                           );
                         });
                   }))
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    animCont.dispose();
+
+    super.dispose();
   }
 }
