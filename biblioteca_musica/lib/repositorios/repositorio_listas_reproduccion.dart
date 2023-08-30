@@ -31,7 +31,7 @@ class RepositorioListasReproduccion {
     _dbpListasReproduccion.eliminarListaRep(idListaRep);
   }
 
-  void actColumnaPrincipal(int idColumna, int idListaRep) {
+  void actColumnaPrincipal(int? idColumna, int idListaRep) {
     _dbpListasReproduccion.actColumnaPrincipal(idColumna, idListaRep);
   }
 }

@@ -141,7 +141,7 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                                               return Container(
                                                 margin:
                                                     const EdgeInsets.symmetric(
-                                                        vertical: 6),
+                                                        vertical: 3),
                                                 child: ItemCancion(
                                                     cancion: cancion,
                                                     idLst: listaSel.id,

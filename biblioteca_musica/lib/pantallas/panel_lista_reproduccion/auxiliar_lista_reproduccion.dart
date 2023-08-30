@@ -61,9 +61,7 @@ class AuxiliarListaReproduccion {
       final bloc = context.read<BlocListaReproduccionSeleccionada>();
       bloc.add(EvActColumnasLista(columnas.map((e) => e.id).toList()));
 
-      if (idColumnaPrincipal != null) {
-        bloc.add(EvActColumnaPrincipal(idColumnaPrincipal));
-      }
+      bloc.add(EvActColumnaPrincipal(idColumnaPrincipal));
     }
   }
 
@@ -147,13 +145,13 @@ class AuxiliarListaReproduccion {
     }
   }
 
-  Future<void> agregarColumna(BuildContext context) async {
+  Future<ColumnaData?> agregarColumna(BuildContext context) async {
     String? nuevoNombre = await abrirDialogoIngresarTexto(
         context, "Nueva Columna", "Ingresa el nombre de la nueva columna");
 
-    if (nuevoNombre == null) return;
+    if (nuevoNombre == null) return null;
 
-    _repositorioColumnas.agregarColumna(nuevoNombre);
+    return _repositorioColumnas.agregarColumna(nuevoNombre);
   }
 
   Future<void> eliminarCancionesTotalmente(

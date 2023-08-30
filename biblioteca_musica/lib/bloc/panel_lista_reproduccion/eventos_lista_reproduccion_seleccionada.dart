@@ -110,7 +110,7 @@ class EvActValoresColumnaCancionUnica
 }
 
 class EvActColumnaPrincipal extends EventoListaReproduccionSeleccionada {
-  final int idColumna;
+  final int? idColumna;
 
   EvActColumnaPrincipal(this.idColumna);
 }

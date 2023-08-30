@@ -81,10 +81,14 @@ class DBPColumnas {
         .watch();
   }
 
-  void agregarColumna(String nombreNuevaColumna) {
-    appDb
+  Future<ColumnaData> agregarColumna(String nombreNuevaColumna) async {
+    int nuevoId = await (appDb
         .into(appDb.columna)
-        .insert(ColumnaCompanion.insert(nombre: nombreNuevaColumna));
+        .insert(ColumnaCompanion.insert(nombre: nombreNuevaColumna)));
+
+    return await (appDb.select(appDb.columna)
+          ..where((tbl) => tbl.id.equals(nuevoId)))
+        .getSingle();
   }
 
   Stream<List<ValorColumnaData>> crearStreamValoresColumnaSugerencias(

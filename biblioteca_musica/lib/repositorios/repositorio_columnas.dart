@@ -24,8 +24,8 @@ class RepositorioColumnas {
     return _dbpColumnas.crearStreamValorColumna(columna);
   }
 
-  void agregarColumna(String nombreNuevaColumna) {
-    _dbpColumnas.agregarColumna(nombreNuevaColumna);
+  Future<ColumnaData> agregarColumna(String nombreNuevaColumna) async {
+    return await _dbpColumnas.agregarColumna(nombreNuevaColumna);
   }
 
   Stream<List<ValorColumnaData>> crearStreamValoresColumnaSugerencias(

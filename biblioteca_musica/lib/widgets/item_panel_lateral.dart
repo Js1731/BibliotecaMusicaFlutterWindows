@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'decoracion_.dart';
 
-class ItemPanelLateral extends StatelessWidget {
+class ItemPanelLateral extends StatefulWidget {
   final String texto;
   final bool seleccionado;
   final VoidCallback onPressed;
@@ -18,26 +18,19 @@ class ItemPanelLateral extends StatelessWidget {
       this.extra});
 
   @override
+  State<StatefulWidget> createState() => _EstadoItemPanelLateral();
+}
+
+class _EstadoItemPanelLateral extends State<ItemPanelLateral> {
+  @override
   Widget build(BuildContext context) {
     return PlantillaHover(
         constructorContenido: (context, hover) {
           return GestureDetector(
-            onTap: onPressed,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              transitionBuilder: (child, animation) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  seleccionado
-                      ? _ItemSeleccionado(hover: hover, nombre: texto)
-                      : _ItemNormal(hover: hover, nombre: texto),
-                  Align(alignment: Alignment.bottomRight, child: extra)
-                ],
-              ),
-            ),
+            onTap: widget.onPressed,
+            child: widget.seleccionado
+                ? _ItemSeleccionado(hover: hover, nombre: widget.texto)
+                : _ItemNormal(hover: hover, nombre: widget.texto),
           );
         },
         enabled: true);
@@ -68,7 +61,7 @@ class _ItemNormal extends StatelessWidget {
             //DECORACION
             decoration: BoxDecoration(
               color: hover ? Colors.white10 : Colors.transparent,
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -95,6 +88,7 @@ class _ItemSeleccionado extends StatefulWidget {
 class _EstadoItemSeleccionado extends State<_ItemSeleccionado>
     with SingleTickerProviderStateMixin {
   late AnimationController animCont;
+  late Animation<double> anim;
 
   @override
   void initState() {
@@ -103,7 +97,7 @@ class _EstadoItemSeleccionado extends State<_ItemSeleccionado>
     animCont = AnimationController(
         lowerBound: 0,
         upperBound: 1,
-        duration: const Duration(milliseconds: 100),
+        duration: const Duration(milliseconds: 200),
         vsync: this)
       ..addListener(() {
         setState(() {});
@@ -122,30 +116,32 @@ class _EstadoItemSeleccionado extends State<_ItemSeleccionado>
         ),
         height: 25,
         child: LayoutBuilder(builder: (context, constraint) {
-          return AnimatedContainer(
-              width: constraint.maxWidth * animCont.value,
-              duration: const Duration(milliseconds: 100),
-              alignment: Alignment.centerLeft,
-              margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
+          return Opacity(
+            opacity: animCont.value,
+            child: Container(
+                width: constraint.maxWidth * animCont.value,
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.fromLTRB(0, 2, 0, 0),
 
-              //DECORACION
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    topLeft: Radius.circular(15),
-                    bottomRight: Radius.zero,
-                    topRight: Radius.zero),
-              ),
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                //DECORACION
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                      bottomRight: Radius.zero,
+                      topRight: Radius.zero),
+                ),
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
 
-                  //NOMBRE DE LA LISTA
-                  child: TextoPer(
-                    texto: widget.nombre,
-                    tam: 16,
-                    color: DecoColores.rosa,
-                  )));
+                    //NOMBRE DE LA LISTA
+                    child: TextoPer(
+                      texto: widget.nombre,
+                      tam: 16,
+                      color: DecoColores.rosa,
+                    ))),
+          );
         }));
   }
 

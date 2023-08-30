@@ -33,8 +33,8 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
 
     idColumnaPrincipal = widget.idColumnaPrincipal;
 
-    columnasSeleccionadas =
-        context.read<BlocListaReproduccionSeleccionada>().state.lstColumnas;
+    columnasSeleccionadas = List.from(
+        context.read<BlocListaReproduccionSeleccionada>().state.lstColumnas);
   }
 
   List<ColumnaData> obtColumasSinSeleccionar(
@@ -139,13 +139,21 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
                   onSelected: (indexColumna) async {
                     //AGREGAR NUEVA COLUMNA
                     if (indexColumna == 0) {
-                      await context
+                      ColumnaData? nuevaColumna = await context
                           .read<AuxiliarListaReproduccion>()
                           .agregarColumna(context);
+
+                      if (nuevaColumna == null) return;
+
+                      columnasSeleccionadas.add(nuevaColumna);
+
+                      idColumnaPrincipal ??= nuevaColumna.id;
                     } else {
                       final columna = obtColumasSinSeleccionar(
                           columnasSistema)[indexColumna - 1];
                       columnasSeleccionadas.add(columna);
+
+                      idColumnaPrincipal ??= columna.id;
                       setState(() {});
                     }
                   },
@@ -178,7 +186,11 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
                     await context
                         .read<AuxiliarListaReproduccion>()
                         .actColumnasListaRep(
-                            context, columnasSeleccionadas, idColumnaPrincipal);
+                            context,
+                            columnasSeleccionadas,
+                            columnasSeleccionadas.isEmpty
+                                ? null
+                                : idColumnaPrincipal);
 
                     if (context.mounted) {
                       context

@@ -7,8 +7,11 @@ import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/data/dbp_canciones.dart';
+import 'package:biblioteca_musica/dialogos/dialogo_progreso.dart';
+import 'package:biblioteca_musica/pantallas/pant_principal.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
@@ -78,8 +81,9 @@ class RepositorioCanciones {
         procesoImportarCancionesGlobal, Tuple2(lstCanciones, idLista));
     procImportarCancionesListaTodo.iniciar();
 
-    // await abrirDialogoProgreso(
-    //     "Importando Canciones...", procImportarCancionesListaTodo);
+    abrirDialogoProgreso(keyPantPrincipal.currentContext!, "Importando...",
+        "Importando canciones", procImportarCancionesListaTodo,
+        icono: Icons.download);
   }
 
   Future<void> asignarCancionesListaRep(
@@ -104,11 +108,11 @@ class RepositorioCanciones {
     _dbpCanciones.eliminarCancionesLista(idLista, cancionesSeleccionadas);
   }
 
-  void eliminarCancionesTotalmente(List<int> cancionesSeleccionadas) {
+  void eliminarCancionesTotalmente(List<int> cancionesSeleccionadas) async {
     _dbpCanciones.eliminarCancionesTotalemnte(cancionesSeleccionadas);
 
     for (int cancion in cancionesSeleccionadas) {
-      eliminarArchivo("$cancion.mp3");
+      await eliminarArchivo("$cancion.mp3");
     }
   }
 

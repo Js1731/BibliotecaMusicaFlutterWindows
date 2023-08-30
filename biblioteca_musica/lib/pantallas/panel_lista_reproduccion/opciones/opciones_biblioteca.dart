@@ -115,18 +115,21 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
 
       const Spacer(),
 
-      //ELIMINAR CANCIONES SELECCIONADAS
+      ///ELIMINAR CANCIONES SELECCIONADAS
       SeccionCintaOpciones(
         lstItems: [
           BotonCintaOpciones(
               icono: Icons.delete_sweep,
               texto: "Eliminar",
               onPressed: (_) async {
-                context.read<BlocListaReproduccionSeleccionada>().add(
-                    EvEliminarCancionesTotalmente(context
-                        .read<BlocListaReproduccionSeleccionada>()
-                        .state
-                        .obtCancionesSeleccionadas()));
+                context
+                    .read<AuxiliarListaReproduccion>()
+                    .eliminarCancionesTotalmente(
+                        context,
+                        context
+                            .read<BlocListaReproduccionSeleccionada>()
+                            .state
+                            .obtCancionesSeleccionadas());
               })
         ],
       ),
