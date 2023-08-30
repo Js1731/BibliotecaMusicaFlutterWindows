@@ -12,7 +12,11 @@ class EvSeleccionarColumna extends EventoColumnaSeleccionada {
   EvSeleccionarColumna(this.nuevaColumna);
 }
 
-class EvEscucharValoresColumna extends EventoColumnaSeleccionada {}
+class EvEscucharValoresColumna extends EventoColumnaSeleccionada {
+  final ColumnaData columna;
+
+  EvEscucharValoresColumna(this.columna);
+}
 
 class EvEliminarColumna extends EventoColumnaSeleccionada {}
 

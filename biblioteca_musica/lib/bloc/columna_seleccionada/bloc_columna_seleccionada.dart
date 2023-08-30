@@ -19,14 +19,13 @@ class BlocColumnaSeleccionada
   void _onSeleccionarColumna(
       EvSeleccionarColumna event, Emitter<EstadoColumnaSeleccionada> emit) {
     emit(state.copiarCon(nuevaColumna: event.nuevaColumna));
-    add(EvEscucharValoresColumna());
+    add(EvEscucharValoresColumna(event.nuevaColumna));
   }
 
   void _onEscucharValoresColumna(EvEscucharValoresColumna event,
       Emitter<EstadoColumnaSeleccionada> emit) async {
     await emit.forEach(
-        _repositorioColumnas
-            .crearStreamValoresColumna(state.columnaSeleccionada!),
+        _repositorioColumnas.crearStreamValoresColumna(event.columna),
         onData: (nuevaLista) =>
             state.copiarCon(nuevaListaValoresColumna: nuevaLista));
   }
