@@ -1,6 +1,5 @@
 import 'package:biblioteca_musica/backend/misc/Proceso.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_generico.dart';
-import 'package:biblioteca_musica/painters/custom_painter_dialogo.dart';
 import 'package:biblioteca_musica/painters/custom_painter_dialogo_confirmar.dart';
 import 'package:flutter/material.dart';
 

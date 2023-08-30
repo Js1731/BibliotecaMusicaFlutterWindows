@@ -7,7 +7,7 @@ class BtnFlotanteGenerico extends StatefulWidget {
   final VoidCallback onPressed;
   final bool enabled;
   final IconData? icono;
-  final int ancho;
+  final double ancho;
   final Widget Function(bool hover) constructorContenido;
 
   const BtnFlotanteGenerico(

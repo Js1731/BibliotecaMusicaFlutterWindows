@@ -12,8 +12,8 @@ class BtnFlotanteSimple extends StatefulWidget {
   final bool enabled;
   final Color color;
   final IconData? icono;
-  final int ancho;
-  final int altura;
+  final double ancho;
+  final double altura;
 
   const BtnFlotanteSimple(
       {super.key,
@@ -48,23 +48,12 @@ class _BtnFlotanteSimpleState extends State<BtnFlotanteSimple> {
               child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (widget.icono != null)
-                        Container(
-                            margin: const EdgeInsets.only(right: 5),
-                            child: Icon(
-                              widget.icono,
-                              color: Colors.white,
-                              size: 20,
-                            )),
-                      TextoPer(
-                        texto: widget.texto,
-                        tam: 14,
-                        color: Colors.white,
-                      ),
-                    ],
+                  child: Center(
+                    child: TextoPer(
+                      texto: widget.texto,
+                      tam: 14,
+                      color: Colors.white,
+                    ),
                   )),
             ));
   }

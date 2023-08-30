@@ -2,8 +2,8 @@ import 'package:biblioteca_musica/widgets/plantilla_hover.dart';
 import 'package:flutter/material.dart';
 
 class PlantillaFlotante extends StatefulWidget {
-  final int altura;
-  final int ancho;
+  final double altura;
+  final double ancho;
   final bool enabled;
   final Widget Function(bool hover) constructorContenido;
 
