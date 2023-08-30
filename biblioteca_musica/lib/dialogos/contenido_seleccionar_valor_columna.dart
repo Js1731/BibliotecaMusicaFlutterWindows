@@ -78,6 +78,7 @@ class _EstadoContenidoSeleccionarValorColumna
                     padding:
                         const EdgeInsets.only(top: 10, bottom: 10, right: 10),
                     child: TextField(
+                      autofocus: true,
                       onChanged: (criterio) {
                         context
                             .read<BlocDialogoSeleccionarValorColumna>()
