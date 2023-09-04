@@ -75,15 +75,18 @@ class _EstadoBtnFlotante extends State<BtnFlotanteIcono> {
 }
 
 class BtnDecoration extends BoxDecoration {
-  BtnDecoration(bool hover, bool enabled, Color color)
+  BtnDecoration(bool hover, bool enabled, Color color,
+      {double blurRadious = 2, double radio = 15})
       : super(
             color: enabled
                 ? hover
                     ? aumnetarBrillo(color, 0.1)
                     : color
                 : Colors.grey.shade600,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(radio),
             boxShadow: [
-              BoxShadow(blurRadius: (hover && enabled) ? 2 : 0, color: color)
+              BoxShadow(
+                  blurRadius: (hover && enabled) ? blurRadious : 0,
+                  color: color)
             ]);
 }

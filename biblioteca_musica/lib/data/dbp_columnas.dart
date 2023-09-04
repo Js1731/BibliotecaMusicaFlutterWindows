@@ -117,4 +117,19 @@ class DBPColumnas {
           ..where((tbl) => tbl.id.equals(idValorColumna)))
         .getSingle();
   }
+
+  void eliminarValorColumna(ValorColumnaData valorColumna) {
+    (appDb.delete(appDb.valorColumna)
+          ..where((tbl) => tbl.id.equals(valorColumna.id)))
+        .go();
+  }
+
+  Future<ValorColumnaData> editarValorColumna(int id, String text) async {
+    await (appDb.update(appDb.valorColumna)..where((tbl) => tbl.id.equals(id)))
+        .write(ValorColumnaCompanion(nombre: Value(text)));
+
+    return await (appDb.select(appDb.valorColumna)
+          ..where((tbl) => tbl.id.equals(id)))
+        .getSingle();
+  }
 }

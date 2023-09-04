@@ -20,10 +20,10 @@ class EvEscucharValoresColumna extends EventoColumnaSeleccionada {
 
 class EvEliminarColumna extends EventoColumnaSeleccionada {}
 
-class EvAgregarValorColumna extends EventoColumnaSeleccionada {
-  final String nuevaColumna;
+class EvEliminarValorColumna extends EventoColumnaSeleccionada {
+  final ValorColumnaData valorColumna;
 
-  EvAgregarValorColumna(this.nuevaColumna);
+  EvEliminarValorColumna(this.valorColumna);
 }
 
 class EvRenombrarColumna extends EventoColumnaSeleccionada {

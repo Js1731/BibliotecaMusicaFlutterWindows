@@ -3,7 +3,7 @@ import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_selecci
 import 'package:biblioteca_musica/bloc/columna_seleccionada/estado_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
-import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_columnas_lateral.dart';
+import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_panel_columnas.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/item_panel_lateral.dart';
@@ -64,7 +64,7 @@ class EstadoPanelColumnasLateral extends State<PanelColumnasLateral>
                 alignment: Alignment.centerRight,
                 child: BtnGenerico(onPressed: (_) async {
                   await context
-                      .read<AuxiliarColumnasLateral>()
+                      .read<AuxiliarPanelColumnas>()
                       .agregarColumna(context);
                 }, builder: (hover, context) {
                   return CustomPaint(

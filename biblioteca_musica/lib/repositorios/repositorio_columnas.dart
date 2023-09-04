@@ -50,4 +50,26 @@ class RepositorioColumnas {
       int idCancion) {
     return _dbpColumnas.crearStreamMapaValoresColumnaCancion(idCancion);
   }
+
+  Future<void> eliminarValorColumna(ValorColumnaData valorColumna) async {
+    _dbpColumnas.eliminarValorColumna(valorColumna);
+
+    final rutaIm = rutaImagen(valorColumna.id);
+    if (rutaIm == null) return;
+    await eliminarArchivo(rutaIm);
+  }
+
+  Future<ValorColumnaData> editarValorColumna(
+      int id, String text, String? urlSel) async {
+    final valorCol = _dbpColumnas.editarValorColumna(id, text);
+
+    final imAnterior = rutaImagen(id);
+
+    if (imAnterior != urlSel) {
+      await eliminarArchivo("$id.jpg");
+      await copiarArchivo(urlSel!, "$id.jpg");
+    }
+
+    return valorCol;
+  }
 }

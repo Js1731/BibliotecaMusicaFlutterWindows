@@ -1,4 +1,5 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/misc/archivos.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,14 @@ class ContenidoAgregarValorColumna extends StatefulWidget {
   final ColumnaData columna;
   final void Function(ValorColumnaData nuevoValorColuma)? onAgregarValorColumna;
   final Widget? btnVolver;
+  final ValorColumnaData? valorColumnaIni;
 
   const ContenidoAgregarValorColumna(
       {super.key,
       required this.columna,
       this.onAgregarValorColumna,
-      this.btnVolver});
+      this.btnVolver,
+      this.valorColumnaIni});
 
   @override
   State<StatefulWidget> createState() => _EstadoContenidoAgregarValorColumna();
@@ -31,6 +34,16 @@ class _EstadoContenidoAgregarValorColumna
   String? urlSel;
   final _formKey = GlobalKey<FormState>();
   final txtController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.valorColumnaIni != null) {
+      urlSel = rutaImagen(widget.valorColumnaIni!.id);
+      txtController.text = widget.valorColumnaIni!.nombre;
+    }
+  }
 
   Future<void> _buscarImagen() async {
     final FilePickerResult? resultados = await FilePicker.platform.pickFiles();
@@ -47,6 +60,19 @@ class _EstadoContenidoAgregarValorColumna
       final valorColumnaNuevo = await context
           .read<RepositorioColumnas>()
           .agregarValorColumna(txtController.text, widget.columna.id, urlSel);
+
+      if (widget.onAgregarValorColumna != null) {
+        widget.onAgregarValorColumna!(valorColumnaNuevo);
+      }
+    }
+  }
+
+  Future<void> _editarValorColumna(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      final valorColumnaNuevo = await context
+          .read<RepositorioColumnas>()
+          .editarValorColumna(
+              widget.valorColumnaIni!.id, txtController.text, urlSel);
 
       if (widget.onAgregarValorColumna != null) {
         widget.onAgregarValorColumna!(valorColumnaNuevo);

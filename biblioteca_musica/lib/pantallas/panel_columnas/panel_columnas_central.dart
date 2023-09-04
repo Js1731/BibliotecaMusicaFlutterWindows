@@ -7,6 +7,9 @@ import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'auxiliar_panel_columnas.dart';
+import 'item_valor_columna.dart';
+
 class PanelColumnasCentral extends StatefulWidget {
   const PanelColumnasCentral({super.key});
 
@@ -48,7 +51,9 @@ class EstadoPanelPropiedadesCentral extends State<PanelColumnasCentral> {
                                 icono: Icons.add,
                                 texto: "Agregar ${columnaSel.nombre}",
                                 onPressed: (_) async {
-                                  //await agregarValorColumna(columnaSel);
+                                  await context
+                                      .read<AuxiliarPanelColumnas>()
+                                      .agregarValorColumna(context);
                                 })
                           ],
                         ),
@@ -100,14 +105,14 @@ class EstadoPanelPropiedadesCentral extends State<PanelColumnasCentral> {
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Wrap(
-                          runSpacing: 30,
-                          spacing: 20,
+                          runSpacing: 10,
+                          spacing: 10,
                           children: [
-                            // for (ValorColumnaData valorColumna
-                            //     in lstValoresColumna)
-                            //   ItemValorColumna(
-                            //       valorColumna: valorColumna,
-                            //       controlador: controlador)
+                            for (ValorColumnaData valorColumna
+                                in lstValoresColumna)
+                              ItemValorColumna(
+                                valorColumna: valorColumna,
+                              )
                           ],
                         ),
                       ),

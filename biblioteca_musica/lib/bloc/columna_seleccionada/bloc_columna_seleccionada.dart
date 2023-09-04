@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:biblioteca_musica/bloc/columna_seleccionada/estado_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BlocColumnaSeleccionada
@@ -10,10 +13,11 @@ class BlocColumnaSeleccionada
   BlocColumnaSeleccionada(this._repositorioColumnas)
       : super(const EstadoColumnaSeleccionada(null, [])) {
     on<EvSeleccionarColumna>(_onSeleccionarColumna);
-    on<EvEscucharValoresColumna>(_onEscucharValoresColumna);
+    on<EvEscucharValoresColumna>(_onEscucharValoresColumna,
+        transformer: restartable());
     on<EvEliminarColumna>(_onEliminarColumna);
-    on<EvAgregarValorColumna>(_onAgregarValorColumna);
     on<EvRenombrarColumna>(_onRenombrarColumna);
+    on<EvEliminarValorColumna>(_onEvEliminarValorColumna);
   }
 
   void _onSeleccionarColumna(
@@ -33,9 +37,11 @@ class BlocColumnaSeleccionada
   void _onEliminarColumna(
       EvEliminarColumna event, Emitter<EstadoColumnaSeleccionada> emit) {}
 
-  void _onAgregarValorColumna(
-      EvAgregarValorColumna event, Emitter<EstadoColumnaSeleccionada> emit) {}
-
   void _onRenombrarColumna(
       EvRenombrarColumna event, Emitter<EstadoColumnaSeleccionada> emit) {}
+
+  FutureOr<void> _onEvEliminarValorColumna(
+      EvEliminarValorColumna event, Emitter<EstadoColumnaSeleccionada> emit) {
+    _repositorioColumnas.eliminarValorColumna(event.valorColumna);
+  }
 }
