@@ -8,14 +8,12 @@ class ItemPanelLateral extends StatefulWidget {
   final String texto;
   final bool seleccionado;
   final VoidCallback onPressed;
-  final Widget? extra;
 
   const ItemPanelLateral(
       {super.key,
       required this.texto,
       required this.seleccionado,
-      required this.onPressed,
-      this.extra});
+      required this.onPressed});
 
   @override
   State<StatefulWidget> createState() => _EstadoItemPanelLateral();

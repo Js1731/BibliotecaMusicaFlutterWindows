@@ -21,7 +21,7 @@ class EstadoPanelPropiedadesCentral extends State<PanelColumnasCentral> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(left: 20, right: 10, bottom: 10, top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

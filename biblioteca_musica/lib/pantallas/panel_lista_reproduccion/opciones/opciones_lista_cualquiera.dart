@@ -52,7 +52,15 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
       const Spacer(),
       SeccionCintaOpciones(lstItems: [
         //RENOMBRAR LISTA
-        BtnRecortarNombres(),
+        BotonCintaOpciones(
+          icono: Icons.drive_file_rename_outline,
+          texto: "Renombrar",
+          onPressed: (context) async {
+            await context
+                .read<AuxiliarListaReproduccion>()
+                .renombrarLista(context);
+          },
+        ),
 
         //ELIMINAR LISTA
         BotonCintaOpciones(

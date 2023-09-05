@@ -41,10 +41,11 @@ class PantPrincipalState extends State<PantPrincipal>
             create: (context) => CubitGestorColumnas(),
             child: Provider(
                 create: (context) => AuxiliarListaReproduccion(
-                    context.read<RepositorioReproductor>(),
-                    context.read<RepositorioCanciones>(),
-                    context.read<RepositorioColumnas>()),
-                child: PanelListaReproduccion()));
+                      context.read<RepositorioReproductor>(),
+                      context.read<RepositorioCanciones>(),
+                      context.read<RepositorioColumnas>(),
+                    ),
+                child: const PanelListaReproduccion()));
 
       case Panel.columnas:
         return Provider(

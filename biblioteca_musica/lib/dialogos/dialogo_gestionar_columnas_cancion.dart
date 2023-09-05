@@ -117,7 +117,8 @@ class _EstadoDialogoGestionarColumnasCancion
                           final valorColumna = state.mapaColumnas[columna];
                           return SizedBox(
                             child: ItemValorColumnaEditableDialogo(
-                                enabled: !state.mostrarSelectorValorColumna,
+                                enabled: !state.mostrarSelectorValorColumna &&
+                                    !state.mostrarAgregarColumna,
                                 onPressed: () {
                                   context
                                       .read<BlocDialogoGestorColumnasCancion>()

@@ -2,10 +2,8 @@ import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
 import 'package:equatable/equatable.dart';
 
-import 'evento_reproductor.dart';
-
 class EstadoReproductor extends Equatable {
-  final ListaReproduccionData listaReproduccionReproducida;
+  final ListaReproduccionData? listaReproduccionReproducida;
   final CancionColumnaPrincipal? cancionReproducida;
   final int progresoReproduccion;
   final double volumen;
@@ -15,7 +13,7 @@ class EstadoReproductor extends Equatable {
   const EstadoReproductor(
       {this.volumen = 1,
       this.progresoReproduccion = 0,
-      this.listaReproduccionReproducida = listaRepBiblioteca,
+      this.listaReproduccionReproducida,
       this.cancionReproducida,
       this.reproduciendo = false,
       this.enOrden = false});

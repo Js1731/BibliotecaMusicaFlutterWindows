@@ -16,8 +16,11 @@ class EstadoCintaOpciones extends State<CintaOpciones> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(5),
       width: double.maxFinite,
       height: 35,
+      decoration: BoxDecoration(
+          color: DecoColores.gris0, borderRadius: BorderRadius.circular(5)),
       child: Row(children: widget.lstOpciones),
     );
   }

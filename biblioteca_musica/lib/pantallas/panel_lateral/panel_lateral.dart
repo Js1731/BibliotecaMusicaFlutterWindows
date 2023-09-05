@@ -1,24 +1,25 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
-import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
-import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/item_panel_lateral.dart';
+import 'package:biblioteca_musica/widgets/item_panel_lateral_lista_rep.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../bloc/panel_lateral/estado_panel_lateral.dart';
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
-import '../../painters/custom_painter_agregar_lista.dart';
 import '../../painters/custom_painter_KOPI.dart';
+import '../../painters/custom_painter_agregar_lista.dart';
 import '../../painters/custom_painter_panel_lateral.dart';
 import 'item_panel_lateral_sub_menu.dart';
 
@@ -49,9 +50,13 @@ class _ConstructorPanelLateral extends StatelessWidget {
           child: BlocBuilder<BlocPanelLateral, EstadoPanelLateral>(
               builder: (context, estadoPanelLateral) {
             return BlocSelector<BlocReproductor, EstadoReproductor,
-                    ListaReproduccionData>(
-                selector: (state) => state.listaReproduccionReproducida,
-                builder: (context, listaReproducida) {
+                    Tuple2<ListaReproduccionData?, bool>>(
+                selector: (state) => Tuple2(
+                    state.listaReproduccionReproducida, state.reproduciendo),
+                builder: (context, dataReproductor) {
+                  final listaReproducida = dataReproductor.item1;
+                  final reproduciendo = dataReproductor.item2;
+
                   return BlocSelector<
                           BlocListaReproduccionSeleccionada,
                           EstadoListaReproduccionSelecconada,
@@ -95,7 +100,7 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                     bottom: 5,
                                     left: 10,
                                   ),
-                                  child: ItemPanelLateral(
+                                  child: ItemPanelLateralListaRep(
                                     texto: listaRepBiblioteca.nombre,
                                     seleccionado:
                                         panelSeleccionado == Panel.listasRep &&
@@ -112,6 +117,9 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                           .add(EvSeleccionarLista(
                                               listaRepBiblioteca));
                                     },
+                                    reproduciendo: listaReproducida?.id ==
+                                            listaRepBiblioteca.id &&
+                                        reproduciendo,
                                   ),
                                 ),
 
@@ -172,7 +180,7 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                                             DriftDbViewer(
                                                                 appDb)));
                                               },
-                                              child: Text("Drift")),
+                                              child: const Text("Drift")),
 
                                         //LISTA DE LISTAS DE REPRODUCCION
                                         Expanded(
@@ -183,7 +191,11 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                                 int index) {
                                               final lista = estadoPanelLateral
                                                   .listasReproduccion[index];
-                                              return ItemPanelLateral(
+                                              return ItemPanelLateralListaRep(
+                                                reproduciendo:
+                                                    listaReproducida?.id ==
+                                                            lista.id &&
+                                                        reproduciendo,
                                                 texto: lista.nombre,
                                                 seleccionado:
                                                     panelSeleccionado ==
@@ -202,7 +214,8 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                                       .read<
                                                           BlocListaReproduccionSeleccionada>()
                                                       .add(EvSeleccionarLista(
-                                                          lista));
+                                                        lista,
+                                                      ));
                                                 },
                                               );
                                             },

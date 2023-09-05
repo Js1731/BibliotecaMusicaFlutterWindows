@@ -151,6 +151,9 @@ class AuxiliarListaReproduccion {
 
     if (nuevoNombre == null) return null;
 
+    ///ESTA ES UNA EXCEPCION
+    ///SE USA UN REPOSITORIO DIRECTAMENTE POR QUE LOS ADD EVENT DE LOS BLOC NO
+    ///DEVUELVEN UN VALOR
     return _repositorioColumnas.agregarColumna(nuevoNombre);
   }
 
@@ -174,5 +177,23 @@ class AuxiliarListaReproduccion {
     context
         .read<BlocListaReproduccionSeleccionada>()
         .add(EvEliminarCancionesLista(list));
+  }
+
+  Future<void> renombrarLista(BuildContext context) async {
+    final lista = context
+        .read<BlocListaReproduccionSeleccionada>()
+        .state
+        .listaReproduccionSeleccionada;
+    final nuevoNombre = await abrirDialogoIngresarTexto(
+        context, "Renombrar Lista", "Ingrese el nuevo nombre de la lista.",
+        txtIni: lista.nombre);
+
+    if (nuevoNombre == null) return;
+
+    if (context.mounted) {
+      context
+          .read<BlocListaReproduccionSeleccionada>()
+          .add(EvRenombrarLista(nuevoNombre));
+    }
   }
 }

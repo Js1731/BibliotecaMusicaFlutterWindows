@@ -1,12 +1,14 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
-import 'package:biblioteca_musica/dialogos/dialogo_agregar_valor_columna.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
+import 'package:biblioteca_musica/dialogos/dialogo_editar_valor_columna.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_ingresar_texto.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../dialogos/dialogo_agregar_valor_columna.dart';
 
 class AuxiliarPanelColumnas {
   final RepositorioColumnas _repositorioColumnas;
@@ -27,6 +29,14 @@ class AuxiliarPanelColumnas {
     await abrirDialogoAgregarValorColumna(context,
         context.read<BlocColumnaSeleccionada>().state.columnaSeleccionada!,
         valorColIni: valorColIni);
+  }
+
+  Future<void> editarValorColumna(
+      BuildContext context, ValorColumnaData valorColumna) async {
+    await abrirDialogoEditarValorColumna(
+        context,
+        context.read<BlocColumnaSeleccionada>().state.columnaSeleccionada!,
+        valorColumna);
   }
 
   Future<void> eliminarValorColumna(

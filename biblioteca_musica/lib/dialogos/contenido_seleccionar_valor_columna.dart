@@ -1,7 +1,7 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/bloc_dimesiones_panel.dart';
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/evento_dimensiones_panel.dart';
-import 'package:biblioteca_musica/dialogos/contenido_agregar_valor_columna.dart';
+import 'package:biblioteca_musica/dialogos/contenido_valor_columna.dart';
 import 'package:biblioteca_musica/widgets/btn_flotante_icono.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -148,9 +148,9 @@ class _EstadoContenidoSeleccionarValorColumna
             //CONTENIDO AGREGAR VALOR COLUMNA
             if (state.mostrarPanelAgregarColumna)
               Expanded(
-                  child: ContenidoAgregarValorColumna(
+                  child: ContenidoValorColumna(
                 columna: widget.columna,
-                onAgregarValorColumna: (nuevoValorColuma) {
+                onAceptarValorColumna: (nuevoValorColuma) {
                   context
                       .read<BlocDialogoSeleccionarValorColumna>()
                       .add(EvSeleccionarValorColumna(nuevoValorColuma));

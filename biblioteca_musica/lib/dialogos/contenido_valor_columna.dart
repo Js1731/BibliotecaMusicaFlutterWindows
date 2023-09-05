@@ -12,25 +12,24 @@ import '../widgets/form/txt_field.dart';
 import '../widgets/imagen_round_rect.dart';
 import '../widgets/texto_per.dart';
 
-class ContenidoAgregarValorColumna extends StatefulWidget {
+class ContenidoValorColumna extends StatefulWidget {
   final ColumnaData columna;
-  final void Function(ValorColumnaData nuevoValorColuma)? onAgregarValorColumna;
+  final void Function(ValorColumnaData nuevoValorColuma)? onAceptarValorColumna;
   final Widget? btnVolver;
   final ValorColumnaData? valorColumnaIni;
 
-  const ContenidoAgregarValorColumna(
+  const ContenidoValorColumna(
       {super.key,
       required this.columna,
-      this.onAgregarValorColumna,
+      this.onAceptarValorColumna,
       this.btnVolver,
       this.valorColumnaIni});
 
   @override
-  State<StatefulWidget> createState() => _EstadoContenidoAgregarValorColumna();
+  State<StatefulWidget> createState() => _EstadoContenidoValorColumna();
 }
 
-class _EstadoContenidoAgregarValorColumna
-    extends State<ContenidoAgregarValorColumna> {
+class _EstadoContenidoValorColumna extends State<ContenidoValorColumna> {
   String? urlSel;
   final _formKey = GlobalKey<FormState>();
   final txtController = TextEditingController();
@@ -61,8 +60,8 @@ class _EstadoContenidoAgregarValorColumna
           .read<RepositorioColumnas>()
           .agregarValorColumna(txtController.text, widget.columna.id, urlSel);
 
-      if (widget.onAgregarValorColumna != null) {
-        widget.onAgregarValorColumna!(valorColumnaNuevo);
+      if (widget.onAceptarValorColumna != null) {
+        widget.onAceptarValorColumna!(valorColumnaNuevo);
       }
     }
   }
@@ -74,8 +73,8 @@ class _EstadoContenidoAgregarValorColumna
           .editarValorColumna(
               widget.valorColumnaIni!.id, txtController.text, urlSel);
 
-      if (widget.onAgregarValorColumna != null) {
-        widget.onAgregarValorColumna!(valorColumnaNuevo);
+      if (widget.onAceptarValorColumna != null) {
+        widget.onAceptarValorColumna!(valorColumnaNuevo);
       }
     }
   }
@@ -106,7 +105,7 @@ class _EstadoContenidoAgregarValorColumna
                       alignment: Alignment.center,
                       padding: const EdgeInsets.only(left: 30),
                       child: TextoPer(
-                        texto: "Agregar ${widget.columna.nombre}",
+                        texto: widget.columna.nombre,
                         tam: 16,
                         weight: FontWeight.bold,
                       ),
@@ -178,10 +177,16 @@ class _EstadoContenidoAgregarValorColumna
               ///BOTON AGREGAR VALOR
               BtnFlotanteSimple(
                   ancho: 250,
-                  onPressed: () {
-                    _agregarValorColumna(context);
+                  onPressed: () async {
+                    if (widget.valorColumnaIni != null) {
+                      await _editarValorColumna(context);
+                    } else {
+                      await _agregarValorColumna(context);
+                    }
                   },
-                  texto: "Agregar"),
+                  texto: widget.valorColumnaIni == null
+                      ? "Agregar"
+                      : "Actualizar"),
               const SizedBox(height: 10)
             ],
           ),

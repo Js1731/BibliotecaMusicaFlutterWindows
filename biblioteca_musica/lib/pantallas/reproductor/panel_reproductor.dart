@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../../backend/misc/archivos.dart';
+
 class PanelReproductor extends StatefulWidget {
   const PanelReproductor({super.key});
 
@@ -116,13 +118,13 @@ class EstadoPanelReproductor extends State<PanelReproductor> {
                           return Row(
                             children: [
                               ImagenRectRounded(
-                                sombra: false,
-                                radio: 10,
-                                tam: 60,
-                                // url: valorColumnaPrincipal != null
-                                //     ? rutaImagen(valorColumnaPrincipal.id)
-                                //     : null
-                              ),
+                                  sombra: false,
+                                  radio: 10,
+                                  tam: 60,
+                                  url: cancionRep?.valorColumnaPrincipal != null
+                                      ? rutaImagen(
+                                          cancionRep!.valorColumnaPrincipal!.id)
+                                      : null),
                               const SizedBox(width: 10),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,

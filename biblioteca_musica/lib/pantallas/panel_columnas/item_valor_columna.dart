@@ -87,8 +87,7 @@ class ItemValorColumna extends StatelessWidget {
                     if (value == 0) {
                       await context
                           .read<AuxiliarPanelColumnas>()
-                          .agregarValorColumna(context,
-                              valorColIni: valorColumna);
+                          .editarValorColumna(context, valorColumna);
                     } else {
                       await context
                           .read<AuxiliarPanelColumnas>()

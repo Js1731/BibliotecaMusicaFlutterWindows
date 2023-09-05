@@ -78,9 +78,10 @@ class Reproductor {
                   appDb.cancionValorColumna.idValorPropiedad
                       .equalsExp(appDb.valorColumna.id))
             ])
-            ..where(
-                appDb.valorColumna.idColumna.equals(lista.idColumnaPrincipal!) &
-                    appDb.cancionListaReproduccion.idCancion.equals(cancion.id))
+            ..where(appDb.valorColumna.idColumna
+                    .equals(lista.idColumnaPrincipal!) &
+                appDb.cancionListaReproduccion.idCancion.equals(cancion.id) &
+                appDb.cancionListaReproduccion.idListaRep.equals(lista.id))
             ..addColumns([
               appDb.cancionListaReproduccion.idCancion,
               appDb.cancionListaReproduccion.idListaRep,
