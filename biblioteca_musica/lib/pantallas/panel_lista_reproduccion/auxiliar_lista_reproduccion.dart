@@ -1,8 +1,8 @@
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_gestionar_columnas_cancion.dart';
-import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -12,15 +12,11 @@ import '../../backend/datos/AppDb.dart';
 import '../../bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import '../../dialogos/dialogo_ingresar_texto.dart';
-import '../../repositorios/repositorio_reproductor.dart';
 
 class AuxiliarListaReproduccion {
-  final RepositorioReproductor _repositorioReproductor;
-  final RepositorioCanciones _repositorioCanciones;
   final RepositorioColumnas _repositorioColumnas;
 
-  AuxiliarListaReproduccion(this._repositorioReproductor,
-      this._repositorioCanciones, this._repositorioColumnas);
+  AuxiliarListaReproduccion(this._repositorioColumnas);
 
   Future<void> importarCanciones(BuildContext context) async {
     FilePickerResult? lstArchivosSeleccionados =
@@ -100,34 +96,28 @@ class AuxiliarListaReproduccion {
 
   Future<void> reproducirCancion(
       BuildContext context, CancionData cancion) async {
-    await _repositorioReproductor.reproducirCancion(
+    final estadoListaSel =
+        context.read<BlocListaReproduccionSeleccionada>().state;
+    context.read<BlocReproductor>().add(EvReproducirCancion(
+        estadoListaSel.listaReproduccionSeleccionada,
         cancion,
-        context
-            .read<BlocListaReproduccionSeleccionada>()
-            .state
-            .listaReproduccionSeleccionada,
-        context.read<BlocListaReproduccionSeleccionada>().state.listaCanciones,
-        _repositorioCanciones.obtStreamCanciones()!);
+        estadoListaSel.listaCanciones));
   }
 
   Future<void> reproducirListaEnOrden(BuildContext context) async {
-    await _repositorioReproductor.reproducirListaOrden(
-        context
-            .read<BlocListaReproduccionSeleccionada>()
-            .state
-            .listaReproduccionSeleccionada,
-        context.read<BlocListaReproduccionSeleccionada>().state.listaCanciones,
-        _repositorioCanciones.obtStreamCanciones()!);
+    final estadoListaSel =
+        context.read<BlocListaReproduccionSeleccionada>().state;
+    context.read<BlocReproductor>().add(EvReproducirListaOrden(
+        estadoListaSel.listaReproduccionSeleccionada,
+        estadoListaSel.listaCanciones));
   }
 
   Future<void> reproducirListaAzar(BuildContext context) async {
-    await _repositorioReproductor.reproducirListaAzar(
-        context
-            .read<BlocListaReproduccionSeleccionada>()
-            .state
-            .listaReproduccionSeleccionada,
-        context.read<BlocListaReproduccionSeleccionada>().state.listaCanciones,
-        _repositorioCanciones.obtStreamCanciones()!);
+    final estadoListaSel =
+        context.read<BlocListaReproduccionSeleccionada>().state;
+    context.read<BlocReproductor>().add(EvReproducirListaAzar(
+        estadoListaSel.listaReproduccionSeleccionada,
+        estadoListaSel.listaCanciones));
   }
 
   Future<void> eliminarLista(BuildContext context) async {
@@ -139,9 +129,7 @@ class AuxiliarListaReproduccion {
     if (confirmar == null) return;
 
     if (context.mounted) {
-      context
-          .read<BlocListaReproduccionSeleccionada>()
-          .add(EvSeleccionarLista(listaRepBiblioteca));
+      context.read<BlocListaReproduccionSeleccionada>().add(EvEliminarLista());
     }
   }
 
@@ -154,6 +142,7 @@ class AuxiliarListaReproduccion {
     ///ESTA ES UNA EXCEPCION
     ///SE USA UN REPOSITORIO DIRECTAMENTE POR QUE LOS ADD EVENT DE LOS BLOC NO
     ///DEVUELVEN UN VALOR
+    ///SE NECESITA LA COLUMNA QUE SE AGREGA PARA ASIGNARLA AL GESTOR DE COLUMNAS
     return _repositorioColumnas.agregarColumna(nuevoNombre);
   }
 

@@ -3,7 +3,7 @@ import 'package:biblioteca_musica/backend/misc/utiles.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
-import 'package:biblioteca_musica/widgets/btn_accion_reproductor.dart';
+import 'package:biblioteca_musica/pantallas/reproductor/btn_accion_reproductor.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';

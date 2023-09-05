@@ -1,19 +1,18 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/eventos_columnas_sistema.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_editar_valor_columna.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_ingresar_texto.dart';
-import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../dialogos/dialogo_agregar_valor_columna.dart';
 
 class AuxiliarPanelColumnas {
-  final RepositorioColumnas _repositorioColumnas;
-
-  AuxiliarPanelColumnas(this._repositorioColumnas);
+  AuxiliarPanelColumnas();
 
   Future<void> agregarColumna(BuildContext context) async {
     String? nuevoNombre = await abrirDialogoIngresarTexto(
@@ -21,7 +20,9 @@ class AuxiliarPanelColumnas {
 
     if (nuevoNombre == null) return;
 
-    _repositorioColumnas.agregarColumna(nuevoNombre);
+    if (context.mounted) {
+      context.read<BlocColumnasSistema>().add(EvAgregarColumna(nuevoNombre));
+    }
   }
 
   Future<void> agregarValorColumna(BuildContext context,

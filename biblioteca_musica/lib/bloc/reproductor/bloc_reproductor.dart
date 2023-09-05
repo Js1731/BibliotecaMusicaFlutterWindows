@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
@@ -23,6 +25,9 @@ class BlocReproductor extends Bloc<EventoReproductor, EstadoReproductor> {
     on<EvTogglePausa>(_onTogglePausa);
     on<EvAvanzar10s>(_onAvanzar10s);
     on<EvAvanzarCancion>(_onAvanzarCancion);
+    on<EvReproducirListaOrden>(_onReproducirListaOrden);
+    on<EvReproducirListaAzar>(_onReproducirListaAzar);
+    on<EvReproducirCancion>(_onReproducirCancion);
   }
 
   void _onEscucharReproductor(
@@ -114,5 +119,23 @@ class BlocReproductor extends Bloc<EventoReproductor, EstadoReproductor> {
     if (state.cancionReproducida != null) {
       _repositorioReproductor.avanzarCancion();
     }
+  }
+
+  FutureOr<void> _onReproducirListaOrden(
+      EvReproducirListaOrden event, Emitter<EstadoReproductor> emit) {
+    _repositorioReproductor.reproducirListaOrden(
+        event.lista, event.listaCancionesActuales);
+  }
+
+  FutureOr<void> _onReproducirListaAzar(
+      EvReproducirListaAzar event, Emitter<EstadoReproductor> emit) {
+    _repositorioReproductor.reproducirListaAzar(
+        event.lista, event.listaCancionesActuales);
+  }
+
+  FutureOr<void> _onReproducirCancion(
+      EvReproducirCancion event, Emitter<EstadoReproductor> emit) {
+    _repositorioReproductor.reproducirCancion(
+        event.cancion, event.lista, event.listaCancionesActuales);
   }
 }

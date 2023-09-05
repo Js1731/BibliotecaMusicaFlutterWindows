@@ -43,6 +43,8 @@ Future<void> main() async {
 
   sincronizar();
 
+  final repositorioCanciones = RepositorioCanciones(DBPCanciones());
+
   runApp(
     MultiRepositoryProvider(
         providers: [
@@ -51,13 +53,14 @@ Future<void> main() async {
                 RepositorioListasReproduccion(DBPListasReproduccion()),
           ),
           RepositoryProvider(
-            create: (context) => RepositorioCanciones(DBPCanciones()),
+            create: (context) => repositorioCanciones,
           ),
           RepositoryProvider(
             create: (context) => RepositorioColumnas(DBPColumnas()),
           ),
           RepositoryProvider(
-              create: (context) => RepositorioReproductor(Reproductor()))
+              create: (context) =>
+                  RepositorioReproductor(Reproductor(), repositorioCanciones))
         ],
         child: MultiBlocProvider(providers: [
           BlocProvider(create: (context) => CubitPanelSeleccionado()),

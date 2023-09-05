@@ -95,6 +95,7 @@ class DBPCanciones {
         final listaNoNull = nuevaLista.map<CancionColumnas>((e) => e!).toList();
         ordenarListaColumna(
             listaNoNull, listaRep.idColumnaOrden, listaRep.ordenAscendente);
+
         return listaNoNull;
       }();
 

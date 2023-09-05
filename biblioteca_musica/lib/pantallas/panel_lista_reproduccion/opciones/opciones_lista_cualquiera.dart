@@ -67,7 +67,9 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
             icono: Icons.delete,
             texto: "Eliminar",
             onPressed: (context) async {
-              context.read<AuxiliarListaReproduccion>().eliminarLista(context);
+              await context
+                  .read<AuxiliarListaReproduccion>()
+                  .eliminarLista(context);
             }),
       ]),
     ];

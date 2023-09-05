@@ -2,11 +2,13 @@ import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/data/reproductor.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 
 class RepositorioReproductor {
   final Reproductor _reproductor;
+  final RepositorioCanciones _repositorioCanciones;
 
-  RepositorioReproductor(this._reproductor);
+  RepositorioReproductor(this._reproductor, this._repositorioCanciones);
 
   Stream<CancionColumnaPrincipal?> escucharCancionReproducida() =>
       _reproductor.streamContCancionReproducida.obtStream();
@@ -22,26 +24,23 @@ class RepositorioReproductor {
       _reproductor.streamContReproduciendo.obtStream();
 
   Future<void> reproducirListaOrden(
-      ListaReproduccionData lista,
-      List<CancionColumnas> listaCanciones,
-      Stream<List<CancionColumnas>> stream) async {
-    await _reproductor.reproducirLista(lista, true, listaCanciones, stream);
+      ListaReproduccionData lista, List<CancionColumnas> listaCanciones) async {
+    await _reproductor.reproducirLista(lista, true, listaCanciones,
+        _repositorioCanciones.obtStreamCanciones()!);
   }
 
   Future<void> reproducirListaAzar(
-      ListaReproduccionData lista,
-      List<CancionColumnas> listaCanciones,
-      Stream<List<CancionColumnas>> stream) async {
-    await _reproductor.reproducirLista(lista, false, listaCanciones, stream);
+      ListaReproduccionData lista, List<CancionColumnas> listaCanciones) async {
+    await _reproductor.reproducirLista(lista, false, listaCanciones,
+        _repositorioCanciones.obtStreamCanciones()!);
   }
 
   Future<void> reproducirCancion(
       CancionData cancion,
       ListaReproduccionData listaRep,
-      List<CancionColumnas> listaCanciones,
-      Stream<List<CancionColumnas>> stream) async {
-    await _reproductor.reproducirCancion(
-        cancion, listaRep, listaCanciones, stream);
+      List<CancionColumnas> listaCanciones) async {
+    await _reproductor.reproducirCancion(cancion, listaRep, listaCanciones,
+        _repositorioCanciones.obtStreamCanciones()!);
   }
 
   void cambiarProgreso(int nuevoProgreso) {

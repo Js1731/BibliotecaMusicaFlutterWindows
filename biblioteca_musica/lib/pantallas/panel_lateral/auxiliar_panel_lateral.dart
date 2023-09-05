@@ -1,7 +1,7 @@
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/evento_panel_lateral.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_ingresar_texto.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuxiliarPanelLateral {

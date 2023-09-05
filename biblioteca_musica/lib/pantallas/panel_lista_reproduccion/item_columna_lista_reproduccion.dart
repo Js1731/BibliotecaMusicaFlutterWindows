@@ -56,7 +56,7 @@ class ItemColumnaListaReproduccion extends BtnGenerico {
                           ),
                         ),
                       ),
-                      VerticalDivider(
+                      const VerticalDivider(
                         width: 5,
                         color: DecoColores.gris,
                       )

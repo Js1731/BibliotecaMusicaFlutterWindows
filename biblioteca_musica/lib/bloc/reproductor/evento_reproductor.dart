@@ -1,4 +1,5 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
 import 'package:equatable/equatable.dart';
 
 const ListaReproduccionData listaRepBiblioteca =
@@ -44,3 +45,25 @@ class EvTogglePausa extends EventoReproductor {}
 class EvAvanzar10s extends EventoReproductor {}
 
 class EvAvanzarCancion extends EventoReproductor {}
+
+class EvReproducirListaOrden extends EventoReproductor {
+  final ListaReproduccionData lista;
+  final List<CancionColumnas> listaCancionesActuales;
+
+  EvReproducirListaOrden(this.lista, this.listaCancionesActuales);
+}
+
+class EvReproducirListaAzar extends EventoReproductor {
+  final ListaReproduccionData lista;
+  final List<CancionColumnas> listaCancionesActuales;
+
+  EvReproducirListaAzar(this.lista, this.listaCancionesActuales);
+}
+
+class EvReproducirCancion extends EventoReproductor {
+  final ListaReproduccionData lista;
+  final List<CancionColumnas> listaCancionesActuales;
+  final CancionData cancion;
+
+  EvReproducirCancion(this.lista, this.cancion, this.listaCancionesActuales);
+}

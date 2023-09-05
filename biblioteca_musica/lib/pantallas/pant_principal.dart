@@ -10,9 +10,7 @@ import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/panel_reproductor.dart';
-import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
-import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
@@ -41,16 +39,13 @@ class PantPrincipalState extends State<PantPrincipal>
             create: (context) => CubitGestorColumnas(),
             child: Provider(
                 create: (context) => AuxiliarListaReproduccion(
-                      context.read<RepositorioReproductor>(),
-                      context.read<RepositorioCanciones>(),
                       context.read<RepositorioColumnas>(),
                     ),
                 child: const PanelListaReproduccion()));
 
       case Panel.columnas:
         return Provider(
-            create: (context) =>
-                AuxiliarPanelColumnas(context.read<RepositorioColumnas>()),
+            create: (context) => AuxiliarPanelColumnas(),
             child: const PanelColumnasPrincipal());
       default:
         return const SizedBox();

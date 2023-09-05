@@ -163,9 +163,9 @@ class BlocListaReproduccionSeleccionada extends Bloc<
     emit(state.copiarCon(nuevaListaSel: nuevaLista));
   }
 
-  void _onEliminarLista(EvEliminarLista evento,
-      Emitter<EstadoListaReproduccionSelecconada> emit) {
-    _repositorioListasReproduccion
+  Future<void> _onEliminarLista(EvEliminarLista evento,
+      Emitter<EstadoListaReproduccionSelecconada> emit) async {
+    await _repositorioListasReproduccion
         .eliminarLista(state.listaReproduccionSeleccionada.id);
 
     add(EvSeleccionarLista(listaRepBiblioteca));

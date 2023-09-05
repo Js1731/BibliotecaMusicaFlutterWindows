@@ -31,7 +31,8 @@ class ItemCancion extends BtnGenerico {
               .map((mapa) => mapa?["valor_columna_nombre"])
               .toList();
 
-          return Container(
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 100),
             width: double.infinity,
             height: 30,
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -58,12 +59,17 @@ class ItemCancion extends BtnGenerico {
                       Checkbox(
                           shape: const CircleBorder(),
                           splashRadius: 15,
-                          activeColor: Deco.cRosa0,
+                          activeColor: reproduciendo
+                              ? Colors.white
+                              : DecoColores.rosaClaro1,
+                          checkColor: reproduciendo
+                              ? DecoColores.rosaClaro1
+                              : Colors.white,
                           side: BorderSide(
                               color: reproduciendo
                                   ? hover
                                       ? Colors.white
-                                      : Deco.cMorado2
+                                      : DecoColores.rosaClaro1
                                   : hover
                                       ? Deco.cGray
                                       : Colors.white),

@@ -27,8 +27,8 @@ class RepositorioListasReproduccion {
     _dbpListasReproduccion.renombarLista(idLista, nuevoNombre);
   }
 
-  void eliminarLista(int idListaRep) {
-    _dbpListasReproduccion.eliminarListaRep(idListaRep);
+  Future<void> eliminarLista(int idListaRep) async {
+    await _dbpListasReproduccion.eliminarListaRep(idListaRep);
   }
 
   void actColumnaPrincipal(int? idColumna, int idListaRep) {

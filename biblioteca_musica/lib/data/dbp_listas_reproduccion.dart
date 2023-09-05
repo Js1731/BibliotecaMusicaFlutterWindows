@@ -41,14 +41,14 @@ class DBPListasReproduccion {
       ..write(ListaReproduccionCompanion(nombre: Value(nuevoNombre)));
   }
 
-  void eliminarListaRep(int idListaRep) {
-    (appDb.delete(appDb.cancionListaReproduccion)
+  Future<void> eliminarListaRep(int idListaRep) async {
+    await (appDb.delete(appDb.cancionListaReproduccion)
           ..where((tbl) => tbl.idListaRep.equals(idListaRep)))
         .go();
-    (appDb.delete(appDb.listaColumnas)
+    await (appDb.delete(appDb.listaColumnas)
           ..where((tbl) => tbl.idListaRep.equals(idListaRep)))
         .go();
-    (appDb.delete(appDb.listaReproduccion)
+    await (appDb.delete(appDb.listaReproduccion)
           ..where((tbl) => tbl.id.equals(idListaRep)))
         .go();
   }

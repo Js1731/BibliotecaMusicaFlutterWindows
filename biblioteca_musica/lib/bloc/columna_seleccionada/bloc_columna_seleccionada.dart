@@ -17,16 +17,16 @@ class BlocColumnaSeleccionada
         transformer: restartable());
     on<EvEliminarColumna>(_onEliminarColumna);
     on<EvRenombrarColumna>(_onRenombrarColumna);
-    on<EvEliminarValorColumna>(_onEvEliminarValorColumna);
+    on<EvEliminarValorColumna>(_onEliminarValorColumna);
   }
 
-  void _onSeleccionarColumna(
+  FutureOr<void> _onSeleccionarColumna(
       EvSeleccionarColumna event, Emitter<EstadoColumnaSeleccionada> emit) {
     emit(state.copiarCon(nuevaColumna: event.nuevaColumna));
     add(EvEscucharValoresColumna(event.nuevaColumna));
   }
 
-  void _onEscucharValoresColumna(EvEscucharValoresColumna event,
+  FutureOr<void> _onEscucharValoresColumna(EvEscucharValoresColumna event,
       Emitter<EstadoColumnaSeleccionada> emit) async {
     await emit.forEach(
         _repositorioColumnas.crearStreamValoresColumna(event.columna),
@@ -34,13 +34,13 @@ class BlocColumnaSeleccionada
             state.copiarCon(nuevaListaValoresColumna: nuevaLista));
   }
 
-  void _onEliminarColumna(
+  FutureOr<void> _onEliminarColumna(
       EvEliminarColumna event, Emitter<EstadoColumnaSeleccionada> emit) {}
 
-  void _onRenombrarColumna(
+  FutureOr<void> _onRenombrarColumna(
       EvRenombrarColumna event, Emitter<EstadoColumnaSeleccionada> emit) {}
 
-  FutureOr<void> _onEvEliminarValorColumna(
+  FutureOr<void> _onEliminarValorColumna(
       EvEliminarValorColumna event, Emitter<EstadoColumnaSeleccionada> emit) {
     _repositorioColumnas.eliminarValorColumna(event.valorColumna);
   }
