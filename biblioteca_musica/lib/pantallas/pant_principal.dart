@@ -1,6 +1,9 @@
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/logs/Log.dart';
+import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
+import 'package:biblioteca_musica/bloc/logs/evento_bloc_log.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_panel_columnas.dart';
@@ -9,6 +12,7 @@ import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral
 import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion.dart';
+import 'package:biblioteca_musica/pantallas/panel_logs.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/panel_reproductor.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
@@ -53,6 +57,11 @@ class PantPrincipalState extends State<PantPrincipal>
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -94,7 +103,10 @@ class PantPrincipalState extends State<PantPrincipal>
                           }),
                     ]),
                   ),
-                  //const PanelBarraLog(),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: PanelLog(),
+                  ),
                   const PanelReproductor()
                 ],
               ),
@@ -120,7 +132,5 @@ class PantPrincipalState extends State<PantPrincipal>
         ),
       ),
     );
-
-    //const BarraSync()
   }
 }

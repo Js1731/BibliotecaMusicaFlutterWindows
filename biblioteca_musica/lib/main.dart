@@ -5,6 +5,7 @@ import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/evento_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
@@ -26,22 +27,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/columnas_sistema/eventos_columnas_sistema.dart';
 
-Future<void> iniciarServidor() async {
-  var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
-
-  await server.forEach((HttpRequest request) async {
-    await actIpServidor(request.connectionInfo!.remoteAddress.address);
-  });
-}
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   actNumeroVersionLocal(0);
   await initRutaDoc();
-  enviarMDNS();
-  iniciarServidor();
-
-  sincronizar();
 
   final repositorioCanciones = RepositorioCanciones(DBPCanciones());
 
@@ -63,6 +52,7 @@ Future<void> main() async {
                   RepositorioReproductor(Reproductor(), repositorioCanciones))
         ],
         child: MultiBlocProvider(providers: [
+          BlocProvider(create: (context) => BlocLog()),
           BlocProvider(create: (context) => CubitPanelSeleccionado()),
           BlocProvider(
               create: (context) =>
@@ -108,7 +98,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PantPrincipal(),
+      home: FutureBuilder(
+          future: sincronizar(context.read<BlocLog>()),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return PantPrincipal();
+            } else {
+              return const Center(
+                child: Text("Sincronizando..."),
+              );
+            }
+          }),
     );
   }
 }

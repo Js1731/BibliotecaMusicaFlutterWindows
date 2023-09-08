@@ -3,8 +3,13 @@ import 'dart:io';
 
 import 'package:biblioteca_musica/backend/datos/AppDb.dart';
 import 'package:biblioteca_musica/backend/misc/archivos.dart';
+import 'package:biblioteca_musica/bloc/logs/Log.dart';
+import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
+import 'package:biblioteca_musica/bloc/logs/evento_bloc_log.dart';
+import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -427,13 +432,6 @@ Future<void> descargarArchivo(
   );
 }
 
-Future<void> actualizarDatosLocales() async {
-  final versionLocal = await obtNumeroVersionLocal();
-  await actNumeroVersionLocal(versionLocal + 1);
-
-  sincronizar();
-}
-
 Future<void> sincronizarArchivos() async {
   var lstCanciones = await appDb.select(appDb.cancion).get();
 
@@ -505,36 +503,71 @@ Future<void> sincronizarArchivos() async {
   //provBarraLog.texto("Sincronizando", "Archivos Sincronizados.");
 }
 
-Future<void> sincronizar() async {
+Future<void> _buscarServidor(BlocLog blocLog) async {
+  var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
+
+  enviarMDNS();
+
+  await server.forEach((HttpRequest request) async {
+    await actIpServidor(request.connectionInfo!.remoteAddress.address);
+    blocLog.add(EvAgregarLog(Log(null, "Servidor Encontrado",
+        "Se encontro un servidor en ${await obtIpServidor()}")));
+    int a = 0;
+    throw Exception();
+  }).timeout(
+    const Duration(seconds: 10),
+    onTimeout: () {
+      blocLog.add(EvAgregarLog(Log(
+          const Icon(Icons.highlight_remove_rounded, color: Colors.red),
+          "Servidor no encontrado",
+          "El tiempo limite de busqueda se ha superado.")));
+    },
+  );
+
+  int a = 0;
+}
+
+Future<void> sincronizar(BlocLog blocLog) async {
   try {
     //provBarraLog.cambiarEstadoSinc(false);
 
     await cancelarDescargaSubida();
+    blocLog.add(EvAgregarLog(Log(
+        const Icon(Icons.sync, color: Deco.cGray),
+        "Iniciando Sincronizacion",
+        "Iniciando sincronizacion de datos con el servidor.")));
 
-    //provBarraLog.texto("Sincronizando", "Iniciando Sincronización...");
+    blocLog.add(EvAgregarLog(
+        Log(null, "Buscando Servidor", "Buscando un servidor en la red...")));
+
+    await _buscarServidor(blocLog);
+
     int versionServidor = await obtNumeroVersionServidor();
     int versionLocal = await obtNumeroVersionLocal();
 
-    if (versionLocal > versionServidor) {
-      await reemplazarDatosServidor();
-      await sincronizarLocalServidor();
-      //await provGeneral.actualizarListaCanciones();
-      await actNumeroVersionServidor(versionLocal);
-    } else if (versionLocal < versionServidor) {
-      await reemplazarDatosLocal();
-      await sincronizarServidorLocal();
-      //await provGeneral.actualizarListaCanciones();
-      await actNumeroVersionLocal(versionServidor);
-    }
+    // if (versionLocal > versionServidor) {
+    //   await reemplazarDatosServidor();
+    //   await sincronizarLocalServidor();
 
-    //provBarraLog.texto("Sincronizando", "Datos Sincronizados.");
-    //provBarraLog.cambiarEstadoSinc(true);
+    //   await actNumeroVersionServidor(versionLocal);
+    // } else if (versionLocal < versionServidor) {
+    //   await reemplazarDatosLocal();
+    //   await sincronizarServidorLocal();
+    //   await actNumeroVersionLocal(versionServidor);
+    // }
+    blocLog.add(EvAgregarLog(Log(
+        const Icon(Icons.check_circle_rounded, color: Colors.green),
+        "Datos Sincronizados",
+        "Los datos fueron sincronizados con exito.")));
 
-    sincronizarArchivos();
+    //sincronizarArchivos();
   } catch (error) {
     if (error is DioException) {
-      //provBarraLog.texto(
-      //    "Error", "Hubo un error con la comunicación con el servidor.");
+      blocLog.add(EvAgregarLog(Log(
+          const Icon(Icons.highlight_remove_rounded, color: Colors.red),
+          "Error Sincronizando",
+          "No se pudo encontrar el servidor.")));
+
       return;
     } else {
       //provBarraLog.texto("Error", "Hubo un error durante la sincronización.");
