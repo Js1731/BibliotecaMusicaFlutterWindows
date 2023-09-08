@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/backend/datos/cancion.dart';
-import 'package:biblioteca_musica/backend/datos/valor_columna.dart';
+import 'package:biblioteca_musica/datos/cancion.dart';
+import 'package:biblioteca_musica/datos/valor_columna.dart';
 import 'package:drift/drift.dart';
 
 class CancionValorColumna extends Table {

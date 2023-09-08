@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
-import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
-import 'package:biblioteca_musica/backend/misc/archivos.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
+import 'package:biblioteca_musica/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:drift/drift.dart';
 
-import '../backend/misc/custom_stream_controller.dart';
+import '../misc/custom_stream_controller.dart';
 
 class Reproductor {
   final CustomStreamController<CancionColumnaPrincipal?>

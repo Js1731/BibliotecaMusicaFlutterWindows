@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
-import 'package:biblioteca_musica/backend/misc/utiles.dart';
+import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-import '../../backend/misc/archivos.dart';
+import '../../misc/archivos.dart';
 
 class PanelReproductor extends StatefulWidget {
   const PanelReproductor({super.key});

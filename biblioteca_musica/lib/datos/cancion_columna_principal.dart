@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:drift/drift.dart';
 
 class CancionColumnaPrincipal extends Table {

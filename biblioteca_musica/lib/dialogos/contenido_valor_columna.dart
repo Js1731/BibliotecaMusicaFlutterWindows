@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/misc/archivos.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';

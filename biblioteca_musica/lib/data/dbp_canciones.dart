@@ -1,6 +1,6 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
-import 'package:biblioteca_musica/backend/misc/utiles.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:drift/drift.dart';
 
 class DBPCanciones {

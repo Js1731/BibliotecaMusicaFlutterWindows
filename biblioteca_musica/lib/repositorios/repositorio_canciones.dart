@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
-import 'package:biblioteca_musica/backend/misc/Proceso.dart';
-import 'package:biblioteca_musica/backend/misc/archivos.dart';
-import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/misc/Proceso.dart';
+import 'package:biblioteca_musica/misc/archivos.dart';
+import 'package:biblioteca_musica/sincronizador/sincronizacion.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/data/dbp_canciones.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_progreso.dart';

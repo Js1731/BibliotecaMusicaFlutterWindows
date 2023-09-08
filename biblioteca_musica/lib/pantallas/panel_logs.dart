@@ -24,7 +24,7 @@ class _PanelLogState extends State<PanelLog> {
       return AnimatedContainer(
         curve: Curves.bounceOut,
         duration: const Duration(milliseconds: 500),
-        height: mostrarLogCompleto ? 130 : 30,
+        height: mostrarLogCompleto ? 230 : 30,
         child: Column(
           children: [
             Expanded(

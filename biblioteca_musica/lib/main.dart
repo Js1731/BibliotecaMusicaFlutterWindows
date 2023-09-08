@@ -1,7 +1,5 @@
-import 'dart:io';
-
-import 'package:biblioteca_musica/backend/misc/archivos.dart';
-import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/misc/archivos.dart';
+import 'package:biblioteca_musica/sincronizador/sincronizacion.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
@@ -26,10 +24,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/columnas_sistema/eventos_columnas_sistema.dart';
+import 'misc/utiles.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  actNumeroVersionLocal(0);
+  //actNumeroVersionLocal(0);
   await initRutaDoc();
 
   final repositorioCanciones = RepositorioCanciones(DBPCanciones());

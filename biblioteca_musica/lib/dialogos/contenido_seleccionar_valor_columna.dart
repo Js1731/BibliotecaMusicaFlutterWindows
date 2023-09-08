@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/bloc_dimesiones_panel.dart';
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/evento_dimensiones_panel.dart';
 import 'package:biblioteca_musica/dialogos/contenido_valor_columna.dart';

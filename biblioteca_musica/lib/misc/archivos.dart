@@ -1,7 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../sincronizador/sincronizacion.dart';
+import 'utiles.dart';
 
 late String _rutadoc;
 
@@ -83,4 +88,45 @@ Future<void> borrarTodo() async {
   for (File file in files) {
     await file.delete();
   }
+}
+
+Future<void> subirArchivo(String nombreArchivoExtension) async {
+  await Dio(BaseOptions(connectTimeout: timeout)).post(
+      await crearURLServidor("subirArchivo", {}),
+      data: FormData.fromMap({
+        "file": await MultipartFile.fromFile(rutaDoc(nombreArchivoExtension),
+            filename: nombreArchivoExtension)
+      }));
+}
+
+Future<void> descargarArchivo(
+    String nombreArchivoExtension, TipoArchivo tipo) async {
+  String tp = tipo == TipoArchivo.texto
+      ? "t"
+      : tipo == TipoArchivo.musica
+          ? "m"
+          : tipo == TipoArchivo.imagen
+              ? "i"
+              : "";
+
+  await Dio(BaseOptions(connectTimeout: timeout)).download(
+    await crearURLServidor(
+        "descargarArchivo", {"tipodato": tp, "nombre": nombreArchivoExtension}),
+    rutaDoc(nombreArchivoExtension),
+  );
+}
+
+Future<(List, List)> obtArchivosServidor() async {
+  var resultadosServidor =
+      await Dio().get(await crearURLServidor("conArchivos", {}));
+  return dividirListaTipo(resultadosServidor.data);
+}
+
+Future<(List, List)> obtArchivosLocal() async {
+  var ruta = obtRutaDoc();
+  var dir = Directory(ruta);
+  var listaArchivosLocalRaw = dir.listSync();
+  var listArchivosLocal =
+      listaArchivosLocalRaw.map((e) => basename(e.path)).toList();
+  return dividirListaTipo(listArchivosLocal);
 }

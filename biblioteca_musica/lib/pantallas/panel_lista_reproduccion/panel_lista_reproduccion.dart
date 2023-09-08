@@ -1,7 +1,7 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/datos/cancion_columna_principal.dart';
-import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
-import 'package:biblioteca_musica/backend/misc/utiles.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
+import 'package:biblioteca_musica/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';

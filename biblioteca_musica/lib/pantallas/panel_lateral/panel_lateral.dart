@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';

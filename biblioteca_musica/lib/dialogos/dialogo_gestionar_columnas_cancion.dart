@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/bloc/dialogo_gestor_columnas_cancion.dart/bloc_dialogo_gestor_columnas_cancion.dart';
 import 'package:biblioteca_musica/bloc/dialogo_gestor_columnas_cancion.dart/estado_dialogo_gestor_columnas_cancion.dart';
 import 'package:biblioteca_musica/bloc/dialogo_gestor_columnas_cancion.dart/evento_dialogo_gestor_columnas_cancion.dart';

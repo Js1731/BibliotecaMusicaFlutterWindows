@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../backend/datos/AppDb.dart';
+import '../datos/AppDb.dart';
 import 'dialogo_valor_columna.dart';
 
 Future<void> abrirDialogoAgregarValorColumna(

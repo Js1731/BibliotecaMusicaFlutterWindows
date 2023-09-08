@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/backend/datos/lista_reproduccion.dart';
-import 'package:biblioteca_musica/backend/datos/columna.dart';
+import 'package:biblioteca_musica/datos/lista_reproduccion.dart';
+import 'package:biblioteca_musica/datos/columna.dart';
 import 'package:drift/drift.dart';
 
 class ListaColumnas extends Table {

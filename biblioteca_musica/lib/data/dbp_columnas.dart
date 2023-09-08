@@ -1,5 +1,5 @@
-import 'package:biblioteca_musica/backend/datos/AppDb.dart';
-import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/sincronizador/sincronizacion.dart';
 import 'package:drift/drift.dart';
 
 class DBPColumnas {

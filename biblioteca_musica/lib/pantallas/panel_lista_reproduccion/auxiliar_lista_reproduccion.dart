@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/backend/datos/cancion_columnas.dart';
+import 'package:biblioteca_musica/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
@@ -8,7 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../backend/datos/AppDb.dart';
+import '../../datos/AppDb.dart';
 import '../../bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import '../../dialogos/dialogo_ingresar_texto.dart';
