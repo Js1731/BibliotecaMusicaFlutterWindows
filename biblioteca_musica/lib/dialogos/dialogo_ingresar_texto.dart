@@ -55,6 +55,13 @@ class _EstadoDialogoIngresarTexto
   String textoIngresado = "";
 
   @override
+  void initState() {
+    super.initState();
+
+    textoIngresado = widget.txtIni ?? "";
+  }
+
+  @override
   Widget constructorContenido(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),

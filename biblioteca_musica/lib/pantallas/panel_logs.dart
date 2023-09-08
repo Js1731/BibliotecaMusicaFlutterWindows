@@ -1,6 +1,7 @@
 import 'package:biblioteca_musica/bloc/logs/Log.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/logs/estado_log.dart';
+import 'package:biblioteca_musica/sincronizador/sincronizacion.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/plantilla_hover.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
@@ -75,11 +76,11 @@ class _PanelLogState extends State<PanelLog> {
                             });
                           },
                           child: AnimatedContainer(
-                              duration: const Duration(microseconds: 100),
+                              duration: const Duration(milliseconds: 200),
                               width: double.maxFinite,
                               decoration: BoxDecoration(
                                   color:
-                                      hover ? DecoColores.gris : Colors.white,
+                                      hover ? DecoColores.gris0 : Colors.white,
                                   borderRadius: BorderRadius.circular(15)),
                               child: Padding(
                                   padding: const EdgeInsets.only(left: 410),
@@ -120,36 +121,49 @@ class _PanelLogState extends State<PanelLog> {
                       ),
                     ),
                   ),
-                  Container(
-                    width: 170,
-                    height: double.maxFinite,
-                    decoration: BoxDecoration(
-                        color: DecoColores.rosaOscuro,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            margin: const EdgeInsets.only(top: 2),
+                  PlantillaHover(
+                      enabled: true,
+                      constructorContenido: (context, hover) {
+                        return GestureDetector(
+                          onTap: () {
+                            sincronizar(context.read<BlocLog>());
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 170,
+                            height: double.maxFinite,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: DecoColores.rosaClaro1),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextoPer(
-                              texto: "Sincronizado",
-                              color: Colors.white,
-                              tam: 16,
+                                color: hover
+                                    ? DecoColores.rosa
+                                    : DecoColores.rosaOscuro,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 10,
+                                    height: 10,
+                                    margin: const EdgeInsets.only(top: 2),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: DecoColores.rosaClaro1),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: TextoPer(
+                                      texto: "Sincronizado",
+                                      color: Colors.white,
+                                      tam: 16,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                          ),
+                        );
+                      }),
                 ],
               ),
             ),

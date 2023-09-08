@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../bloc/logs/Log.dart';
@@ -10,7 +9,6 @@ import '../bloc/logs/evento_bloc_log.dart';
 import '../datos/AppDb.dart';
 import '../misc/archivos.dart';
 import '../misc/utiles.dart';
-import '../widgets/decoracion_.dart';
 import 'sincronizacion.dart';
 import 'utils_sinc.dart';
 

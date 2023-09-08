@@ -1,9 +1,7 @@
 import 'package:biblioteca_musica/sincronizador/sincronizacion.dart';
-import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 
 import '../datos/AppDb.dart';
-import '../misc/utiles.dart';
 
 Future<void> cambiarEstadoCancion(List<int> lstCanciones, int estado) async {
   appDb.update(appDb.cancion)

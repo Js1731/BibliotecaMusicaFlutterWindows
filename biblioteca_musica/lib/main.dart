@@ -19,12 +19,13 @@ import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
+import 'package:biblioteca_musica/widgets/decoracion_.dart';
+import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/columnas_sistema/eventos_columnas_sistema.dart';
-import 'misc/utiles.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -103,11 +104,22 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               return PantPrincipal();
             } else {
-              return const Center(
-                child: Text("Sincronizando..."),
-              );
+              return _PantSincronizando();
             }
           }),
+    );
+  }
+}
+
+class _PantSincronizando extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+          color: DecoColores.gris,
+          child: Center(
+            child: TextoPer(texto: "Sincronizando"),
+          )),
     );
   }
 }

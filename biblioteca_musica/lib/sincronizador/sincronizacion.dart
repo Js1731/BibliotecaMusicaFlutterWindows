@@ -66,18 +66,8 @@ Future<void> enviarMDNS() async {
   RawDatagramSocket.bind(InternetAddress.anyIPv4, 0).then((socket) {
     socket.send(queryPacket, InternetAddress('224.0.0.251'), 5353);
     socket.listen((RawSocketEvent event) {
-      if (event == RawSocketEvent.read) {
-        print('Received mDNS response:');
-        final datagram = socket.receive();
-        if (datagram != null) {
-          final responsePacket = datagram.data;
-          // Process the mDNS response packet here
-          print('Received mDNS response: ${responsePacket.toList()}');
-        }
-      }
-    }, onDone: () {
-      print("SNO");
-    });
+      if (event == RawSocketEvent.read) {}
+    }, onDone: () {});
   });
 }
 
@@ -186,7 +176,7 @@ Future<void> _buscarServidor(BlocLog blocLog) async {
   try {
     final request =
         await server.firstWhere((HttpRequest request) => true).timeout(
-              const Duration(seconds: 5),
+              const Duration(seconds: 3),
             );
 
     await actIpServidor(request.connectionInfo!.remoteAddress.address);
