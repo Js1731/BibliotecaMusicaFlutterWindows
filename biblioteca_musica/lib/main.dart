@@ -1,46 +1,81 @@
-import 'dart:io';
-
-import 'package:biblioteca_musica/backend/misc/archivos.dart';
-import 'package:biblioteca_musica/backend/misc/sincronizacion.dart';
-import 'package:biblioteca_musica/backend/providers/provider_general.dart';
-import 'package:biblioteca_musica/backend/providers/provider_lista_rep.dart';
-import 'package:biblioteca_musica/backend/providers/provider_log.dart';
-import 'package:biblioteca_musica/backend/providers/provider_panel_propiedad.dart';
-import 'package:biblioteca_musica/backend/providers/provider_reproductor.dart';
+import 'package:biblioteca_musica/misc/archivos.dart';
+import 'package:biblioteca_musica/sincronizador/sincronizacion.dart';
+import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
+import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/evento_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
+import 'package:biblioteca_musica/data/dbp_canciones.dart';
+import 'package:biblioteca_musica/data/dbp_columnas.dart';
+import 'package:biblioteca_musica/data/dbp_listas_reproduccion.dart';
+import 'package:biblioteca_musica/data/reproductor.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
+import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-Future<void> iniciarServidor() async {
-  var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
-
-  await server.forEach((HttpRequest request) async {
-    provBarraLog.texto("Servidor",
-        "Servidor encontrado en ${request.connectionInfo!.remoteAddress.address}");
-    await actIpServidor(request.connectionInfo!.remoteAddress.address);
-  });
-}
-
-ProviderListaReproduccion provListaRep = ProviderListaReproduccion();
-ProviderReproductor provReproductor =
-    ProviderReproductor(providerGeneral: provGeneral);
+import 'bloc/columnas_sistema/eventos_columnas_sistema.dart';
+import 'misc/utiles.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  actNumeroVersionLocal(0);
+  //actNumeroVersionLocal(0);
   await initRutaDoc();
-  enviarMDNS();
-  iniciarServidor();
 
-  sincronizar();
+  final repositorioCanciones = RepositorioCanciones(DBPCanciones());
 
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => provListaRep),
-    ChangeNotifierProvider(create: (_) => ProviderPanelColumnas()),
-    ChangeNotifierProvider(create: (_) => provGeneral),
-    ChangeNotifierProvider(create: (_) => provReproductor)
-  ], child: const MyApp()));
+  runApp(
+    MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(
+            create: (context) =>
+                RepositorioListasReproduccion(DBPListasReproduccion()),
+          ),
+          RepositoryProvider(
+            create: (context) => repositorioCanciones,
+          ),
+          RepositoryProvider(
+            create: (context) => RepositorioColumnas(DBPColumnas()),
+          ),
+          RepositoryProvider(
+              create: (context) =>
+                  RepositorioReproductor(Reproductor(), repositorioCanciones))
+        ],
+        child: MultiBlocProvider(providers: [
+          BlocProvider(create: (context) => BlocLog()),
+          BlocProvider(create: (context) => CubitPanelSeleccionado()),
+          BlocProvider(
+              create: (context) =>
+                  BlocColumnasSistema(context.read<RepositorioColumnas>())
+                    ..add(EvEscucharColumnasSistema())),
+          BlocProvider(
+              create: (context_) => BlocPanelLateral(
+                  context_.read<RepositorioListasReproduccion>())
+                ..add(PanelLateralEscucharStreamListasReproduccion())),
+          BlocProvider(
+              create: (context) =>
+                  BlocReproductor(context.read<RepositorioReproductor>())
+                    ..add(EvEscucharReproductor())),
+          BlocProvider(
+              create: (context) => BlocListaReproduccionSeleccionada(
+                  context.read<RepositorioCanciones>(),
+                  context.read<RepositorioColumnas>(),
+                  context.read<RepositorioListasReproduccion>())
+                ..add(EvSeleccionarLista(listaRepBiblioteca))),
+          BlocProvider(
+              create: (context) =>
+                  BlocColumnaSeleccionada(context.read<RepositorioColumnas>())),
+        ], child: const MyApp())),
+  );
 
   doWhenWindowReady(() {
     const initialSize = Size(1024, 700);
@@ -62,7 +97,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PantPrincipal(),
+      home: FutureBuilder(
+          future: sincronizar(context.read<BlocLog>()),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return PantPrincipal();
+            } else {
+              return const Center(
+                child: Text("Sincronizando..."),
+              );
+            }
+          }),
     );
   }
 }

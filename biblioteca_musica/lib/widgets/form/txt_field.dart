@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-class _TxtFieldDecoration extends InputDecoration {
-  const _TxtFieldDecoration()
+class CustomTxtFieldDecoration extends InputDecoration {
+  const CustomTxtFieldDecoration({String? hint})
       : super(
+            filled: true,
+            fillColor: Colors.white,
+            hintText: hint,
             isCollapsed: true,
             errorStyle: const TextStyle(fontSize: 10),
             contentPadding: const EdgeInsets.all(10),
@@ -15,7 +18,7 @@ class TextFormFieldCustom extends TextFormField {
       {super.key})
       : super(
             initialValue: texto,
-            decoration: const _TxtFieldDecoration(),
+            decoration: const CustomTxtFieldDecoration(),
             onChanged: onChanged);
 }
 
@@ -24,6 +27,6 @@ class TextFieldCustom extends TextField {
       {super.key})
       : super(
             controller: TextEditingController(text: texto),
-            decoration: const _TxtFieldDecoration(),
+            decoration: const CustomTxtFieldDecoration(),
             onChanged: onChanged);
 }

@@ -3,16 +3,17 @@ import 'package:flutter/cupertino.dart';
 class TextoPer extends Text {
   TextoPer(
       {required String texto,
-      required double tam,
+      double tam = 12,
       FontWeight weight = FontWeight.normal,
       TextAlign align = TextAlign.left,
       Color? color,
+      int filasTexto = 1,
       super.key})
       : super(texto,
             textAlign: align,
             overflow: TextOverflow.ellipsis,
             softWrap: true,
-            maxLines: 1,
+            maxLines: filasTexto,
             style: TextStyle(
                 fontStyle: FontStyle.normal,
                 decoration: TextDecoration.none,

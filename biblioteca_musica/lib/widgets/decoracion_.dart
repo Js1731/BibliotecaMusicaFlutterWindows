@@ -20,4 +20,5 @@ class DecoColores {
   static const Color rosaClaro = Color.fromRGBO(116, 44, 96, 1);
   static const Color rosaClaro1 = Color.fromRGBO(190, 61, 115, 1);
   static const Color gris = Color.fromRGBO(206, 206, 206, 1);
+  static const Color gris0 = Color.fromRGBO(245, 245, 245, 1);
 }
