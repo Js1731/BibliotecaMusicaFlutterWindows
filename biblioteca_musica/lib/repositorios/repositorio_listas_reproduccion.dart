@@ -1,5 +1,5 @@
 import 'package:biblioteca_musica/datos/AppDb.dart';
-import 'package:biblioteca_musica/data/dbp_listas_reproduccion.dart';
+import 'package:biblioteca_musica/data_provider/dbp_listas_reproduccion.dart';
 
 class RepositorioListasReproduccion {
   final DBPListasReproduccion _dbpListasReproduccion;

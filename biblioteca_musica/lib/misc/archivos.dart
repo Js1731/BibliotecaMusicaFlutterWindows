@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../sincronizador/sincronizacion.dart';
+import '../bloc/sincronizador/sincronizacion.dart';
 import 'utiles.dart';
 
 late String _rutadoc;
@@ -91,8 +91,7 @@ Future<void> borrarTodo() async {
 }
 
 Future<void> subirArchivo(String nombreArchivoExtension) async {
-  await Dio(BaseOptions(connectTimeout: timeout)).post(
-      await genUrlNoParams("archivos/subir"),
+  await Dio().post(await genUrlNoParams("archivos/subir"),
       data: FormData.fromMap({
         "file": await MultipartFile.fromFile(rutaDoc(nombreArchivoExtension),
             filename: nombreArchivoExtension)
@@ -109,7 +108,7 @@ Future<void> descargarArchivo(
               ? "i"
               : "";
 
-  await Dio(BaseOptions(connectTimeout: timeout)).download(
+  await Dio().download(
     await genUrlParams("archivos/descargar",
         {"tipodato": tp, "nombre": nombreArchivoExtension}),
     rutaDoc(nombreArchivoExtension),

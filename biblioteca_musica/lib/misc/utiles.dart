@@ -109,6 +109,11 @@ Future<int> obtNumeroVersionServidor() async {
   return numeroVersion;
 }
 
+Future<void> actNumeroVersionServidor(int nuevaVersion) async {
+  await Dio().post(
+      await genUrlParams("version/actualizar", {"version": nuevaVersion}));
+}
+
 (List, List) dividirListaTipo(List lst) {
   List<int> listaMP3 = lst
       .where(

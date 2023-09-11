@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:dio/dio.dart';
 
-import '../datos/AppDb.dart';
-import '../misc/archivos.dart';
-import '../misc/utiles.dart';
+import '../../datos/AppDb.dart';
+import '../../misc/archivos.dart';
+import '../../misc/utiles.dart';
 import 'sincronizacion.dart';
 import 'utils_sinc.dart';
 

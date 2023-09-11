@@ -1,5 +1,6 @@
 import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/columnas_sistema/eventos_columnas_sistema.dart';
+import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,6 +26,7 @@ class ContenidoAgregarColumna extends StatelessWidget {
       context
           .read<BlocColumnasSistema>()
           .add(EvAgregarColumna(txtController.text));
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
       onAgregarColumna();
     }
   }

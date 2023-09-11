@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
@@ -59,6 +60,12 @@ class _EstadoContenidoValorColumna extends State<ContenidoValorColumna> {
       final valorColumnaNuevo = await context
           .read<RepositorioColumnas>()
           .agregarValorColumna(txtController.text, widget.columna.id, urlSel);
+
+      if (context.mounted) {
+        context
+            .read<CubitSincronizacion>()
+            .cambiarEstado(EstadoSinc.nuevoLocal);
+      }
 
       if (widget.onAceptarValorColumna != null) {
         widget.onAceptarValorColumna!(valorColumnaNuevo);

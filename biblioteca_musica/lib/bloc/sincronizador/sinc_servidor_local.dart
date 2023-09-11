@@ -4,11 +4,11 @@ import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../bloc/logs/Log.dart';
-import '../bloc/logs/evento_bloc_log.dart';
-import '../datos/AppDb.dart';
-import '../misc/archivos.dart';
-import '../misc/utiles.dart';
+import '../logs/Log.dart';
+import '../logs/evento_bloc_log.dart';
+import '../../datos/AppDb.dart';
+import '../../misc/archivos.dart';
+import '../../misc/utiles.dart';
 import 'sincronizacion.dart';
 import 'utils_sinc.dart';
 
@@ -78,8 +78,7 @@ class SincronizadorServidorConLocal {
     //Borrar archivos del servidor
 
     //Obtener Canciones
-    final query =
-        await genUrlParams("db/tabla/consultar", {"tabla": "cancion"});
+
     final resultadosCanciones = await Dio()
         .get(await genUrlParams("db/tabla/consultar", {"tabla": "cancion"}));
 

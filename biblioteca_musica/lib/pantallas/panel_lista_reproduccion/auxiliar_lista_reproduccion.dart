@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
@@ -28,6 +29,8 @@ class AuxiliarListaReproduccion {
       context
           .read<BlocListaReproduccionSeleccionada>()
           .add(EvImportarCanciones(lstArchivosSeleccionados));
+
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
   }
 
@@ -49,6 +52,9 @@ class AuxiliarListaReproduccion {
                     altura: 180) ??
                 "",
             canciones));
+    if (context.mounted) {
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
+    }
   }
 
   Future<void> actColumnasListaRep(BuildContext context,
@@ -58,6 +64,8 @@ class AuxiliarListaReproduccion {
       bloc.add(EvActColumnasLista(columnas.map((e) => e.id).toList()));
 
       bloc.add(EvActColumnaPrincipal(idColumnaPrincipal));
+
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
   }
 
@@ -73,6 +81,8 @@ class AuxiliarListaReproduccion {
       context
           .read<BlocListaReproduccionSeleccionada>()
           .add(EvRenombrarCancion(cancion.id, nuevoNombre));
+
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
   }
 
@@ -130,6 +140,7 @@ class AuxiliarListaReproduccion {
 
     if (context.mounted) {
       context.read<BlocListaReproduccionSeleccionada>().add(EvEliminarLista());
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
   }
 
@@ -143,7 +154,13 @@ class AuxiliarListaReproduccion {
     ///SE USA UN REPOSITORIO DIRECTAMENTE POR QUE LOS ADD EVENT DE LOS BLOC NO
     ///DEVUELVEN UN VALOR
     ///SE NECESITA LA COLUMNA QUE SE AGREGA PARA ASIGNARLA AL GESTOR DE COLUMNAS
-    return _repositorioColumnas.agregarColumna(nuevoNombre);
+    final nuevaColumna = _repositorioColumnas.agregarColumna(nuevoNombre);
+
+    if (context.mounted) {
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
+    }
+
+    return nuevaColumna;
   }
 
   Future<void> eliminarCancionesTotalmente(
@@ -159,6 +176,8 @@ class AuxiliarListaReproduccion {
       context
           .read<BlocListaReproduccionSeleccionada>()
           .add(EvEliminarCancionesTotalmente(canciones));
+
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
   }
 
@@ -183,6 +202,8 @@ class AuxiliarListaReproduccion {
       context
           .read<BlocListaReproduccionSeleccionada>()
           .add(EvRenombrarLista(nuevoNombre));
+
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
   }
 }

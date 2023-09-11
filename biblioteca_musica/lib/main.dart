@@ -1,5 +1,6 @@
+import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
-import 'package:biblioteca_musica/sincronizador/sincronizacion.dart';
+import 'package:biblioteca_musica/bloc/sincronizador/sincronizacion.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
@@ -10,10 +11,11 @@ import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_repro
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
-import 'package:biblioteca_musica/data/dbp_canciones.dart';
-import 'package:biblioteca_musica/data/dbp_columnas.dart';
-import 'package:biblioteca_musica/data/dbp_listas_reproduccion.dart';
-import 'package:biblioteca_musica/data/reproductor.dart';
+import 'package:biblioteca_musica/data_provider/dbp_canciones.dart';
+import 'package:biblioteca_musica/data_provider/dbp_columnas.dart';
+import 'package:biblioteca_musica/data_provider/dbp_listas_reproduccion.dart';
+import 'package:biblioteca_musica/data_provider/reproductor.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
@@ -29,7 +31,7 @@ import 'bloc/columnas_sistema/eventos_columnas_sistema.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //actNumeroVersionLocal(0);
+  await actNumeroVersionLocal(0);
   await initRutaDoc();
 
   final repositorioCanciones = RepositorioCanciones(DBPCanciones());
@@ -37,6 +39,7 @@ Future<void> main() async {
   runApp(
     MultiRepositoryProvider(
         providers: [
+          RepositoryProvider(create: (context) => Sincronizador()),
           RepositoryProvider(
             create: (context) =>
                 RepositorioListasReproduccion(DBPListasReproduccion()),
@@ -52,6 +55,9 @@ Future<void> main() async {
                   RepositorioReproductor(Reproductor(), repositorioCanciones))
         ],
         child: MultiBlocProvider(providers: [
+          BlocProvider(
+              create: (context) =>
+                  CubitSincronizacion(context.read<Sincronizador>())),
           BlocProvider(create: (context) => BlocLog()),
           BlocProvider(create: (context) => CubitPanelSeleccionado()),
           BlocProvider(
@@ -99,7 +105,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder(
-          future: sincronizar(context.read<BlocLog>()),
+          future: context
+              .read<CubitSincronizacion>()
+              .sincronizar(context.read<BlocLog>()),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return PantPrincipal();

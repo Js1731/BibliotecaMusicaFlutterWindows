@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/eventos_columna_seleccionada.dart';
@@ -22,6 +23,7 @@ class AuxiliarPanelColumnas {
 
     if (context.mounted) {
       context.read<BlocColumnasSistema>().add(EvAgregarColumna(nuevoNombre));
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
   }
 
@@ -53,6 +55,8 @@ class AuxiliarPanelColumnas {
       context
           .read<BlocColumnaSeleccionada>()
           .add(EvEliminarValorColumna(valorColumna));
+
+      context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
   }
 }

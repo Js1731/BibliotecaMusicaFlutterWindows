@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
-import 'package:biblioteca_musica/sincronizador/sincronizacion.dart';
+import 'package:biblioteca_musica/bloc/sincronizador/sincronizacion.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_panel_columnas.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
