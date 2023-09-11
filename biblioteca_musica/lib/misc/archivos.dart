@@ -92,7 +92,7 @@ Future<void> borrarTodo() async {
 
 Future<void> subirArchivo(String nombreArchivoExtension) async {
   await Dio(BaseOptions(connectTimeout: timeout)).post(
-      await crearURLServidor("subirArchivo", {}),
+      await genUrlNoParams("archivos/subir"),
       data: FormData.fromMap({
         "file": await MultipartFile.fromFile(rutaDoc(nombreArchivoExtension),
             filename: nombreArchivoExtension)
@@ -110,15 +110,15 @@ Future<void> descargarArchivo(
               : "";
 
   await Dio(BaseOptions(connectTimeout: timeout)).download(
-    await crearURLServidor(
-        "descargarArchivo", {"tipodato": tp, "nombre": nombreArchivoExtension}),
+    await genUrlParams("archivos/descargar",
+        {"tipodato": tp, "nombre": nombreArchivoExtension}),
     rutaDoc(nombreArchivoExtension),
   );
 }
 
 Future<(List, List)> obtArchivosServidor() async {
   var resultadosServidor =
-      await Dio().get(await crearURLServidor("conArchivos", {}));
+      await Dio().get(await genUrlNoParams("archivos/listar"));
   return dividirListaTipo(resultadosServidor.data);
 }
 

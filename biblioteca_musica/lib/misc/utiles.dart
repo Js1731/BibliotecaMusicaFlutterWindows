@@ -68,16 +68,14 @@ Color aumnetarBrillo(Color color, double fact) {
   return Color.fromARGB(color.alpha, rojo, verde, azul);
 }
 
-Future<String> crearURLServidor(String tipo, Map parametros) async {
-  final String ipServidor = await obtIpServidor();
-  String url = "http://$ipServidor:8080/?tipo=$tipo";
+Future<String> genUrlParams(String ruta, Map params) async =>
+    "${await genUrlNoParams(ruta)}?${params.keys.map<String>((key) => "$key=${params[key]}").toList().join("&")}";
 
-  for (var paramKey in parametros.keys) {
-    url += "&$paramKey=${parametros[paramKey]}";
-  }
+Future<String> genUrlParamUnico(String ruta, String param) async =>
+    "${await genUrlNoParams(ruta)}/$param";
 
-  return url;
-}
+Future<String> genUrlNoParams(String ruta) async =>
+    "http://${await obtIpServidor()}:8080/$ruta";
 
 Future<String> obtIpServidor() async {
   final SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -100,10 +98,9 @@ Future<void> actNumeroVersionLocal(int nuevaVersion) async {
 }
 
 Future<int> obtNumeroVersionServidor() async {
-  Response respuesta =
-      await Dio(BaseOptions(connectTimeout: const Duration(seconds: 1))).get(
-          await crearURLServidor("conVersion", {}),
-          options: Options(responseType: ResponseType.json));
+  Response respuesta = await Dio().get(
+      await genUrlNoParams("version/consultar"),
+      options: Options(responseType: ResponseType.json));
 
   final dynamic ver = respuesta.data["version"];
 

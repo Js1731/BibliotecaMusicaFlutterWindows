@@ -72,8 +72,8 @@ Future<void> enviarMDNS() async {
 }
 
 Future<void> actNumeroVersionServidor(int nuevaVersion) async {
-  await Dio(BaseOptions(connectTimeout: timeout))
-      .post(await crearURLServidor("actVersion", {"version": nuevaVersion}));
+  await Dio(BaseOptions(connectTimeout: timeout)).post(
+      await genUrlParams("version/actualizar", {"version": nuevaVersion}));
 }
 
 Future<void> sincronizarArchivos(BlocLog blocLog) async {
@@ -191,6 +191,8 @@ Future<void> _buscarServidor(BlocLog blocLog) async {
         "El tiempo limite de busqueda se ha superado.")));
 
     throw const HttpException("Servidor no encontrado");
+  } finally {
+    await server.close();
   }
 }
 

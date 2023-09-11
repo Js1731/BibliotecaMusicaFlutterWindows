@@ -23,7 +23,7 @@ class SincronizadorLocalConServidor {
 
   Future<void> copiarTablaServidorALocal(String tabla) async {
     var resultadoRaw = await Dio()
-        .get(await crearURLServidor("conTablaTodo", {"tabla": tabla}));
+        .get(await genUrlParams("db/tabla/consultar", {"tabla": tabla}));
 
     var resultado = jsonDecode(resultadoRaw.data);
 

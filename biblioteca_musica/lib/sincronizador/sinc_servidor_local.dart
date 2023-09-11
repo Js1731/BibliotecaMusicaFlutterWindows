@@ -36,14 +36,14 @@ class SincronizadorServidorConLocal {
   Future<void> copiarTablaLocalAServidor(String tabla) async {
     var resultados = await appDb.customSelect("SELECT * FROM $tabla;").get();
 
-    await Dio().post(await crearURLServidor("insertarDatos", {"tabla": tabla}),
+    await Dio().post(await genUrlParams("db/tabla/insertar", {"tabla": tabla}),
         data: jsonEncode(resultados.map((fila) => fila.data).toList()),
         options: Options(contentType: Headers.jsonContentType));
   }
 
   Future<void> borrarTablaServidor(String nombreTabla) async {
     await Dio(BaseOptions(connectTimeout: const Duration(seconds: 5)))
-        .post(await crearURLServidor("borrarTabla", {"tabla": nombreTabla}));
+        .delete(await genUrlParams("db/tabla/borrar", {"tabla": nombreTabla}));
   }
 
   Future<void> reemplazarDatosServidorConLocal() async {
@@ -78,8 +78,11 @@ class SincronizadorServidorConLocal {
     //Borrar archivos del servidor
 
     //Obtener Canciones
-    var resultadosCanciones = await Dio()
-        .get(await crearURLServidor("conTablaTodo", {"tabla": "cancion"}));
+    final query =
+        await genUrlParams("db/tabla/consultar", {"tabla": "cancion"});
+    final resultadosCanciones = await Dio()
+        .get(await genUrlParams("db/tabla/consultar", {"tabla": "cancion"}));
+
     List<dynamic> lstCancionesRaw = jsonDecode(resultadosCanciones.data);
     List<int> lstIdCanciones =
         lstCancionesRaw.map<int>((e) => e["id"]).toList();
@@ -92,7 +95,7 @@ class SincronizadorServidorConLocal {
 
     //Obtener Valores Columna
     var resultadosValoresColumna = await Dio().get(
-        await crearURLServidor("conTablaTodo", {"tabla": "valor_columna"}));
+        await genUrlParams("db/tabla/consultar", {"tabla": "valor_columna"}));
     List<dynamic> lstValoresColumnaRaw =
         jsonDecode(resultadosValoresColumna.data);
     List<int> lstValoresColumna =
@@ -104,7 +107,7 @@ class SincronizadorServidorConLocal {
         .map((e) => "$e.jpg")
         .toList();
 
-    await Dio().post(await crearURLServidor("borrarArchivos", {
+    await Dio().delete(await genUrlParams("archivos/borrar", {
       "archivos": [...lstMP3Eliminar, ...lstJPGEliminar].join(",")
     }));
 
