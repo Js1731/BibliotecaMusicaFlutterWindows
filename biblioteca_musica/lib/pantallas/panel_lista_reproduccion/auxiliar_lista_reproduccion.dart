@@ -185,6 +185,8 @@ class AuxiliarListaReproduccion {
     context
         .read<BlocListaReproduccionSeleccionada>()
         .add(EvEliminarCancionesLista(list));
+
+    context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
   }
 
   Future<void> renombrarLista(BuildContext context) async {

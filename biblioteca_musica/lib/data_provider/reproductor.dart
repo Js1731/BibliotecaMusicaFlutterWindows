@@ -246,6 +246,8 @@ class Reproductor {
 
     streamContReproduciendo.actStream(true);
 
+    print(can);
+
     if (_subscriptionCompletarReproduccion != null) {
       await _subscriptionCompletarReproduccion!.cancel();
     }
