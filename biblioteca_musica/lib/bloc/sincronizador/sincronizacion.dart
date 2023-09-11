@@ -69,7 +69,7 @@ class Sincronizador {
       switch (imagen.estado) {
         case estadoLocal:
           try {
-            if (!File("${imagen.id}.jpg").existsSync()) continue;
+            if (!File(rutaImagen(imagen.id)!).existsSync()) continue;
             blocLog.add(EvAgregarLog(Log(
                 const Icon(Icons.upload, color: DecoColores.gris),
                 "Sincronizando Portada",

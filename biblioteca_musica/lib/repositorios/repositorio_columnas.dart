@@ -1,3 +1,5 @@
+import 'package:biblioteca_musica/bloc/sincronizador/sincronizacion.dart';
+import 'package:biblioteca_musica/bloc/sincronizador/utils_sinc.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/data_provider/dbp_columnas.dart';
@@ -66,8 +68,12 @@ class RepositorioColumnas {
     final imAnterior = rutaImagen(id);
 
     if (imAnterior != urlSel) {
-      await eliminarArchivo("$id.jpg");
-      await copiarArchivo(urlSel!, "$id.jpg");
+      try {
+        await eliminarArchivo("$id.jpg");
+      } finally {
+        await copiarArchivo(urlSel!, "$id.jpg");
+        await cambiarEstadoImagen([id], estadoLocal);
+      }
     }
 
     return valorCol;
