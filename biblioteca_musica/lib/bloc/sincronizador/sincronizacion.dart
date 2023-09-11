@@ -69,6 +69,7 @@ class Sincronizador {
       switch (imagen.estado) {
         case estadoLocal:
           try {
+            if (!File("${imagen.id}.jpg").existsSync()) continue;
             blocLog.add(EvAgregarLog(Log(
                 const Icon(Icons.upload, color: DecoColores.gris),
                 "Sincronizando Portada",
@@ -95,7 +96,14 @@ class Sincronizador {
                 "Descargando portada de ${imagen.nombre}...")));
             await cambiarEstadoImagen([imagen.id], estadoDescargando);
 
-            await descargarArchivo("${imagen.id}.jpg", TipoArchivo.imagen);
+            try {
+              await descargarArchivo("${imagen.id}.jpg", TipoArchivo.imagen);
+            } catch (e) {
+              blocLog.add(EvAgregarLog(Log(
+                  const Icon(Icons.info_rounded, color: DecoColores.gris),
+                  "Sincronizando Portadas",
+                  "${imagen.nombre} no tiene portada.")));
+            }
 
             blocLog.add(EvAgregarLog(Log(
                 const Icon(Icons.check_circle_rounded, color: Colors.green),

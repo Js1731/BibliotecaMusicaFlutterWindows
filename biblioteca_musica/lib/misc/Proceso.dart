@@ -1,9 +1,13 @@
+import 'package:flutter/foundation.dart';
+
 enum EstadoProcedimiento { espera, corriendo, finalizado }
 
 class Procedimiento {
   void Function(double prog)? _callBackCambioProgreso;
+  void Function()? _callBackProcesoTerminado;
   void Function(String log)? _callBackCambioLog;
-  List<Future<dynamic> Function(Procedimiento, dynamic)> _colaProcesos = [];
+  final List<Future<dynamic> Function(Procedimiento, dynamic)> _colaProcesos =
+      [];
   double progreso = 0.0;
   String log = '';
   dynamic _datosIniciales;
@@ -39,9 +43,16 @@ class Procedimiento {
     _callBackCambioProgreso = callbackCamProg;
   }
 
+  void onProcesoTerminado(void Function() callbackProcesoTerminado) {
+    _callBackProcesoTerminado = callbackProcesoTerminado;
+  }
+
   void actProgreso(double nuevoProgreso) {
     progreso = nuevoProgreso;
     if (_callBackCambioProgreso != null) _callBackCambioProgreso!(progreso);
+    if (_callBackProcesoTerminado != null && progreso == 1) {
+      _callBackProcesoTerminado!();
+    }
   }
 
   void actLog(String log_) {

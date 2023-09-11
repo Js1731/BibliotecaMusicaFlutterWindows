@@ -79,7 +79,6 @@ class RepositorioCanciones {
       FilePickerResult lstCanciones, int idLista) async {
     Procedimiento procImportarCancionesListaTodo = Procedimiento(
         procesoImportarCancionesGlobal, Tuple2(lstCanciones, idLista));
-    procImportarCancionesListaTodo.iniciar();
 
     abrirDialogoProgreso(keyPantPrincipal.currentContext!, "Importando...",
         "Importando canciones", procImportarCancionesListaTodo,

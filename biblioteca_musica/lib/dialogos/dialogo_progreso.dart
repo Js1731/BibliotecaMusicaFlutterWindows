@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import '../widgets/decoracion_.dart';
 import '../widgets/texto_per.dart';
 
-void abrirDialogoProgreso(BuildContext context, String titulo, String desc,
-    Procedimiento procedimiento,
+Future<void> abrirDialogoProgreso(BuildContext context, String titulo,
+    String desc, Procedimiento procedimiento,
     {IconData? icono}) async {
   return showDialog(
     barrierDismissible: false,
@@ -51,11 +51,13 @@ class _EstadoDialogoProgreso extends EstadoDialogoGenerico<DialogoProgreso> {
 
     widget.procedimiento.onCambioProgreso((prog) {
       setState(() {});
-
-      if (prog == 1) {
-        Navigator.of(context).pop();
-      }
     });
+
+    widget.procedimiento.onProcesoTerminado(() {
+      Navigator.of(context).pop();
+    });
+
+    widget.procedimiento.iniciar();
   }
 
   @override
