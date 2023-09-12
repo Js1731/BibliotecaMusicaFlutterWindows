@@ -77,9 +77,9 @@ Future<String> genUrlParamUnico(String ruta, String param) async =>
 Future<String> genUrlNoParams(String ruta) async =>
     "http://${await obtIpServidor()}:8080/$ruta";
 
-Future<String> obtIpServidor() async {
+Future<String?> obtIpServidor() async {
   final SharedPreferences sharedPref = await SharedPreferences.getInstance();
-  return sharedPref.getString("ipServidor") ?? "0.0.0.0";
+  return sharedPref.getString("ipServidor");
 }
 
 Future<void> actIpServidor(String nuevaIP) async {

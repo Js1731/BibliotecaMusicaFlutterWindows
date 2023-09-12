@@ -100,22 +100,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: FutureBuilder(
-          future: context
-              .read<CubitSincronizacion>()
-              .sincronizar(context.read<BlocLog>()),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return PantPrincipal();
-            } else {
-              return _PantSincronizando();
-            }
-          }),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: PantPrincipal());
   }
 }
 

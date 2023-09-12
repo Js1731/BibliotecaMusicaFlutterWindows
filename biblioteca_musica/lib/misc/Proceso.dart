@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
-
 enum EstadoProcedimiento { espera, corriendo, finalizado }
 
+///Representa una lista de Futures que se ejecutan en orden
+///
 class Procedimiento {
   void Function(double prog)? _callBackCambioProgreso;
   void Function()? _callBackProcesoTerminado;
