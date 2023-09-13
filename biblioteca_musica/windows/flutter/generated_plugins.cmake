@@ -5,8 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
   bitsdojo_window_windows
-  flutter_nsd
-  nsd_windows
+  file_selector_windows
   sqlite3_flutter_libs
 )
 

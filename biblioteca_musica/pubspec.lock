@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      sha256: fd832b5384d0d6da4f6df60b854d33accaaeb63aa9e10e736a87381f08dee2cb
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3+5"
   crypto:
     dependency: transitive
     description:
@@ -249,6 +257,70 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.4"
+  file_selector:
+    dependency: "direct main"
+    description:
+      name: file_selector
+      sha256: "84eaf3e034d647859167d1f01cfe7b6352488f34c1b4932635012b202014c25b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  file_selector_android:
+    dependency: transitive
+    description:
+      name: file_selector_android
+      sha256: d41e165d6f798ca941d536e5dc93494d50e78c571c28ad60cfe0b0fefeb9f1e7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0+3"
+  file_selector_ios:
+    dependency: transitive
+    description:
+      name: file_selector_ios
+      sha256: b3fbdda64aa2e335df6e111f6b0f1bb968402ed81d2dd1fa4274267999aa32c2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1+6"
+  file_selector_linux:
+    dependency: transitive
+    description:
+      name: file_selector_linux
+      sha256: "045d372bf19b02aeb69cacf8b4009555fb5f6f0b7ad8016e5f46dd1387ddd492"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.2+1"
+  file_selector_macos:
+    dependency: transitive
+    description:
+      name: file_selector_macos
+      sha256: "182c3f8350cee659f7b115e956047ee3dc672a96665883a545e81581b9a82c72"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.3+2"
+  file_selector_platform_interface:
+    dependency: transitive
+    description:
+      name: file_selector_platform_interface
+      sha256: "0aa47a725c346825a2bd396343ce63ac00bda6eff2fbc43eabe99737dede8262"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.1"
+  file_selector_web:
+    dependency: transitive
+    description:
+      name: file_selector_web
+      sha256: dc6622c4d66cb1bee623ddcc029036603c6cc45c85e4a775bb06008d61c809c1
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.2+1"
+  file_selector_windows:
+    dependency: transitive
+    description:
+      name: file_selector_windows
+      sha256: d3547240c20cabf205c7c7f01a50ecdbc413755814d6677f3cb366f04abcead0
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.3+1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -270,14 +342,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
-  flutter_nsd:
-    dependency: "direct main"
-    description:
-      name: flutter_nsd
-      sha256: "470bc3ce0c7a1471ef4f9334468cfb9c759e7cceb02acd27e5081212ea3b0a88"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -360,14 +424,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
-  multicast_dns:
-    dependency: "direct main"
-    description:
-      name: multicast_dns
-      sha256: "80e54aba906a7cc68fdc6a201e76b135af27155e2f8e958181d85e2b73786591"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.2+3"
   nested:
     dependency: transitive
     description:
@@ -376,54 +432,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  nsd:
-    dependency: "direct main"
-    description:
-      name: nsd
-      sha256: "88a3ba4e6dc38363f1256b4b482abdeec396d99df31a064d545e559cb4cb6ba9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.1"
-  nsd_android:
-    dependency: transitive
-    description:
-      name: nsd_android
-      sha256: "7a38d0b2d21f1e578cd3020940b95b22d5260413dc0c8cf30a987a4e410b166d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.2"
-  nsd_ios:
-    dependency: transitive
-    description:
-      name: nsd_ios
-      sha256: "7034134dd89595362d5e464030081b0d542120a558ab7fe6227df44365df3e8a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
-  nsd_macos:
-    dependency: transitive
-    description:
-      name: nsd_macos
-      sha256: "2403b8d599f50fc9179db1420a0ffc25bfa8bbeb814aa31ca0a71f804fc938da"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
-  nsd_platform_interface:
-    dependency: transitive
-    description:
-      name: nsd_platform_interface
-      sha256: "2f4033fa13cc45375253bf348abdb9712004e656462205543ec9506b43c67bb2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.6.0"
-  nsd_windows:
-    dependency: transitive
-    description:
-      name: nsd_windows
-      sha256: "06601efdd3268cbce4b90f8e23ae1dab445c97c661fba417821ce118add722e7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   path:
     dependency: "direct main"
     description:
