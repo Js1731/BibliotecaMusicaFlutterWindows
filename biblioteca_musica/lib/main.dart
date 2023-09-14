@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/sincronizacion.dart';
@@ -21,8 +23,6 @@ import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_reproductor.dart';
-import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,13 +84,15 @@ Future<void> main() async {
         ], child: const MyApp())),
   );
 
-  doWhenWindowReady(() {
-    const initialSize = Size(1024, 700);
-    appWindow.minSize = initialSize;
-    appWindow.size = initialSize;
-    appWindow.alignment = Alignment.center;
-    appWindow.show();
-  });
+  if (Platform.isWindows) {
+    doWhenWindowReady(() {
+      const initialSize = Size(1024, 700);
+      appWindow.minSize = initialSize;
+      appWindow.size = initialSize;
+      appWindow.alignment = Alignment.center;
+      appWindow.show();
+    });
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -99,24 +101,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: PantPrincipal());
-  }
-}
-
-class _PantSincronizando extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-          color: DecoColores.gris,
-          child: Center(
-            child: TextoPer(texto: "Sincronizando"),
-          )),
-    );
+    return Platform.isWindows
+        ? MaterialApp(
+            title: 'KOPI',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: PantPrincipal())
+        : MaterialApp(
+            title: "KOPI",
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: PantPrincipal(),
+          );
   }
 }

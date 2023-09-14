@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/pantallas/BarraVentana.dart';
 import 'package:biblioteca_musica/pantallas/panel_ajustes/panel_ajustes.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_panel_columnas.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_principal.dart';
@@ -113,23 +116,7 @@ class PantPrincipalState extends State<PantPrincipal>
                 ],
               ),
             ),
-            WindowTitleBarBox(child: MoveWindow()),
-            Container(
-              margin: const EdgeInsets.all(10),
-              alignment: Alignment.topRight,
-              child: WindowTitleBarBox(
-                  child: Row(
-                children: [
-                  const Spacer(),
-                  MinimizeWindowButton(),
-                  MaximizeWindowButton(),
-                  CloseWindowButton(
-                    colors:
-                        WindowButtonColors(mouseOver: DecoColores.rosaClaro1),
-                  ),
-                ],
-              )),
-            )
+            if (Platform.isWindows) const BarraVentana()
           ],
         ),
       ),
