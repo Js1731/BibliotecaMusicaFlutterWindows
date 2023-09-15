@@ -87,7 +87,7 @@ Future<void> main() async {
   if (Platform.isWindows) {
     doWhenWindowReady(() {
       const initialSize = Size(1024, 700);
-      appWindow.minSize = initialSize;
+      //appWindow.minSize = const Size(850, 700);
       appWindow.size = initialSize;
       appWindow.alignment = Alignment.center;
       appWindow.show();
@@ -101,19 +101,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Platform.isWindows
-        ? MaterialApp(
-            title: 'KOPI',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            home: PantPrincipal())
-        : MaterialApp(
-            title: "KOPI",
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            home: PantPrincipal(),
-          );
+    return MaterialApp(
+        title: 'KOPI',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: PantPrincipal());
   }
 }

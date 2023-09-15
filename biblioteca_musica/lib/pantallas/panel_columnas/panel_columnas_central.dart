@@ -2,6 +2,7 @@ import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/estado_columna_seleccionada.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ class EstadoPanelPropiedadesCentral extends State<PanelColumnasCentral> {
                             BotonCintaOpciones(
                                 icono: Icons.add,
                                 texto: "Agregar ${columnaSel.nombre}",
+                                modo: ModoResponsive.normal,
                                 onPressed: (_) async {
                                   await context
                                       .read<AuxiliarPanelColumnas>()
@@ -65,6 +67,7 @@ class EstadoPanelPropiedadesCentral extends State<PanelColumnasCentral> {
                           BotonCintaOpciones(
                               icono: Icons.edit,
                               texto: "Renombrar",
+                              modo: ModoResponsive.normal,
                               onPressed: (_) async {
                                 // await controlador
                                 //     .renombrarColumna(columnaSel.id);
@@ -73,6 +76,7 @@ class EstadoPanelPropiedadesCentral extends State<PanelColumnasCentral> {
                           BotonCintaOpciones(
                               icono: Icons.delete,
                               texto: "Eliminar",
+                              modo: ModoResponsive.normal,
                               onPressed: (_) async {
                                 bool? confirmar = await abrirDialogoConfirmar(
                                     context,

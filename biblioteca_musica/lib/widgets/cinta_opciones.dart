@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/btn_popupmenu_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
@@ -85,7 +86,11 @@ class TextoCintaOpciones extends StatelessWidget {
 
 class BotonCintaOpciones extends BtnGenerico {
   BotonCintaOpciones(
-      {required String texto, super.onPressed, IconData? icono, super.key})
+      {required String texto,
+      required IconData icono,
+      required ModoResponsive modo,
+      super.onPressed,
+      super.key})
       : super(
           builder: (hover, context) => Container(
             height: double.maxFinite,
@@ -93,16 +98,14 @@ class BotonCintaOpciones extends BtnGenerico {
             color: hover ? Colors.white24 : Colors.transparent,
             child: Row(
               children: [
-                icono != null
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          icono,
-                          color: Deco.cGray1,
-                        ),
-                      )
-                    : const SizedBox(),
-                Text(texto),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(
+                    icono,
+                    color: Deco.cGray1,
+                  ),
+                ),
+                if (modo == ModoResponsive.normal) Text(texto),
               ],
             ),
           ),

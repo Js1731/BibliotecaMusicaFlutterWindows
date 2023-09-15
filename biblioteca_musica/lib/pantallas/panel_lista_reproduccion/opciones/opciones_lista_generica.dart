@@ -1,18 +1,22 @@
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
 
 class OpcionesListaGenerica extends StatelessWidget {
-  const OpcionesListaGenerica({super.key});
+  final ModoResponsive modo;
+  const OpcionesListaGenerica({required this.modo, super.key});
 
-  List<Widget> construirOpcionesNormales(BuildContext context) {
+  List<Widget> construirOpcionesNormales(
+      BuildContext context, ModoResponsive modo) {
     throw "No se definio un constructor para las opciones normales";
   }
 
-  List<Widget> construirOpcionesSeleccion(BuildContext context) {
+  List<Widget> construirOpcionesSeleccion(
+      BuildContext context, ModoResponsive modo) {
     throw "No se definio un constructor para las opciones de seleccion";
   }
 
@@ -32,8 +36,8 @@ class OpcionesListaGenerica extends StatelessWidget {
                 key: ValueKey(cancionesSeleccionadas),
                 lstOpciones: [
                   ...cancionesSeleccionadas
-                      ? construirOpcionesSeleccion(context)
-                      : construirOpcionesNormales(context)
+                      ? construirOpcionesSeleccion(context, modo)
+                      : construirOpcionesNormales(context, modo)
                 ]),
           );
         });

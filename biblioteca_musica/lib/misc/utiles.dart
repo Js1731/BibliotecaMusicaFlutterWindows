@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum ModoResponsive { normal, reducido, muyReducido }
+
 String duracionString(Duration dur) {
   var min = dur.inMinutes;
   var sec = dur.inSeconds - min * 60;

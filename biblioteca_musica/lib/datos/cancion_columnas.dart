@@ -5,6 +5,7 @@ class CancionColumnas extends Table {
   String nombre;
   int duracion;
   int estado;
+
   late Map<int, Map<String, String>?> mapaColumnas;
 
   CancionColumnas(

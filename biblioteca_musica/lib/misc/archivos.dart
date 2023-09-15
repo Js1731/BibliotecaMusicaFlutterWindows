@@ -74,10 +74,15 @@ Future<List<T>?> cargarDatosInd<T>(
 ///Elimina un archivo del directorio de trabajo
 ///
 ///El nombre debe estar acompanado de la extension
-Future<void> eliminarArchivo(String nombreExt) async {
+Future<bool> eliminarArchivo(String nombreExt) async {
   String url = rutaDoc(nombreExt);
   File file = File(url);
-  await file.delete();
+  try {
+    await file.delete();
+  } catch (e) {
+    return false;
+  }
+  return true;
 }
 
 Future<void> borrarTodo() async {

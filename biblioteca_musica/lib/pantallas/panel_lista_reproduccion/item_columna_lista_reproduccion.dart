@@ -24,7 +24,7 @@ class ItemColumnaListaReproduccion extends BtnGenerico {
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

@@ -1,6 +1,7 @@
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/sincronizacion.dart';
+import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
@@ -8,6 +9,7 @@ import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
+import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,8 @@ class ItemCancion extends BtnGenerico {
   final bool reproduciendo;
   final bool seleccionado;
   final bool modoSeleccion;
+  final int? idColumnaPrincipal;
+  final ModoResponsive modo;
 
   ItemCancion(
       {required this.cancion,
@@ -25,16 +29,14 @@ class ItemCancion extends BtnGenerico {
       required this.seleccionado,
       required this.modoSeleccion,
       required this.reproduciendo,
+      required this.idColumnaPrincipal,
+      required this.modo,
       super.key})
       : super(builder: (hover, context) {
-          List<String?> valoresColumna = cancion.mapaColumnas.values
-              .map((mapa) => mapa?["valor_columna_nombre"])
-              .toList();
-
           return AnimatedContainer(
             duration: const Duration(milliseconds: 100),
             width: double.infinity,
-            height: 30,
+            height: modo == ModoResponsive.muyReducido ? 60 : 30,
             padding: const EdgeInsets.symmetric(horizontal: 15),
             decoration: reproduciendo
                 ? BoxDecoration(
@@ -56,29 +58,30 @@ class ItemCancion extends BtnGenerico {
                   child: Row(
                     children: [
                       //CHECKBOX
-                      Checkbox(
-                          shape: const CircleBorder(),
-                          splashRadius: 15,
-                          activeColor: reproduciendo
-                              ? Colors.white
-                              : DecoColores.rosaClaro1,
-                          checkColor: reproduciendo
-                              ? DecoColores.rosaClaro1
-                              : Colors.white,
-                          side: BorderSide(
-                              color: reproduciendo
-                                  ? hover
-                                      ? Colors.white
-                                      : DecoColores.rosaClaro1
-                                  : hover
-                                      ? Deco.cGray
-                                      : Colors.white),
-                          value: seleccionado,
-                          onChanged: (nuevoValor) {
-                            context
-                                .read<BlocListaReproduccionSeleccionada>()
-                                .add(EvToggleSelCancion(cancion.id));
-                          }),
+                      if (modo == ModoResponsive.normal)
+                        Checkbox(
+                            shape: const CircleBorder(),
+                            splashRadius: 15,
+                            activeColor: reproduciendo
+                                ? Colors.white
+                                : DecoColores.rosaClaro1,
+                            checkColor: reproduciendo
+                                ? DecoColores.rosaClaro1
+                                : Colors.white,
+                            side: BorderSide(
+                                color: reproduciendo
+                                    ? hover
+                                        ? Colors.white
+                                        : DecoColores.rosaClaro1
+                                    : hover
+                                        ? Deco.cGray
+                                        : Colors.white),
+                            value: seleccionado,
+                            onChanged: (nuevoValor) {
+                              context
+                                  .read<BlocListaReproduccionSeleccionada>()
+                                  .add(EvToggleSelCancion(cancion.id));
+                            }),
 
                       if (cancion.estado == estadoLocal)
                         const Icon(
@@ -107,15 +110,49 @@ class ItemCancion extends BtnGenerico {
                       if (cancion.estado != estadoSync)
                         const SizedBox(width: 10),
 
+                      if (modo == ModoResponsive.muyReducido)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Builder(builder: (context) {
+                            int? id = int.tryParse(
+                                cancion.mapaColumnas[idColumnaPrincipal]
+                                        ?["valor_columna_id"] ??
+                                    "a");
+                            String? url = id == null ? null : rutaImagen(id);
+
+                            return ImagenRectRounded(
+                                url: url, tam: 55, sombra: false);
+                          }),
+                        ),
+
                       Expanded(
-                        child: _TextoItemCancion(
-                          texto: cancion.nombre,
-                          hover: hover,
-                          reproduciendo: reproduciendo,
-                          local: cancion.estado == estadoSync ||
-                              cancion.estado == estadoLocal ||
-                              cancion.estado == estadoLocal,
-                          align: TextAlign.left,
+                        flex: 3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _TextoItemCancion(
+                              texto: cancion.nombre,
+                              hover: hover,
+                              reproduciendo: reproduciendo,
+                              local: cancion.estado == estadoSync ||
+                                  cancion.estado == estadoLocal ||
+                                  cancion.estado == estadoLocal,
+                              align: TextAlign.left,
+                            ),
+                            if (modo == ModoResponsive.muyReducido)
+                              _TextoItemCancion(
+                                texto: cancion.mapaColumnas[idColumnaPrincipal]
+                                        ?["valor_columna_nombre"] ??
+                                    "---",
+                                hover: hover,
+                                reproduciendo: reproduciendo,
+                                local: cancion.estado == estadoSync ||
+                                    cancion.estado == estadoLocal ||
+                                    cancion.estado == estadoLocal,
+                                align: TextAlign.left,
+                              ),
+                          ],
                         ),
                       ),
                     ],
@@ -123,18 +160,26 @@ class ItemCancion extends BtnGenerico {
                 ),
 
                 //VALORES COLUMNA DE LA CANCION
-                for (String? nombreValorPropiedad in valoresColumna)
-                  Expanded(
-                      child: _TextoItemCancion(
-                          texto: nombreValorPropiedad ?? "--",
-                          hover: hover,
-                          local: cancion.estado == estadoSync ||
-                              cancion.estado == estadoLocal ||
-                              cancion.estado == estadoLocal,
-                          reproduciendo: reproduciendo)),
+                for (Map<String, dynamic>? valorColumna
+                    in cancion.mapaColumnas.values)
+                  if ((modo == ModoResponsive.reducido &&
+                          idColumnaPrincipal ==
+                              int.tryParse(
+                                  valorColumna?["valor_columna_id"] ?? "a")) ||
+                      modo == ModoResponsive.normal)
+                    Expanded(
+                        child: _TextoItemCancion(
+                            texto:
+                                valorColumna?["valor_columna_nombre"] ?? "--",
+                            hover: hover,
+                            local: cancion.estado == estadoSync ||
+                                cancion.estado == estadoLocal ||
+                                cancion.estado == estadoLocal,
+                            reproduciendo: reproduciendo)),
 
                 //DURACION DE LA CANCION
                 Expanded(
+                  flex: 0,
                   child: _TextoItemCancion(
                     texto: duracionString(Duration(seconds: cancion.duracion)),
                     hover: hover,

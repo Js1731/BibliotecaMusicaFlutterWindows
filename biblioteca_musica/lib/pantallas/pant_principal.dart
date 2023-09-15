@@ -68,58 +68,70 @@ class PantPrincipalState extends State<PantPrincipal>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              color: DecoColores.gris,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Row(children: [
-                      Provider(
-                          create: (context) => AuxiliarPanelLateral(),
-                          child: const PanelLateral()),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        bottomNavigationBar: constraints.maxWidth < 700
+            ? NavigationBar(destinations: const [
+                NavigationDestination(
+                    icon: Icon(Icons.music_note_rounded), label: "Musica"),
+                NavigationDestination(icon: Icon(Icons.list), label: "Listas"),
+                NavigationDestination(
+                    icon: Icon(Icons.settings), label: "Ajustes")
+              ])
+            : null,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                color: DecoColores.gris,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(children: [
+                        if (constraints.maxWidth > 700)
+                          Provider(
+                              create: (context) => AuxiliarPanelLateral(),
+                              child: const PanelLateral()),
 
-                      //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
+                        //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
 
-                      BlocSelector<
-                              BlocListaReproduccionSeleccionada,
-                              EstadoListaReproduccionSelecconada,
-                              ListaReproduccionData?>(
-                          selector: (state) =>
-                              state.listaReproduccionSeleccionada,
-                          builder: (context, listaSeleccionada) {
-                            return BlocBuilder<CubitPanelSeleccionado, Panel>(
-                                builder: (context, panel) {
-                              return Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(
-                                      top: 10, right: 10, bottom: 10),
-                                  child: CustomPaint(
-                                      key: ValueKey(panel),
-                                      painter: CustomPainerPanelCentral(),
-                                      child: construirPanelCentral(
-                                          context, panel)),
-                                ),
-                              );
-                            });
-                          }),
-                    ]),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                    child: PanelLog(),
-                  ),
-                  const PanelReproductor()
-                ],
+                        BlocSelector<
+                                BlocListaReproduccionSeleccionada,
+                                EstadoListaReproduccionSelecconada,
+                                ListaReproduccionData?>(
+                            selector: (state) =>
+                                state.listaReproduccionSeleccionada,
+                            builder: (context, listaSeleccionada) {
+                              return BlocBuilder<CubitPanelSeleccionado, Panel>(
+                                  builder: (context, panel) {
+                                return Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(
+                                        top: 10, right: 10, bottom: 10),
+                                    child: CustomPaint(
+                                        key: ValueKey(panel),
+                                        painter: CustomPainerPanelCentral(),
+                                        child: construirPanelCentral(
+                                            context, panel)),
+                                  ),
+                                );
+                              });
+                            }),
+                      ]),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                      child: PanelLog(),
+                    ),
+                    if (constraints.maxWidth > 700) const PanelReproductor()
+                  ],
+                ),
               ),
-            ),
-            if (Platform.isWindows) const BarraVentana()
-          ],
+              //if (Platform.isWindows) const BarraVentana()
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

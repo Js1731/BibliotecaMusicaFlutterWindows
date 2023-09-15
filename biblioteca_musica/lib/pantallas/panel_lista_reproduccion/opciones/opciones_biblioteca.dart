@@ -2,6 +2,7 @@ import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/widgets/cinta_opciones.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
@@ -16,32 +17,34 @@ import 'btn_reproducir_orden.dart';
 import 'opciones_lista_generica.dart';
 
 class OpcionesListaBiblioteca extends OpcionesListaGenerica {
-  const OpcionesListaBiblioteca({super.key});
+  const OpcionesListaBiblioteca({required super.modo, super.key});
 
   @override
-  List<Widget> construirOpcionesNormales(BuildContext context) {
+  List<Widget> construirOpcionesNormales(
+      BuildContext context, ModoResponsive modo) {
     return [
       SeccionCintaOpciones(lstItems: [
         const TextoCintaOpciones(texto: "Reproducir"),
 
         //REPRODUCIR EN ORDEN
-        BtnReproducirOrden(),
+        BtnReproducirOrden(modo: modo),
 
         //REPRODUCIR AL AZAR
-        BtnReproducirAzar(),
+        BtnReproducirAzar(modo: modo),
       ]),
       const SizedBox(width: 10),
       SeccionCintaOpciones(
         lstItems: [
           //IMPORTAR CANCIONES
-          BtnImportarCanciones()
+          BtnImportarCanciones(modo: modo)
         ],
       )
     ];
   }
 
   @override
-  List<Widget> construirOpcionesSeleccion(BuildContext context) {
+  List<Widget> construirOpcionesSeleccion(
+      BuildContext context, ModoResponsive modo) {
     return [
       SeccionCintaOpciones(
         lstItems: [
@@ -102,6 +105,7 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
         BotonCintaOpciones(
           icono: Icons.view_column,
           texto: "Asignar Columnas...",
+          modo: modo,
           onPressed: (context) async {
             await context
                 .read<AuxiliarListaReproduccion>()
@@ -110,7 +114,9 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
         ),
 
         //RECORTAR NOMBRES
-        BtnRecortarNombres()
+        BtnRecortarNombres(
+          modo: modo,
+        )
       ]),
 
       const Spacer(),
@@ -121,6 +127,7 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
           BotonCintaOpciones(
               icono: Icons.delete_sweep,
               texto: "Eliminar",
+              modo: modo,
               onPressed: (_) async {
                 context
                     .read<AuxiliarListaReproduccion>()

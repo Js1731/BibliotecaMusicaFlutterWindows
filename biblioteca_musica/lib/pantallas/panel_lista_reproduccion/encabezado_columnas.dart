@@ -39,59 +39,66 @@ class _EncabezadoColumnasState extends State<EncabezadoColumnas> {
             return SizedBox(
               height: 25,
               child: !modoActColumnas
-                  ? Row(
-                      children: [
-                        //NOMBRE
-                        Expanded(
-                            child: ItemColumnaListaReproduccion(
-                          idColumna: -1,
-                          nombre: "Nombre",
-                          align: TextAlign.left,
-                          esColumnaOrden: idColumnaOrden == -1,
-                          esAscendente: esAscendente,
-                        )),
-
-                        //COLUMNAS
-                        for (ColumnaData col in lstColumnas)
+                  ? LayoutBuilder(builder: (context, constraint) {
+                      return Row(
+                        children: [
+                          //NOMBRE
                           Expanded(
                               child: ItemColumnaListaReproduccion(
-                            nombre: col.nombre,
-                            idColumna: col.id,
-                            esPrincipal: col.id == idColumnaPrincipal,
-                            esColumnaOrden: col.id == idColumnaOrden,
+                            idColumna: -1,
+                            nombre: "Nombre",
+                            align: TextAlign.left,
+                            esColumnaOrden: idColumnaOrden == -1,
                             esAscendente: esAscendente,
                           )),
 
-                        //DURACION
-                        Expanded(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: ItemColumnaListaReproduccion(
-                                idColumna: -2,
-                                nombre: "Duración",
-                                align: TextAlign.right,
-                                esColumnaOrden: idColumnaOrden == -2,
-                                esAscendente: esAscendente,
+                          //COLUMNAS
+                          if (constraint.maxWidth > 700)
+                            for (ColumnaData col in lstColumnas)
+                              if ((constraint.maxWidth < 850 &&
+                                      col.id == idColumnaPrincipal) ||
+                                  constraint.maxWidth > 850)
+                                Expanded(
+                                    child: ItemColumnaListaReproduccion(
+                                  nombre: col.nombre,
+                                  idColumna: col.id,
+                                  esPrincipal: col.id == idColumnaPrincipal,
+                                  esColumnaOrden: col.id == idColumnaOrden,
+                                  esAscendente: esAscendente,
+                                )),
+
+                          //DURACION
+                          Expanded(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: ItemColumnaListaReproduccion(
+                                  idColumna: -2,
+                                  nombre: "Duración",
+                                  align: TextAlign.right,
+                                  esColumnaOrden: idColumnaOrden == -2,
+                                  esAscendente: esAscendente,
+                                ),
                               ),
-                            ),
-                            if (listaSel.id != listaRepBiblioteca.id)
-                              BtnFlotanteIcono(
-                                icono: Icons.mode_edit,
-                                onPressed: () {
-                                  context
-                                      .read<CubitGestorColumnas>()
-                                      .mostrarGestorColumnas();
-                                },
-                                tam: 20,
-                                tamIcono: 15,
-                                color: Colors.grey,
-                              )
-                          ],
-                        )),
-                      ],
-                    )
+                              if (listaSel.id != listaRepBiblioteca.id &&
+                                  constraint.maxWidth > 700)
+                                BtnFlotanteIcono(
+                                  icono: Icons.mode_edit,
+                                  onPressed: () {
+                                    context
+                                        .read<CubitGestorColumnas>()
+                                        .mostrarGestorColumnas();
+                                  },
+                                  tam: 20,
+                                  tamIcono: 15,
+                                  color: Colors.grey,
+                                )
+                            ],
+                          )),
+                        ],
+                      );
+                    })
                   : GestorColumnas(
                       idColumnaPrincipal: idColumnaPrincipal,
                     ),
