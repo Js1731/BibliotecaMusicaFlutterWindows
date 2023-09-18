@@ -119,8 +119,13 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
 
                         const SizedBox(height: 5),
 
-                        //CINTA DE OPCIONES
-                        CintaOpcionesLista(modo: widget.modoResponsive),
+                        //CINTA DE OPCIONES ESCRITORIO
+                        if (widget.modoResponsive != ModoResponsive.muyReducido)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child:
+                                CintaOpcionesLista(modo: widget.modoResponsive),
+                          ),
 
                         //COLUMNAS DE LA LISTA DE REPRODUCCION
                         if (widget.modoResponsive != ModoResponsive.muyReducido)
@@ -128,6 +133,12 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                               maxHeight: 50,
                               child: EncabezadoColumnas(
                                   modo: widget.modoResponsive)),
+
+                        if (widget.modoResponsive == ModoResponsive.muyReducido)
+                          const Divider(
+                            color: Colors.black26,
+                            height: 30,
+                          ),
 
                         //LISTA DE CANCIONES
                         Expanded(
@@ -175,7 +186,19 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                                             });
                                       });
                                     })
-                                : const SizedBox())
+                                : const SizedBox()),
+                        //CINTA OPCIONES MOVIL
+                        //CINTA DE OPCIONES
+                        if (widget.modoResponsive == ModoResponsive.muyReducido)
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: widget.modoResponsive ==
+                                        ModoResponsive.muyReducido
+                                    ? 10
+                                    : 0),
+                            child:
+                                CintaOpcionesLista(modo: widget.modoResponsive),
+                          ),
                       ]));
             });
       },

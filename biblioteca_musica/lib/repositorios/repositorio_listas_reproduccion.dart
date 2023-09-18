@@ -34,4 +34,10 @@ class RepositorioListasReproduccion {
   void actColumnaPrincipal(int? idColumna, int idListaRep) {
     _dbpListasReproduccion.actColumnaPrincipal(idColumna, idListaRep);
   }
+
+  Future<ListaReproduccionData> obtListaReproduccionInicial(
+      int idListaInicial) async {
+    return await _dbpListasReproduccion
+        .obtListaReproduccionInicial(idListaInicial);
+  }
 }

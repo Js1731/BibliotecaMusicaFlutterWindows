@@ -5,7 +5,9 @@ import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:drift/drift.dart';
+import 'package:path/path.dart';
 
 import '../misc/custom_stream_controller.dart';
 
@@ -244,9 +246,9 @@ class Reproductor {
     streamContCancionReproducida.actStream(await crearCancionColumnaPrincipal(
         can, streamContListaReproducida.obtenerUltimo()!));
 
-    streamContReproduciendo.actStream(true);
+    await actUltimaListaRep(streamContListaReproducida.obtenerUltimo()!.id);
 
-    print(can);
+    streamContReproduciendo.actStream(true);
 
     if (_subscriptionCompletarReproduccion != null) {
       await _subscriptionCompletarReproduccion!.cancel();

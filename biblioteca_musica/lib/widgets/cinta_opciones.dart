@@ -98,14 +98,15 @@ class BotonCintaOpciones extends BtnGenerico {
             color: hover ? Colors.white24 : Colors.transparent,
             child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Icon(
-                    icono,
-                    color: Deco.cGray1,
-                  ),
+                Icon(
+                  icono,
+                  color: Deco.cGray1,
                 ),
-                if (modo == ModoResponsive.normal) Text(texto),
+                if (modo == ModoResponsive.normal)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(texto),
+                  ),
               ],
             ),
           ),
@@ -129,15 +130,16 @@ class BotonPopUpMenuCintaOpciones<T> extends BtnPopupMenuGenerico<T> {
                   child: Row(
                     children: [
                       icono != null
-                          ? Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Icon(
-                                icono,
-                                color: Deco.cGray1,
-                              ),
+                          ? Icon(
+                              icono,
+                              color: Deco.cGray1,
                             )
                           : const SizedBox(),
-                      if (modo == ModoResponsive.normal) Text(texto),
+                      if (modo == ModoResponsive.normal)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(texto),
+                        ),
                     ],
                   ),
                 ));

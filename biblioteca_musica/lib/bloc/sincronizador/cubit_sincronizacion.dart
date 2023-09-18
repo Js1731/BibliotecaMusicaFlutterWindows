@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,14 +17,14 @@ class CubitSincronizacion extends Cubit<EstadoSinc> {
   final Sincronizador sincronizador;
   CubitSincronizacion(this.sincronizador) : super(EstadoSinc.initSinc);
 
-  Future<void> sincronizar(BlocLog blocLog) async {
+  Future<void> sincronizar(BlocLog blocLog, CubitConf cubitConf) async {
     if (state == EstadoSinc.sincronizando) return;
 
     final estadoInit = state;
 
     emit(EstadoSinc.sincronizando);
 
-    final sincronizado = await sincronizador.sincronizar(blocLog);
+    final sincronizado = await sincronizador.sincronizar(blocLog, cubitConf);
 
     if (sincronizado) {
       emit(EstadoSinc.sincronizado);

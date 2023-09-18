@@ -4,6 +4,7 @@ import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/controles_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/modo_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/slider_progreso_reproduccion.dart';
@@ -43,10 +44,14 @@ class PanelExpandido extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(bottom: 30),
-                        child: ImagenRectRounded(
-                          url: rutaImagen(cancion?.valorColumnaPrincipal?.id),
-                          tam: constraints.maxWidth - 70,
+                        margin: const EdgeInsets.only(bottom: 30),
+                        child: LimitedBox(
+                          maxWidth: 270,
+                          maxHeight: 270,
+                          child: ImagenRectRounded(
+                            url: rutaImagen(cancion?.valorColumnaPrincipal?.id),
+                            tam: constraints.maxWidth - 70,
+                          ),
                         ),
                       ),
                       TextoPer(
@@ -61,7 +66,8 @@ class PanelExpandido extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       const SliderProgresoReproductor(),
-                      const ControlesReproduccion(),
+                      const ControlesReproduccion(
+                          modoResp: ModoResponsive.muyReducido),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
                         child: ModoReproduccion(),

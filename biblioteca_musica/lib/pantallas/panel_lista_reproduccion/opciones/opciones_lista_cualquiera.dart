@@ -1,3 +1,5 @@
+import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
+import 'package:biblioteca_musica/bloc/columnas_sistema/estado_columnas_sistema.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_listas_reproduccion.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
@@ -35,34 +37,67 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
         BtnReproducirAzar(modo: modo),
       ]),
       const SizedBox(width: 10),
-      SeccionCintaOpciones(lstItems: [
-        //IMPORTAR CANCIONES
-        BtnImportarCanciones(modo: modo)
-      ]),
+      if (modo != ModoResponsive.muyReducido)
+        SeccionCintaOpciones(lstItems: [
+          //IMPORTAR CANCIONES
+          BtnImportarCanciones(modo: modo)
+        ]),
       const Spacer(),
       SeccionCintaOpciones(lstItems: [
         //RENOMBRAR LISTA
-        BotonCintaOpciones(
-          icono: Icons.drive_file_rename_outline,
-          texto: "Renombrar",
-          modo: modo,
-          onPressed: (context) async {
-            await context
-                .read<AuxiliarListaReproduccion>()
-                .renombrarLista(context);
-          },
-        ),
-
-        //ELIMINAR LISTA
-        BotonCintaOpciones(
-            icono: Icons.delete,
-            texto: "Eliminar",
+        if (modo != ModoResponsive.muyReducido)
+          BotonCintaOpciones(
+            icono: Icons.drive_file_rename_outline,
+            texto: "Renombrar",
             modo: modo,
             onPressed: (context) async {
               await context
                   .read<AuxiliarListaReproduccion>()
-                  .eliminarLista(context);
+                  .renombrarLista(context);
+            },
+          ),
+
+        BlocSelector<BlocListaReproduccionSeleccionada,
+                EstadoListaReproduccionSelecconada, List<ColumnaData>>(
+            selector: (state) => state.lstColumnas,
+            builder: (context, columnas) {
+              return BotonPopUpMenuCintaOpciones<int>(
+                  icono: Icons.south_rounded,
+                  texto: "Ordenar",
+                  modo: modo,
+                  enabled: true,
+                  onSelected: (idColumnaSel) {
+                    context
+                        .read<AuxiliarListaReproduccion>()
+                        .ordenarListaPorColumna(context, idColumnaSel);
+                  },
+                  itemBuilder: (context) {
+                    List<PopupMenuItem<int>> listaColumnas = columnas
+                        .map((columna) => PopupMenuItem(
+                            value: columna.id, child: Text(columna.nombre)))
+                        .toList();
+
+                    listaColumnas.insert(0,
+                        const PopupMenuItem(value: -1, child: Text("Nombre")));
+
+                    listaColumnas.add(const PopupMenuItem(
+                        value: -2, child: Text("Duracion")));
+
+                    return listaColumnas;
+                  });
             }),
+
+        //ELIMINAR LISTA
+        if (modo != ModoResponsive.muyReducido)
+          BotonCintaOpciones(
+              icono: Icons.delete,
+              texto: "Eliminar",
+              modo: modo,
+              onPressed: (context) async {
+                await context
+                    .read<AuxiliarListaReproduccion>()
+                    .eliminarLista(context);
+              }),
       ]),
     ];
   }

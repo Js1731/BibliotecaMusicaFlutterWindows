@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,7 +10,9 @@ import '../../widgets/decoracion_.dart';
 import 'btn_accion_reproductor.dart';
 
 class ControlesReproduccion extends StatelessWidget {
-  const ControlesReproduccion({super.key});
+  final ModoResponsive modoResp;
+
+  const ControlesReproduccion({super.key, required this.modoResp});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +53,7 @@ class ControlesReproduccion extends StatelessWidget {
                           }),
                       const SizedBox(width: 5),
                       BtnAccionReproductor(
+                          tam: modoResp == ModoResponsive.muyReducido ? 50 : 30,
                           pausado: reproduciendo,
                           enabled: cancionRep != null,
                           icono: reproduciendo ? Icons.pause : Icons.play_arrow,

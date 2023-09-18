@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/sincronizacion.dart';
@@ -36,6 +37,8 @@ Future<void> main() async {
 
   final repositorioCanciones = RepositorioCanciones(DBPCanciones());
 
+  int? idLista = await obtUltimaListaRep();
+
   runApp(
     MultiRepositoryProvider(
         providers: [
@@ -55,6 +58,7 @@ Future<void> main() async {
                   RepositorioReproductor(Reproductor(), repositorioCanciones))
         ],
         child: MultiBlocProvider(providers: [
+          BlocProvider(create: (context) => CubitConf()),
           BlocProvider(
               create: (context) =>
                   CubitSincronizacion(context.read<Sincronizador>())),
@@ -77,7 +81,7 @@ Future<void> main() async {
                   context.read<RepositorioCanciones>(),
                   context.read<RepositorioColumnas>(),
                   context.read<RepositorioListasReproduccion>())
-                ..add(EvSeleccionarLista(listaRepBiblioteca))),
+                ..add(EvIniciar())),
           BlocProvider(
               create: (context) =>
                   BlocColumnaSeleccionada(context.read<RepositorioColumnas>())),

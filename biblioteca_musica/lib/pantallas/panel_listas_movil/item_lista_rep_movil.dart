@@ -12,9 +12,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ItemListaRepMovil extends StatelessWidget {
   final ListaReproduccionData listaRep;
   final bool esListaReproducida;
+  final bool estaSeleccionada;
 
   const ItemListaRepMovil(
-      {required this.listaRep, required this.esListaReproducida, super.key});
+      {required this.listaRep,
+      required this.esListaReproducida,
+      required this.estaSeleccionada,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +32,37 @@ class ItemListaRepMovil extends StatelessWidget {
               .add(EvSeleccionarLista(listaRep));
         },
         child: Container(
-          height: 70,
-          color: hover ? Colors.black12 : Colors.transparent,
+          height: 50,
+          color: estaSeleccionada
+              ? DecoColores.rosaClaro1
+              : hover
+                  ? Colors.black12
+                  : Colors.transparent,
           child: Column(
             children: [
+              if (!estaSeleccionada)
+                const Divider(color: Colors.black12, height: 1),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(children: [
                     Expanded(
-                      child: TextoPer(texto: listaRep.nombre, tam: 16),
+                      child: TextoPer(
+                          texto: listaRep.nombre,
+                          tam: 16,
+                          color:
+                              estaSeleccionada ? Colors.white : Colors.black),
                     ),
                     if (esListaReproducida)
-                      const IconoAnimado(color: DecoColores.rosaClaro1)
+                      IconoAnimado(
+                          color: estaSeleccionada
+                              ? Colors.white
+                              : DecoColores.rosaClaro1)
                   ]),
                 ),
               ),
-              const Divider(color: Colors.black26, height: 1),
+              if (!estaSeleccionada)
+                const Divider(color: Colors.black12, height: 1),
             ],
           ),
         ),

@@ -21,9 +21,7 @@ class EncabezadoColumnas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 10),
-        const Divider(color: Colors.black38, height: 2),
-        const SizedBox(height: 2),
+        const Divider(color: Colors.black38, thickness: 1),
         Expanded(
           child: BlocSelector<
                   BlocListaReproduccionSeleccionada,
@@ -108,9 +106,7 @@ class EncabezadoColumnas extends StatelessWidget {
                 });
               }),
         ),
-        const SizedBox(height: 2),
-        const Divider(color: Colors.black38, height: 2),
-        const SizedBox(height: 10),
+        const Divider(color: Colors.black38, thickness: 1),
       ],
     );
   }

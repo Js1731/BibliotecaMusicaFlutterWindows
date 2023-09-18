@@ -58,4 +58,11 @@ class DBPListasReproduccion {
       ..where((tbl) => tbl.id.equals(idListaRep))
       ..write(ListaReproduccionCompanion(idColumnaPrincipal: Value(idColumna)));
   }
+
+  Future<ListaReproduccionData> obtListaReproduccionInicial(
+      int idListaInicial) async {
+    return await (appDb.select(appDb.listaReproduccion)
+          ..where((tbl) => tbl.id.equals(idListaInicial)))
+        .getSingle();
+  }
 }

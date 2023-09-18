@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/controles_reproduccion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,9 @@ import '../../widgets/decoracion_.dart';
 import 'modo_reproduccion.dart';
 
 class ControlesPanelReproduccion extends StatelessWidget {
-  const ControlesPanelReproduccion({super.key});
+  final ModoResponsive modoResp;
+
+  const ControlesPanelReproduccion({super.key, required this.modoResp});
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +23,18 @@ class ControlesPanelReproduccion extends StatelessWidget {
         decoration: BoxDecoration(
             color: DecoColores.rosaOscuro,
             borderRadius: BorderRadius.circular(10)),
-        child: const Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               children: [
-                _ControlVolumen(),
-                Spacer(),
-                ControlesReproduccion(),
-                Spacer(),
-                ModoReproduccion()
+                const _ControlVolumen(),
+                const Spacer(),
+                ControlesReproduccion(
+                  modoResp: modoResp,
+                ),
+                const Spacer(),
+                const ModoReproduccion()
               ],
             ),
           ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
 import 'package:biblioteca_musica/bloc/logs/Log.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/logs/evento_bloc_log.dart';
@@ -8,6 +9,7 @@ import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/sinc_servidor_local.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../misc/utiles.dart';
@@ -24,6 +26,10 @@ enum TipoArchivo { texto, musica, imagen }
 
 class Sincronizador {
   Future<void> sincronizarArchivos(BlocLog blocLog) async {
+    blocLog.add(EvAgregarLog(Log(
+        const Icon(Icons.sync, color: Deco.cGray),
+        "Sincronizar Archivos",
+        "Iniciando sincronizacion de archivos Locales y Remotos.")));
     var lstCanciones = await appDb.select(appDb.cancion).get();
 
     for (var cancion in lstCanciones) {
@@ -123,7 +129,7 @@ class Sincronizador {
         "Los Archivos fueron sincronizados con exito.")));
   }
 
-  Future<void> _buscarServidor(BlocLog blocLog) async {
+  Future<void> _buscarServidor(BlocLog blocLog, CubitConf cubitConf) async {
     var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
 
     enviarMDNS();
@@ -134,11 +140,12 @@ class Sincronizador {
                 const Duration(seconds: 3),
               );
 
-      await actIpServidor(request.connectionInfo!.remoteAddress.address);
+      await cubitConf.actualizarConfig(cubitConf.state.copiarCon(
+          ipServidor_: request.connectionInfo!.remoteAddress.address));
       blocLog.add(EvAgregarLog(Log(
           const Icon(Icons.check_circle_rounded, color: Colors.green),
           "Servidor Encontrado",
-          "Se encontro un servidor en ${await obtIpServidor()}")));
+          "Se encontro un servidor en ${cubitConf.state.ipServidor}")));
     } on TimeoutException {
       blocLog.add(EvAgregarLog(Log(
           const Icon(Icons.highlight_remove_rounded, color: Colors.red),
@@ -151,7 +158,7 @@ class Sincronizador {
     }
   }
 
-  Future<bool> sincronizar(BlocLog blocLog) async {
+  Future<bool> sincronizar(BlocLog blocLog, CubitConf cubitConfig) async {
     try {
       await cancelarDescargaSubida();
       blocLog.add(EvAgregarLog(Log(
@@ -159,10 +166,29 @@ class Sincronizador {
           "Iniciando Sincronizacion",
           "Iniciando sincronizacion de datos con el servidor.")));
 
-      blocLog.add(EvAgregarLog(
-          Log(null, "Buscando Servidor", "Buscando un servidor en la red...")));
+      if (cubitConfig.state.ipAuto) {
+        blocLog.add(EvAgregarLog(Log(
+            null, "Buscando Servidor", "Buscando un servidor en la red...")));
 
-      await _buscarServidor(blocLog);
+        await _buscarServidor(blocLog, cubitConfig);
+      } else {
+        final ipServidor = cubitConfig.state.ipServidor;
+
+        if (ipServidor == "") {
+          blocLog.add(EvAgregarLog(Log(
+              const Icon(Icons.highlight_remove_rounded, color: Colors.red),
+              "IP Invalida",
+              "No hay una IP configurada del servidor.")));
+
+          throw const HttpException("No se configuro una IP");
+        } else {
+          blocLog.add(EvAgregarLog(Log(null, "IP Servidor",
+              "Se usara la ip $ipServidor configurada en ajustes.")));
+        }
+      }
+
+      blocLog.add(EvAgregarLog(Log(
+          null, "Sincronizando", "Comparando versiones con el servidor...")));
 
       int versionServidor = await obtNumeroVersionServidor();
       int versionLocal = await obtNumeroVersionLocal();
@@ -171,24 +197,19 @@ class Sincronizador {
         blocLog.add(EvAgregarLog(Log(null, "Sincronizando",
             "El cliente tiene datos mas recientes, sincronizando Servidor con Local")));
 
-        await SincronizadorServidorConLocal(blocLog).sincronizar();
+        //await SincronizadorServidorConLocal(blocLog).sincronizar();
       } else if (versionLocal < versionServidor) {
         blocLog.add(EvAgregarLog(Log(null, "Sincronizando",
             "El Servidor tiene datos mas recientes, sincronizando Local con Servidor")));
 
-        await SincronizadorLocalConServidor(blocLog).sincronizar();
+        //await SincronizadorLocalConServidor(blocLog).sincronizar();
       }
       blocLog.add(EvAgregarLog(Log(
           const Icon(Icons.check_circle_rounded, color: Colors.green),
           "Datos Sincronizados",
           "Los datos fueron sincronizados con exito.")));
 
-      blocLog.add(EvAgregarLog(Log(
-          const Icon(Icons.sync, color: Deco.cGray),
-          "Sincronizar Archivos",
-          "Iniciando sincronizacion de archivos Locales y Remotos.")));
-
-      sincronizarArchivos(blocLog);
+      //sincronizarArchivos(blocLog);
 
       return true;
     } catch (error) {
@@ -198,6 +219,12 @@ class Sincronizador {
             "Error Sincronizando",
             "No se pudo encontrar el servidor.")));
 
+        return false;
+      } else if (error is DioException) {
+        blocLog.add(EvAgregarLog(Log(
+            const Icon(Icons.highlight_remove_rounded, color: Colors.red),
+            "Error Sincronizando",
+            error.message ?? "Error durante conexion")));
         return false;
       } else {
         rethrow;

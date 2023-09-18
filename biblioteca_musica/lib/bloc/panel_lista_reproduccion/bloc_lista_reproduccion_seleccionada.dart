@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_canciones.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_listas_reproduccion.dart';
@@ -17,6 +20,7 @@ class BlocListaReproduccionSeleccionada extends Bloc<
   BlocListaReproduccionSeleccionada(this._repositorioCanciones,
       this._repositorioColumna, this._repositorioListasReproduccion)
       : super(const EstadoListaReproduccionSelecconada()) {
+    on<EvIniciar>(_onIniciar);
     on<EvSeleccionarLista>(_onSeleccionarLista);
     on<EvEscucharCancionesListaRep>(_onEscucharCancionesListaRep,
         transformer: restartable());
@@ -232,5 +236,13 @@ class BlocListaReproduccionSeleccionada extends Bloc<
                 state.listaReproduccionSeleccionada.ordenAscendente,
             idColumnaOrden: state.listaReproduccionSeleccionada.idColumnaOrden,
             idColumnaPrincipal: event.idColumna)));
+  }
+
+  FutureOr<void> _onIniciar(
+      EvIniciar event, Emitter<EstadoListaReproduccionSelecconada> emit) async {
+    final listaRepInicial = await _repositorioListasReproduccion
+        .obtListaReproduccionInicial(await obtUltimaListaRep() ?? 0);
+
+    add(EvSeleccionarLista(listaRepInicial));
   }
 }

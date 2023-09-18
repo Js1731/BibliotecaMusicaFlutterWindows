@@ -7,6 +7,7 @@ class BtnAccionReproductor extends BtnGenerico {
       required pausado,
       required IconData icono,
       required onPressed,
+      double tam = 30,
       super.key})
       : super(
             onPressed: onPressed,
@@ -18,7 +19,7 @@ class BtnAccionReproductor extends BtnGenerico {
                             ? Colors.white
                             : Colors.white70
                         : Colors.white10,
-                    size: 30,
+                    size: tam,
                   ),
                 ));
 }

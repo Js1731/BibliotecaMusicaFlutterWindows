@@ -7,6 +7,8 @@ class EventoListaReproduccionSeleccionada extends Equatable {
   List<Object?> get props => [];
 }
 
+class EvIniciar extends EventoListaReproduccionSeleccionada {}
+
 class EvSeleccionarLista extends EventoListaReproduccionSeleccionada {
   final ListaReproduccionData listaSeleccionada;
 

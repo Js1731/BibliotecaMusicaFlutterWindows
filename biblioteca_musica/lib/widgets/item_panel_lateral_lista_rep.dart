@@ -178,8 +178,7 @@ class _EstadoItemSeleccionado extends State<_ItemSeleccionado>
 
   @override
   void dispose() {
-    super.dispose();
-
     animCont.dispose();
+    super.dispose();
   }
 }

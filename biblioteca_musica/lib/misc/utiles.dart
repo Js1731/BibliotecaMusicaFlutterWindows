@@ -77,16 +77,11 @@ Future<String> genUrlParamUnico(String ruta, String param) async =>
     "${await genUrlNoParams(ruta)}/$param";
 
 Future<String> genUrlNoParams(String ruta) async =>
-    "http://${await obtIpServidor()}:8080/$ruta";
+    "http://${await _obtIpServidor()}:8080/$ruta";
 
-Future<String?> obtIpServidor() async {
+Future<String?> _obtIpServidor() async {
   final SharedPreferences sharedPref = await SharedPreferences.getInstance();
   return sharedPref.getString("ipServidor");
-}
-
-Future<void> actIpServidor(String nuevaIP) async {
-  final SharedPreferences sharedPref = await SharedPreferences.getInstance();
-  await sharedPref.setString("ipServidor", nuevaIP);
 }
 
 Future<int> obtNumeroVersionLocal() async {
@@ -134,4 +129,14 @@ Future<void> actNumeroVersionServidor(int nuevaVersion) async {
       .toList();
 
   return (listaMP3, listaJPG);
+}
+
+Future<void> actUltimaListaRep(int idListaRep) async {
+  final shr = await SharedPreferences.getInstance();
+  shr.setInt("ultimaLista", idListaRep);
+}
+
+Future<int?> obtUltimaListaRep() async {
+  final shr = await SharedPreferences.getInstance();
+  return shr.getInt("ultimaLista");
 }

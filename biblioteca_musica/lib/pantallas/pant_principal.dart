@@ -1,11 +1,16 @@
+import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
 import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/cubit_reproductor_movil.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_listas_reproduccion.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
+import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/pantallas/panel_ajustes/panel_ajustes.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_panel_columnas.dart';
@@ -15,7 +20,7 @@ import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_listas_movil/panel_listas_movil.dart';
-import 'package:biblioteca_musica/pantallas/panel_logs.dart';
+import 'package:biblioteca_musica/pantallas/panel_log/panel_logs.dart';
 import 'package:biblioteca_musica/pantallas/panel_reproductor_movil/panel_reproductor_movil.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/panel_reproductor.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
@@ -37,8 +42,6 @@ class PantPrincipal extends StatefulWidget {
 
 class PantPrincipalState extends State<PantPrincipal>
     with SingleTickerProviderStateMixin {
-  bool iniciado = false;
-
   Widget construirPanelCentral(
       BuildContext context, Panel panel, ModoResponsive modo) {
     switch (panel) {
@@ -77,9 +80,9 @@ class PantPrincipalState extends State<PantPrincipal>
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final modoResp = constraints.maxWidth >= 1000
+      final modoResp = constraints.maxWidth >= 1030
           ? ModoResponsive.normal
-          : constraints.maxWidth < 1000 && constraints.maxWidth > 700
+          : constraints.maxWidth < 1030 && constraints.maxWidth > 700
               ? ModoResponsive.reducido
               : ModoResponsive.muyReducido;
 
@@ -107,84 +110,108 @@ class PantPrincipalState extends State<PantPrincipal>
                 );
               })
             : null,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              Container(
-                color: DecoColores.gris,
-                child: Column(
+        body: BlocSelector<BlocReproductor, EstadoReproductor,
+                CancionColumnaPrincipal?>(
+            selector: (state) => state.cancionReproducida,
+            builder: (context, cancionReproducida) {
+              return SafeArea(
+                child: Stack(
                   children: [
-                    Expanded(
-                      child: Row(children: [
-                        if (modoResp != ModoResponsive.muyReducido)
-                          Provider(
-                              create: (context) => AuxiliarListasReproduccion(),
-                              child: const PanelLateral()),
+                    Container(
+                      color: DecoColores.gris,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Row(children: [
+                              if (modoResp != ModoResponsive.muyReducido)
+                                Provider(
+                                    create: (context) =>
+                                        AuxiliarListasReproduccion(),
+                                    child: const PanelLateral()),
 
-                        //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
+                              //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
 
-                        BlocSelector<
-                                BlocListaReproduccionSeleccionada,
-                                EstadoListaReproduccionSelecconada,
-                                ListaReproduccionData?>(
-                            selector: (state) =>
-                                state.listaReproduccionSeleccionada,
-                            builder: (context, listaSeleccionada) {
-                              return BlocBuilder<CubitPanelSeleccionado, Panel>(
-                                  builder: (context, panel) {
-                                if (modoResp != ModoResponsive.muyReducido &&
-                                    panel == Panel.listasMovil) {
-                                  context
-                                      .read<CubitPanelSeleccionado>()
-                                      .cambiarPanel(Panel.listasRep);
-                                  context
-                                      .read<BlocListaReproduccionSeleccionada>()
-                                      .add(EvSeleccionarLista(
-                                          listaRepBiblioteca));
-                                }
+                              BlocSelector<
+                                      BlocListaReproduccionSeleccionada,
+                                      EstadoListaReproduccionSelecconada,
+                                      ListaReproduccionData?>(
+                                  selector: (state) =>
+                                      state.listaReproduccionSeleccionada,
+                                  builder: (context, listaSeleccionada) {
+                                    return BlocBuilder<CubitPanelSeleccionado,
+                                        Panel>(builder: (context, panel) {
+                                      if (modoResp !=
+                                              ModoResponsive.muyReducido &&
+                                          panel == Panel.listasMovil) {
+                                        context
+                                            .read<CubitPanelSeleccionado>()
+                                            .cambiarPanel(Panel.listasRep);
+                                        context
+                                            .read<
+                                                BlocListaReproduccionSeleccionada>()
+                                            .add(EvSeleccionarLista(
+                                                listaRepBiblioteca));
+                                      }
 
-                                return Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 10, right: 10, bottom: 10),
-                                    child: CustomPaint(
-                                        key: ValueKey(panel),
-                                        painter: CustomPainerPanelCentral(),
-                                        child: Stack(
-                                          children: [
-                                            construirPanelCentral(
-                                                context, panel, modoResp),
-                                          ],
-                                        )),
-                                  ),
-                                );
-                              });
-                            }),
-                      ]),
+                                      return Expanded(
+                                        child: Container(
+                                          margin: EdgeInsets.only(
+                                              left: modoResp ==
+                                                      ModoResponsive.muyReducido
+                                                  ? 10
+                                                  : 0,
+                                              top: 10,
+                                              right: 10,
+                                              bottom: 10),
+                                          child: CustomPaint(
+                                              key: ValueKey(panel),
+                                              painter: CustomPainerPanelCentral(
+                                                  modoResp),
+                                              child: Stack(
+                                                children: [
+                                                  construirPanelCentral(
+                                                      context, panel, modoResp),
+                                                ],
+                                              )),
+                                        ),
+                                      );
+                                    });
+                                  }),
+                            ]),
+                          ),
+                          BlocBuilder<CubitConf, EstadoConfig>(
+                            builder: (context, config) {
+                              return config.mostrarLog
+                                  ? const Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 10, right: 10, bottom: 10),
+                                      child: PanelLog(),
+                                    )
+                                  : const SizedBox();
+                            },
+                          ),
+                          if (modoResp == ModoResponsive.muyReducido &&
+                              cancionReproducida != null)
+                            const SizedBox(height: 60),
+                          if (modoResp != ModoResponsive.muyReducido)
+                            PanelReproductor(modo: modoResp)
+                        ],
+                      ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                      child: PanelLog(),
-                    ),
-                    if (modoResp == ModoResponsive.muyReducido)
-                      const SizedBox(height: 60),
-                    if (modoResp != ModoResponsive.muyReducido)
-                      PanelReproductor(modo: modoResp)
+                    //if (Platform.isWindows) const BarraVentana()
+                    if (modoResp == ModoResponsive.muyReducido &&
+                        cancionReproducida != null)
+                      Container(
+                          margin: const EdgeInsets.only(
+                              bottom: 10, right: 10, left: 10),
+                          alignment: Alignment.bottomCenter,
+                          child: BlocProvider(
+                              create: (context) => CubitReproductorMovil(),
+                              child: PanelReproductorMovil()))
                   ],
                 ),
-              ),
-              //if (Platform.isWindows) const BarraVentana()
-              if (modoResp == ModoResponsive.muyReducido)
-                Container(
-                    margin:
-                        const EdgeInsets.only(bottom: 10, right: 10, left: 10),
-                    alignment: Alignment.bottomCenter,
-                    child: BlocProvider(
-                        create: (context) => CubitReproductorMovil(),
-                        child: PanelReproductorMovil())),
-            ],
-          ),
-        ),
+              );
+            }),
       );
     });
   }

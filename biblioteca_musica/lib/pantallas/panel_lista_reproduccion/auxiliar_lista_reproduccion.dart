@@ -4,6 +4,7 @@ import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_gestionar_columnas_cancion.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -207,5 +208,11 @@ class AuxiliarListaReproduccion {
 
       context.read<CubitSincronizacion>().cambiarEstado(EstadoSinc.nuevoLocal);
     }
+  }
+
+  void ordenarListaPorColumna(BuildContext context, int idColumna) {
+    context
+        .read<BlocListaReproduccionSeleccionada>()
+        .add(EvOrdenarListaPorColumna(idColumna));
   }
 }
