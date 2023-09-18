@@ -33,164 +33,175 @@ class ItemCancion extends BtnGenerico {
       required this.modo,
       super.key})
       : super(builder: (hover, context) {
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 100),
-            width: double.infinity,
-            height: modo == ModoResponsive.muyReducido ? 60 : 30,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            decoration: reproduciendo
-                ? BoxDecoration(
-                    color: DecoColores.rosaClaro1,
-                    borderRadius: BorderRadius.circular(30))
-                : seleccionado
-                    ? BoxDecoration(
-                        color: Deco.cGray0,
-                        borderRadius: BorderRadius.circular(30))
-                    : hover
-                        ? BoxDecoration(
-                            color: Deco.cGray0,
-                            borderRadius: BorderRadius.circular(30))
-                        : const BoxDecoration(),
-            child: Row(
-              children: [
-                //NOMBRE DE LA CANCION
-                Expanded(
-                  child: Row(
-                    children: [
-                      //CHECKBOX
-                      if (modo == ModoResponsive.normal)
-                        Checkbox(
-                            shape: const CircleBorder(),
-                            splashRadius: 15,
-                            activeColor: reproduciendo
-                                ? Colors.white
-                                : DecoColores.rosaClaro1,
-                            checkColor: reproduciendo
-                                ? DecoColores.rosaClaro1
-                                : Colors.white,
-                            side: BorderSide(
-                                color: reproduciendo
-                                    ? hover
-                                        ? Colors.white
-                                        : DecoColores.rosaClaro1
-                                    : hover
-                                        ? Deco.cGray
-                                        : Colors.white),
-                            value: seleccionado,
-                            onChanged: (nuevoValor) {
-                              context
-                                  .read<BlocListaReproduccionSeleccionada>()
-                                  .add(EvToggleSelCancion(cancion.id));
+          return SizedBox(
+            height: modo == ModoResponsive.muyReducido ? 40 : 30,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 100),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: reproduciendo
+                  ? BoxDecoration(
+                      color: DecoColores.rosaClaro1,
+                      borderRadius: BorderRadius.circular(30))
+                  : seleccionado
+                      ? BoxDecoration(
+                          color: Deco.cGray0,
+                          borderRadius: BorderRadius.circular(30))
+                      : hover
+                          ? BoxDecoration(
+                              color: Deco.cGray0,
+                              borderRadius: BorderRadius.circular(30))
+                          : const BoxDecoration(),
+              child: Row(
+                children: [
+                  //NOMBRE DE LA CANCION
+                  Expanded(
+                    child: Row(
+                      children: [
+                        //CHECKBOX
+                        if (modo != ModoResponsive.muyReducido)
+                          Checkbox(
+                              shape: const CircleBorder(),
+                              splashRadius: 15,
+                              activeColor: reproduciendo
+                                  ? Colors.white
+                                  : DecoColores.rosaClaro1,
+                              checkColor: reproduciendo
+                                  ? DecoColores.rosaClaro1
+                                  : Colors.white,
+                              side: BorderSide(
+                                  color: reproduciendo
+                                      ? hover
+                                          ? Colors.white
+                                          : DecoColores.rosaClaro1
+                                      : hover
+                                          ? Deco.cGray
+                                          : Colors.white),
+                              value: seleccionado,
+                              onChanged: (nuevoValor) {
+                                context
+                                    .read<BlocListaReproduccionSeleccionada>()
+                                    .add(EvToggleSelCancion(cancion.id));
+                              }),
+
+                        if (cancion.estado == estadoLocal)
+                          const Icon(
+                            Icons.file_upload_rounded,
+                            color: Deco.cGray,
+                          ),
+
+                        if (cancion.estado == estadoServidor)
+                          const Icon(
+                            Icons.file_download_rounded,
+                            color: Deco.cGray,
+                          ),
+
+                        if (cancion.estado == estadoSubiendo)
+                          const Icon(
+                            Icons.file_upload_rounded,
+                            color: Deco.cRosa0,
+                          ),
+
+                        if (cancion.estado == estadoDescargando)
+                          const Icon(
+                            Icons.file_download_rounded,
+                            color: Deco.cRosa0,
+                          ),
+
+                        if (cancion.estado != estadoSync)
+                          const SizedBox(width: 10),
+
+                        if (modo == ModoResponsive.muyReducido)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Builder(builder: (context) {
+                              int? id = int.tryParse(
+                                  cancion.mapaColumnas[idColumnaPrincipal]
+                                          ?["valor_columna_id"] ??
+                                      "a");
+                              String? url = id == null ? null : rutaImagen(id);
+
+                              return ImagenRectRounded(
+                                  radio: 5, url: url, tam: 40, sombra: false);
                             }),
+                          ),
 
-                      if (cancion.estado == estadoLocal)
-                        const Icon(
-                          Icons.file_upload_rounded,
-                          color: Deco.cGray,
+                        Expanded(
+                          flex: modo == ModoResponsive.muyReducido ? 3 : 1,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                right: modo == ModoResponsive.muyReducido
+                                    ? 10.0
+                                    : 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _TextoItemCancion(
+                                  texto: cancion.nombre,
+                                  hover: hover,
+                                  reproduciendo: reproduciendo,
+                                  local: cancion.estado == estadoSync ||
+                                      cancion.estado == estadoLocal ||
+                                      cancion.estado == estadoLocal,
+                                  align: TextAlign.left,
+                                ),
+                                if (modo == ModoResponsive.muyReducido)
+                                  _SubTextoItemCancion(
+                                    texto:
+                                        cancion.mapaColumnas[idColumnaPrincipal]
+                                                ?["valor_columna_nombre"] ??
+                                            "---",
+                                    hover: hover,
+                                    reproduciendo: reproduciendo,
+                                    local: cancion.estado == estadoSync ||
+                                        cancion.estado == estadoLocal ||
+                                        cancion.estado == estadoLocal,
+                                    align: TextAlign.left,
+                                  ),
+                              ],
+                            ),
+                          ),
                         ),
+                      ],
+                    ),
+                  ),
 
-                      if (cancion.estado == estadoServidor)
-                        const Icon(
-                          Icons.file_download_rounded,
-                          color: Deco.cGray,
-                        ),
-
-                      if (cancion.estado == estadoSubiendo)
-                        const Icon(
-                          Icons.file_upload_rounded,
-                          color: Deco.cRosa0,
-                        ),
-
-                      if (cancion.estado == estadoDescargando)
-                        const Icon(
-                          Icons.file_download_rounded,
-                          color: Deco.cRosa0,
-                        ),
-
-                      if (cancion.estado != estadoSync)
-                        const SizedBox(width: 10),
-
-                      if (modo == ModoResponsive.muyReducido)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Builder(builder: (context) {
-                            int? id = int.tryParse(
-                                cancion.mapaColumnas[idColumnaPrincipal]
-                                        ?["valor_columna_id"] ??
-                                    "a");
-                            String? url = id == null ? null : rutaImagen(id);
-
-                            return ImagenRectRounded(
-                                url: url, tam: 55, sombra: false);
-                          }),
-                        ),
-
+                  //VALORES COLUMNA DE LA CANCION
+                  for (Map<String, dynamic>? valorColumna
+                      in cancion.mapaColumnas.values)
+                    if ((modo == ModoResponsive.reducido &&
+                            idColumnaPrincipal ==
+                                int.tryParse(
+                                    valorColumna?["valor_columna_id"] ??
+                                        "a")) ||
+                        modo == ModoResponsive.normal)
                       Expanded(
-                        flex: 3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _TextoItemCancion(
-                              texto: cancion.nombre,
+                          child: _TextoItemCancion(
+                              texto:
+                                  valorColumna?["valor_columna_nombre"] ?? "--",
                               hover: hover,
-                              reproduciendo: reproduciendo,
                               local: cancion.estado == estadoSync ||
                                   cancion.estado == estadoLocal ||
                                   cancion.estado == estadoLocal,
-                              align: TextAlign.left,
-                            ),
-                            if (modo == ModoResponsive.muyReducido)
-                              _TextoItemCancion(
-                                texto: cancion.mapaColumnas[idColumnaPrincipal]
-                                        ?["valor_columna_nombre"] ??
-                                    "---",
-                                hover: hover,
-                                reproduciendo: reproduciendo,
-                                local: cancion.estado == estadoSync ||
-                                    cancion.estado == estadoLocal ||
-                                    cancion.estado == estadoLocal,
-                                align: TextAlign.left,
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                              reproduciendo: reproduciendo)),
 
-                //VALORES COLUMNA DE LA CANCION
-                for (Map<String, dynamic>? valorColumna
-                    in cancion.mapaColumnas.values)
-                  if ((modo == ModoResponsive.reducido &&
-                          idColumnaPrincipal ==
-                              int.tryParse(
-                                  valorColumna?["valor_columna_id"] ?? "a")) ||
-                      modo == ModoResponsive.normal)
-                    Expanded(
-                        child: _TextoItemCancion(
-                            texto:
-                                valorColumna?["valor_columna_nombre"] ?? "--",
-                            hover: hover,
-                            local: cancion.estado == estadoSync ||
-                                cancion.estado == estadoLocal ||
-                                cancion.estado == estadoLocal,
-                            reproduciendo: reproduciendo)),
-
-                //DURACION DE LA CANCION
-                Expanded(
-                  flex: 0,
-                  child: _TextoItemCancion(
-                    texto: duracionString(Duration(seconds: cancion.duracion)),
-                    hover: hover,
-                    reproduciendo: reproduciendo,
-                    align: TextAlign.right,
-                    local: cancion.estado == estadoSync ||
-                        cancion.estado == estadoLocal ||
-                        cancion.estado == estadoLocal,
-                  ),
-                )
-              ],
+                  //DURACION DE LA CANCION
+                  Expanded(
+                    flex: modo == ModoResponsive.muyReducido ? 0 : 1,
+                    child: _TextoItemCancion(
+                      texto:
+                          duracionString(Duration(seconds: cancion.duracion)),
+                      hover: hover,
+                      reproduciendo: reproduciendo,
+                      align: TextAlign.right,
+                      local: cancion.estado == estadoSync ||
+                          cancion.estado == estadoLocal ||
+                          cancion.estado == estadoLocal,
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         }, onPressed: (context) async {
@@ -208,13 +219,6 @@ class ItemCancion extends BtnGenerico {
           }
         }, onRightPressed: (context, position) async {
           List<PopupMenuEntry<int>> lstOpciones = [
-            const PopupMenuItem(
-                value: 1,
-                child: Row(children: [
-                  Icon(Icons.view_column, color: Deco.cGray1),
-                  SizedBox(width: 15),
-                  Text("Columnas"),
-                ])),
             const PopupMenuDivider(
               height: 10,
             ),
@@ -249,6 +253,20 @@ class ItemCancion extends BtnGenerico {
                       Text("Recortar")
                     ])));
           }
+
+          if (modo != ModoResponsive.muyReducido) {
+            lstOpciones.insert(
+              1,
+              const PopupMenuItem(
+                  value: 1,
+                  child: Row(children: [
+                    Icon(Icons.view_column, color: Deco.cGray1),
+                    SizedBox(width: 15),
+                    Text("Columnas"),
+                  ])),
+            );
+          }
+
           if (context
                   .read<BlocListaReproduccionSeleccionada>()
                   .state
@@ -339,5 +357,24 @@ class _TextoItemCancion extends TextoPer {
                 ? reproduciendo
                     ? Colors.white
                     : Colors.black
+                : Deco.cGray);
+}
+
+class _SubTextoItemCancion extends TextoPer {
+  _SubTextoItemCancion(
+      {align = TextAlign.center,
+      required texto,
+      required reproduciendo,
+      required local,
+      required hover})
+      : super(
+            texto: texto,
+            tam: 14,
+            align: align,
+            weight: reproduciendo ? FontWeight.bold : FontWeight.normal,
+            color: local
+                ? reproduciendo
+                    ? Colors.white38
+                    : Colors.black45
                 : Deco.cGray);
 }

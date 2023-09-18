@@ -119,7 +119,8 @@ class BotonPopUpMenuCintaOpciones<T> extends BtnPopupMenuGenerico<T> {
       IconData? icono,
       required String texto,
       required super.onSelected,
-      required super.itemBuilder})
+      required super.itemBuilder,
+      required ModoResponsive modo})
       : super(
             botonBuilder: (hover, contexto) => Container(
                   height: double.maxFinite,
@@ -136,7 +137,7 @@ class BotonPopUpMenuCintaOpciones<T> extends BtnPopupMenuGenerico<T> {
                               ),
                             )
                           : const SizedBox(),
-                      Text(texto),
+                      if (modo == ModoResponsive.normal) Text(texto),
                     ],
                   ),
                 ));

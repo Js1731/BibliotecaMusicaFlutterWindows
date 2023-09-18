@@ -1,16 +1,17 @@
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:equatable/equatable.dart';
 
-class EstadoPanelLateral extends Equatable {
+class EstadoListasReproduccion extends Equatable {
   final List<ListaReproduccionData> listasReproduccion;
 
-  const EstadoPanelLateral({this.listasReproduccion = const []});
+  const EstadoListasReproduccion({this.listasReproduccion = const []});
 
   @override
   List<Object?> get props => [listasReproduccion];
 
-  EstadoPanelLateral copiarCon({List<ListaReproduccionData>? listaRep}) =>
-      EstadoPanelLateral(listasReproduccion: listaRep ?? listasReproduccion);
+  EstadoListasReproduccion copiarCon({List<ListaReproduccionData>? listaRep}) =>
+      EstadoListasReproduccion(
+          listasReproduccion: listaRep ?? listasReproduccion);
 
   List<ListaReproduccionData> obtListasRepExcepto(int idListaExcep) =>
       List<ListaReproduccionData>.from(listasReproduccion)

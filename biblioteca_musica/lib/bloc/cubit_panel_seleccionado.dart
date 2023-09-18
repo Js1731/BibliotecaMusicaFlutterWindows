@@ -1,10 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum Panel {
-  listasRep,
-  ajustes,
-  columnas,
-}
+enum Panel { listasRep, listasMovil, ajustes, columnas }
 
 class CubitPanelSeleccionado extends Cubit<Panel> {
   CubitPanelSeleccionado() : super(Panel.listasRep);

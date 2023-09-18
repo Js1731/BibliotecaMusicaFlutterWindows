@@ -1,11 +1,12 @@
-import 'dart:io';
-
 import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
+import 'package:biblioteca_musica/bloc/cubit_reproductor_movil.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
-import 'package:biblioteca_musica/pantallas/BarraVentana.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/pantallas/panel_ajustes/panel_ajustes.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_panel_columnas.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_principal.dart';
@@ -13,11 +14,12 @@ import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral
 import 'package:biblioteca_musica/pantallas/panel_lateral/panel_lateral.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/auxiliar_lista_reproduccion.dart';
 import 'package:biblioteca_musica/pantallas/panel_lista_reproduccion/panel_lista_reproduccion.dart';
+import 'package:biblioteca_musica/pantallas/panel_listas_movil/panel_listas_movil.dart';
 import 'package:biblioteca_musica/pantallas/panel_logs.dart';
+import 'package:biblioteca_musica/pantallas/panel_reproductor_movil/panel_reproductor_movil.dart';
 import 'package:biblioteca_musica/pantallas/reproductor/panel_reproductor.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +39,8 @@ class PantPrincipalState extends State<PantPrincipal>
     with SingleTickerProviderStateMixin {
   bool iniciado = false;
 
-  Widget? construirPanelCentral(BuildContext context, Panel panel) {
+  Widget construirPanelCentral(
+      BuildContext context, Panel panel, ModoResponsive modo) {
     switch (panel) {
       case Panel.listasRep:
         return BlocProvider(
@@ -46,7 +49,9 @@ class PantPrincipalState extends State<PantPrincipal>
                 create: (context) => AuxiliarListaReproduccion(
                       context.read<RepositorioColumnas>(),
                     ),
-                child: const PanelListaReproduccion()));
+                child: PanelListaReproduccion(
+                  modoResponsive: modo,
+                )));
 
       case Panel.columnas:
         return Provider(
@@ -55,6 +60,9 @@ class PantPrincipalState extends State<PantPrincipal>
 
       case Panel.ajustes:
         return const PanelAjustes();
+
+      case Panel.listasMovil:
+        return const PanelListasMovil();
 
       default:
         return const SizedBox();
@@ -69,15 +77,35 @@ class PantPrincipalState extends State<PantPrincipal>
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
+      final modoResp = constraints.maxWidth >= 1000
+          ? ModoResponsive.normal
+          : constraints.maxWidth < 1000 && constraints.maxWidth > 700
+              ? ModoResponsive.reducido
+              : ModoResponsive.muyReducido;
+
+      print(modoResp.name);
       return Scaffold(
-        bottomNavigationBar: constraints.maxWidth < 700
-            ? NavigationBar(destinations: const [
-                NavigationDestination(
-                    icon: Icon(Icons.music_note_rounded), label: "Musica"),
-                NavigationDestination(icon: Icon(Icons.list), label: "Listas"),
-                NavigationDestination(
-                    icon: Icon(Icons.settings), label: "Ajustes")
-              ])
+        bottomNavigationBar: modoResp == ModoResponsive.muyReducido
+            ? BlocBuilder<CubitPanelSeleccionado, Panel>(
+                builder: (context, panelSel) {
+                return NavigationBar(
+                  selectedIndex: panelSel.index,
+                  indicatorColor: DecoColores.rosaClaro2,
+                  destinations: const [
+                    NavigationDestination(
+                        icon: Icon(Icons.music_note_rounded), label: "Musica"),
+                    NavigationDestination(
+                        icon: Icon(Icons.list), label: "Listas"),
+                    NavigationDestination(
+                        icon: Icon(Icons.settings), label: "Ajustes")
+                  ],
+                  onDestinationSelected: (indexSel) {
+                    context
+                        .read<CubitPanelSeleccionado>()
+                        .cambiarPanel(Panel.values[indexSel]);
+                  },
+                );
+              })
             : null,
         body: SafeArea(
           child: Stack(
@@ -88,9 +116,9 @@ class PantPrincipalState extends State<PantPrincipal>
                   children: [
                     Expanded(
                       child: Row(children: [
-                        if (constraints.maxWidth > 700)
+                        if (modoResp != ModoResponsive.muyReducido)
                           Provider(
-                              create: (context) => AuxiliarPanelLateral(),
+                              create: (context) => AuxiliarListasReproduccion(),
                               child: const PanelLateral()),
 
                         //PANEL PANTALLA MOSTRADA EN LA PANTALLA CENTRAL
@@ -104,6 +132,17 @@ class PantPrincipalState extends State<PantPrincipal>
                             builder: (context, listaSeleccionada) {
                               return BlocBuilder<CubitPanelSeleccionado, Panel>(
                                   builder: (context, panel) {
+                                if (modoResp != ModoResponsive.muyReducido &&
+                                    panel == Panel.listasMovil) {
+                                  context
+                                      .read<CubitPanelSeleccionado>()
+                                      .cambiarPanel(Panel.listasRep);
+                                  context
+                                      .read<BlocListaReproduccionSeleccionada>()
+                                      .add(EvSeleccionarLista(
+                                          listaRepBiblioteca));
+                                }
+
                                 return Expanded(
                                   child: Container(
                                     margin: const EdgeInsets.only(
@@ -111,8 +150,12 @@ class PantPrincipalState extends State<PantPrincipal>
                                     child: CustomPaint(
                                         key: ValueKey(panel),
                                         painter: CustomPainerPanelCentral(),
-                                        child: construirPanelCentral(
-                                            context, panel)),
+                                        child: Stack(
+                                          children: [
+                                            construirPanelCentral(
+                                                context, panel, modoResp),
+                                          ],
+                                        )),
                                   ),
                                 );
                               });
@@ -123,11 +166,22 @@ class PantPrincipalState extends State<PantPrincipal>
                       padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                       child: PanelLog(),
                     ),
-                    if (constraints.maxWidth > 700) const PanelReproductor()
+                    if (modoResp == ModoResponsive.muyReducido)
+                      const SizedBox(height: 60),
+                    if (modoResp != ModoResponsive.muyReducido)
+                      PanelReproductor(modo: modoResp)
                   ],
                 ),
               ),
               //if (Platform.isWindows) const BarraVentana()
+              if (modoResp == ModoResponsive.muyReducido)
+                Container(
+                    margin:
+                        const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+                    alignment: Alignment.bottomCenter,
+                    child: BlocProvider(
+                        create: (context) => CubitReproductorMovil(),
+                        child: PanelReproductorMovil())),
             ],
           ),
         ),

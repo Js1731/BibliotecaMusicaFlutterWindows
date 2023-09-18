@@ -35,6 +35,7 @@ class ImagenRectRounded extends StatelessWidget {
           border: Border.all(
               color: conBorde ? Deco.cRosa0 : Colors.transparent, width: 5),
           image: DecorationImage(
+            fit: BoxFit.contain,
             image: im,
           ),
           boxShadow: sombra

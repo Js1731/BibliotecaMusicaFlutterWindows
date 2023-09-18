@@ -12,7 +12,8 @@ late String _rutadoc;
 
 String rutaCan(int id) => rutaDoc("$id.mp3");
 
-String? rutaImagen(int id) {
+String? rutaImagen(int? id) {
+  if (id == null) return null;
   final ruta = rutaDoc("$id.jpg");
   if (!File(ruta).existsSync()) return null;
   return ruta;

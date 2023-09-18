@@ -7,8 +7,8 @@ import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_selecci
 import 'package:biblioteca_musica/bloc/columnas_sistema/bloc_columnas_sistema.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
-import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
-import 'package:biblioteca_musica/bloc/panel_lateral/evento_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_listas_reproduccion.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/evento_listas_reproduccion.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
@@ -65,7 +65,7 @@ Future<void> main() async {
                   BlocColumnasSistema(context.read<RepositorioColumnas>())
                     ..add(EvEscucharColumnasSistema())),
           BlocProvider(
-              create: (context_) => BlocPanelLateral(
+              create: (context_) => BlocListasReproduccion(
                   context_.read<RepositorioListasReproduccion>())
                 ..add(PanelLateralEscucharStreamListasReproduccion())),
           BlocProvider(

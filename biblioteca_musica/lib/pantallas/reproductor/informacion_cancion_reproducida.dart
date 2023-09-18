@@ -2,26 +2,24 @@ import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/imagen_round_rect.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum ModoInfoCancionReproducida { normal, reducida }
-
 class InformacionCancionReproducida extends StatelessWidget {
-  final ModoInfoCancionReproducida modo;
+  final ModoResponsive modo;
 
   const InformacionCancionReproducida({required this.modo, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: modo == ModoInfoCancionReproducida.normal ? 350 : 60,
+      width: modo == ModoResponsive.normal ? 350 : 60,
       height: 60,
-      padding: EdgeInsets.only(
-          right: modo == ModoInfoCancionReproducida.normal ? 10 : 0),
+      padding: EdgeInsets.only(right: modo == ModoResponsive.normal ? 10 : 0),
       decoration: BoxDecoration(
           color: DecoColores.rosaOscuro,
           borderRadius: BorderRadius.circular(10)),
@@ -38,9 +36,8 @@ class InformacionCancionReproducida extends StatelessWidget {
                     url: cancionRep?.valorColumnaPrincipal != null
                         ? rutaImagen(cancionRep!.valorColumnaPrincipal!.id)
                         : null),
-                if (modo == ModoInfoCancionReproducida.normal)
-                  const SizedBox(width: 10),
-                if (modo == ModoInfoCancionReproducida.normal)
+                if (modo == ModoResponsive.normal) const SizedBox(width: 10),
+                if (modo == ModoResponsive.normal)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,

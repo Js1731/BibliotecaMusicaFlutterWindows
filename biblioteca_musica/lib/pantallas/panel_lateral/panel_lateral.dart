@@ -1,12 +1,14 @@
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_listas_reproduccion.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/estado_listas_reproduccion.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
-import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
+import 'package:biblioteca_musica/pantallas/panel_lateral/barra_agregar_lista_rep.dart';
 import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/item_panel_lateral_lista_rep.dart';
@@ -16,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../bloc/panel_lateral/estado_panel_lateral.dart';
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import '../../painters/custom_painter_KOPI.dart';
 import '../../painters/custom_painter_agregar_lista.dart';
@@ -47,7 +48,7 @@ class _ConstructorPanelLateral extends StatelessWidget {
         margin: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
         child: CustomPaint(
           painter: CustomPainterPanelLateral(),
-          child: BlocBuilder<BlocPanelLateral, EstadoPanelLateral>(
+          child: BlocBuilder<BlocListasReproduccion, EstadoListasReproduccion>(
               builder: (context, estadoPanelLateral) {
             return BlocSelector<BlocReproductor, EstadoReproductor,
                     Tuple2<ListaReproduccionData?, bool>>(
@@ -124,44 +125,7 @@ class _ConstructorPanelLateral extends StatelessWidget {
                                 ),
 
                                 //BARRA AGREGAR LISTA
-                                Container(
-                                  height: 25,
-                                  color: DecoColores.rosaClaro1,
-                                  child: Stack(children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: TextoPer(
-                                          texto: "Listas",
-                                          tam: 16,
-                                          color: Colors.white),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: BtnGenerico(onPressed: (_) async {
-                                        await context
-                                            .read<AuxiliarPanelLateral>()
-                                            .agregarLista(context);
-                                      }, builder: (hover, context) {
-                                        return CustomPaint(
-                                          painter:
-                                              CustomPainterAgregarLista(hover),
-                                          child: Container(
-                                            width: 80,
-                                            alignment: Alignment.centerRight,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            height: double.maxFinite,
-                                            child: TextoPer(
-                                                texto: "Nuevo +",
-                                                tam: 16,
-                                                color: Colors.white),
-                                          ),
-                                        );
-                                      }),
-                                    )
-                                  ]),
-                                ),
+                                const BarraAgregarListaRep(),
 
                                 Expanded(
                                   child: Container(

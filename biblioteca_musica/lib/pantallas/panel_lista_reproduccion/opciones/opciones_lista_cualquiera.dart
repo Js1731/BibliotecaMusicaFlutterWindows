@@ -1,5 +1,5 @@
 import 'package:biblioteca_musica/datos/AppDb.dart';
-import 'package:biblioteca_musica/bloc/panel_lateral/bloc_panel_lateral.dart';
+import 'package:biblioteca_musica/bloc/panel_lateral/bloc_listas_reproduccion.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
@@ -106,9 +106,10 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
               return BotonPopUpMenuCintaOpciones(
                 icono: Icons.playlist_add_outlined,
                 enabled: cantCancSel > 0,
+                modo: modo,
                 itemBuilder: (_) {
                   return List<ListaReproduccionData>.from(context
-                          .read<BlocPanelLateral>()
+                          .read<BlocListasReproduccion>()
                           .state
                           .obtListasRepExcepto(context
                               .read<BlocListaReproduccionSeleccionada>()
@@ -153,6 +154,7 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
         BotonPopUpMenuCintaOpciones(
             icono: Icons.delete_sweep,
             texto: "Eliminar...",
+            modo: modo,
             itemBuilder: (_) => [
                   const PopupMenuItem(value: 0, child: Text("De esta Lista")),
                   const PopupMenuItem(value: 1, child: Text("Totalmente"))

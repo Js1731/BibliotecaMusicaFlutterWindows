@@ -26,6 +26,6 @@ class _EstadoPlantillaHover extends State<PlantillaHover> {
         onExit: (event) => setState(() {
               hover = false;
             }),
-        child: widget.constructorContenido(context, hover));
+        child: widget.constructorContenido(context, hover && widget.enabled));
   }
 }
