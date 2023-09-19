@@ -1,18 +1,17 @@
-import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
-import 'package:biblioteca_musica/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
+import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
+import 'package:biblioteca_musica/datos/cancion_columnas.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_gestionar_columnas_cancion.dart';
-import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/repositorios/repositorio_columnas.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../datos/AppDb.dart';
 import '../../bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
+import '../../datos/AppDb.dart';
 import '../../dialogos/dialogo_ingresar_texto.dart';
 
 class AuxiliarListaReproduccion {
@@ -21,8 +20,8 @@ class AuxiliarListaReproduccion {
   AuxiliarListaReproduccion(this._repositorioColumnas);
 
   Future<void> importarCanciones(BuildContext context) async {
-    FilePickerResult? lstArchivosSeleccionados =
-        await FilePicker.platform.pickFiles(allowMultiple: true);
+    FilePickerResult? lstArchivosSeleccionados = await FilePicker.platform
+        .pickFiles(allowMultiple: true, type: FileType.audio);
 
     if (lstArchivosSeleccionados == null) return;
 

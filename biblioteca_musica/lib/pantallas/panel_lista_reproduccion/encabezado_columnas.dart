@@ -4,6 +4,7 @@ import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_repro
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/widgets/btn_flotante_icono.dart';
+import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
@@ -21,7 +22,6 @@ class EncabezadoColumnas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Divider(color: Colors.black38, thickness: 1),
         Expanded(
           child: BlocSelector<
                   BlocListaReproduccionSeleccionada,
@@ -38,8 +38,10 @@ class EncabezadoColumnas extends StatelessWidget {
 
                 return BlocBuilder<CubitGestorColumnas, bool>(
                     builder: (context, modoActColumnas) {
-                  return SizedBox(
-                    height: 25,
+                  return Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        color: DecoColores.gris0),
                     child: !modoActColumnas
                         ? Row(
                             children: [
@@ -106,7 +108,6 @@ class EncabezadoColumnas extends StatelessWidget {
                 });
               }),
         ),
-        const Divider(color: Colors.black38, thickness: 1),
       ],
     );
   }

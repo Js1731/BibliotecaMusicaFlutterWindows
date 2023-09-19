@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/data_provider/dbp_listas_reproduccion.dart';
 
@@ -13,8 +14,8 @@ class RepositorioListasReproduccion {
     await _dbpListasReproduccion.agregarListaReproduccion(nombreListaNueva);
   }
 
-  void actOrdenColumna(int idColumnaOrden, int idListaRep) {
-    _dbpListasReproduccion.actOrdenColumna(idColumnaOrden, idListaRep);
+  Future<void> actOrdenColumna(int idColumnaOrden, int idListaRep) async {
+    await _dbpListasReproduccion.actOrdenColumna(idColumnaOrden, idListaRep);
   }
 
   Future<void> actColumnasListaRep(
@@ -37,6 +38,7 @@ class RepositorioListasReproduccion {
 
   Future<ListaReproduccionData> obtListaReproduccionInicial(
       int idListaInicial) async {
+    if (idListaInicial == 0) return listaRepBiblioteca;
     return await _dbpListasReproduccion
         .obtListaReproduccionInicial(idListaInicial);
   }

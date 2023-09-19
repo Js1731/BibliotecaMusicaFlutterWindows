@@ -1,4 +1,6 @@
+import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:drift/drift.dart';
 
 class DBPListasReproduccion {
@@ -12,11 +14,17 @@ class DBPListasReproduccion {
         .insert(ListaReproduccionCompanion.insert(nombre: nombreNuevaLista));
   }
 
-  void actOrdenColumna(int idColumnaOrden, int idListaRep) {
+  Future<void> actOrdenColumna(int idColumnaOrden, int idListaRep) async {
     appDb.update(appDb.listaReproduccion)
       ..where((tbl) => tbl.id.equals(idListaRep))
       ..write(
           ListaReproduccionCompanion(idColumnaOrden: Value(idColumnaOrden)));
+
+    if (idListaRep == listaRepBiblioteca.id) {
+      actOrdenBiblioteca(idColumnaOrden == -1
+          ? OrdenBiblioteca.porNombre
+          : OrdenBiblioteca.porDuracion);
+    }
   }
 
   Future<void> actColumnasListaReproduccion(

@@ -1,9 +1,6 @@
-import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
 import 'package:biblioteca_musica/bloc/logs/Log.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/logs/estado_log.dart';
-import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
-import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/pantallas/panel_log/btn_sincronizar.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/plantilla_hover.dart';

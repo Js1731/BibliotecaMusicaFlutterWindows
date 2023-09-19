@@ -132,9 +132,8 @@ class Sincronizador {
   Future<void> _buscarServidor(BlocLog blocLog, CubitConf cubitConf) async {
     var server = await HttpServer.bind(InternetAddress.anyIPv4, 8081);
 
-    enviarMDNS();
-
     try {
+      await enviarMDNS();
       final request =
           await server.firstWhere((HttpRequest request) => true).timeout(
                 const Duration(seconds: 3),
@@ -197,19 +196,19 @@ class Sincronizador {
         blocLog.add(EvAgregarLog(Log(null, "Sincronizando",
             "El cliente tiene datos mas recientes, sincronizando Servidor con Local")));
 
-        //await SincronizadorServidorConLocal(blocLog).sincronizar();
+        await SincronizadorServidorConLocal(blocLog).sincronizar();
       } else if (versionLocal < versionServidor) {
         blocLog.add(EvAgregarLog(Log(null, "Sincronizando",
             "El Servidor tiene datos mas recientes, sincronizando Local con Servidor")));
 
-        //await SincronizadorLocalConServidor(blocLog).sincronizar();
+        await SincronizadorLocalConServidor(blocLog).sincronizar();
       }
       blocLog.add(EvAgregarLog(Log(
           const Icon(Icons.check_circle_rounded, color: Colors.green),
           "Datos Sincronizados",
           "Los datos fueron sincronizados con exito.")));
 
-      //sincronizarArchivos(blocLog);
+      sincronizarArchivos(blocLog);
 
       return true;
     } catch (error) {

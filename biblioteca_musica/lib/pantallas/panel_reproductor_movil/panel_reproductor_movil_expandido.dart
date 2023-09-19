@@ -46,8 +46,8 @@ class PanelExpandido extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.only(bottom: 30),
                         child: LimitedBox(
-                          maxWidth: 270,
-                          maxHeight: 270,
+                          maxWidth: 250,
+                          maxHeight: 250,
                           child: ImagenRectRounded(
                             url: rutaImagen(cancion?.valorColumnaPrincipal?.id),
                             tam: constraints.maxWidth - 70,

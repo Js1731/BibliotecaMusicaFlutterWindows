@@ -1,17 +1,21 @@
+import 'dart:io';
+
 import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
 import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/cubit_reproductor_movil.dart';
-import 'package:biblioteca_musica/bloc/panel_lateral/bloc_listas_reproduccion.dart';
+import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
+import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
+import 'package:biblioteca_musica/pantallas/BarraVentana.dart';
 import 'package:biblioteca_musica/pantallas/panel_ajustes/panel_ajustes.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_panel_columnas.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_principal.dart';
@@ -75,6 +79,12 @@ class PantPrincipalState extends State<PantPrincipal>
   @override
   void initState() {
     super.initState();
+
+    bool autoSincAct = context.read<CubitConf>().state.sincAuto;
+    if (autoSincAct) {
+      context.read<CubitConf>().activarSincAuto(
+          context.read<BlocLog>(), context.read<CubitSincronizacion>());
+    }
   }
 
   @override
@@ -198,7 +208,7 @@ class PantPrincipalState extends State<PantPrincipal>
                         ],
                       ),
                     ),
-                    //if (Platform.isWindows) const BarraVentana()
+                    if (Platform.isWindows) const BarraVentana(),
                     if (modoResp == ModoResponsive.muyReducido &&
                         cancionReproducida != null)
                       Container(

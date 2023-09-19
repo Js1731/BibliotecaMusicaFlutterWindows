@@ -37,8 +37,6 @@ Future<void> main() async {
 
   final repositorioCanciones = RepositorioCanciones(DBPCanciones());
 
-  int? idLista = await obtUltimaListaRep();
-
   runApp(
     MultiRepositoryProvider(
         providers: [
@@ -58,7 +56,7 @@ Future<void> main() async {
                   RepositorioReproductor(Reproductor(), repositorioCanciones))
         ],
         child: MultiBlocProvider(providers: [
-          BlocProvider(create: (context) => CubitConf()),
+          BlocProvider(create: (context) => CubitConf()..cargarConfig()),
           BlocProvider(
               create: (context) =>
                   CubitSincronizacion(context.read<Sincronizador>())),
@@ -91,7 +89,7 @@ Future<void> main() async {
   if (Platform.isWindows) {
     doWhenWindowReady(() {
       const initialSize = Size(1024, 700);
-      //appWindow.minSize = const Size(850, 700);
+      appWindow.minSize = const Size(100, 700);
       appWindow.size = initialSize;
       appWindow.alignment = Alignment.center;
       appWindow.show();
@@ -102,7 +100,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

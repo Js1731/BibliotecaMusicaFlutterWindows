@@ -2,6 +2,10 @@ import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
 import 'package:biblioteca_musica/bloc/logs/Log.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/logs/evento_bloc_log.dart';
+import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
+import 'package:biblioteca_musica/dialogos/dialogo_confirmar.dart';
+import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/widgets/btn_flotante_simple.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
@@ -23,6 +27,7 @@ class _PanelAjustesState extends State<PanelAjustes> {
   final TextEditingController txtContIpServidor = TextEditingController();
   bool buscarIPAutomaticamente = true;
   bool mostrarLog = true;
+  bool sincAuto = true;
 
   Future<void> cargarAjustes(BuildContext context) async {
     if (iniciado) return;
@@ -34,6 +39,7 @@ class _PanelAjustesState extends State<PanelAjustes> {
     txtContIpServidor.text = config.ipServidor;
     buscarIPAutomaticamente = config.ipAuto;
     mostrarLog = config.mostrarLog;
+    sincAuto = config.sincAuto;
     iniciado = true;
   }
 
@@ -111,6 +117,72 @@ class _PanelAjustesState extends State<PanelAjustes> {
                             });
                           })
                     ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: TextoPer(
+                              texto: "Sincronizar Automaticamente", tam: 16)),
+                      Switch(
+                          value: sincAuto,
+                          onChanged: (nuevoValor) async {
+                            if (nuevoValor == true) {
+                              context.read<CubitConf>().activarSincAuto(
+                                  context.read<BlocLog>(),
+                                  context.read<CubitSincronizacion>());
+                            } else {
+                              context.read<CubitConf>().detenerSincAuto();
+                            }
+                            setState(() {
+                              sincAuto = nuevoValor;
+                            });
+                          })
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: TextoPer(
+                              texto: "Forzar Sincronizacion", tam: 16)),
+                      BtnFlotanteSimple(
+                          onPressed: () {
+                            context.read<CubitSincronizacion>().sincronizar(
+                                context.read<BlocLog>(),
+                                context.read<CubitConf>());
+                          },
+                          texto: "Sincronizar")
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child:
+                              TextoPer(texto: "Borrar datos locales", tam: 16)),
+                      BtnFlotanteSimple(
+                          onPressed: () async {
+                            final confirmar = await abrirDialogoConfirmar(
+                                context,
+                                "Borrar Datos Locales",
+                                "Quires borrar todos los datos locales?");
+
+                            if (confirmar == null) return;
+
+                            await appDb
+                                .delete(appDb.cancionListaReproduccion)
+                                .go();
+                            await appDb.delete(appDb.cancionValorColumna).go();
+                            await appDb.delete(appDb.cancion).go();
+                            await appDb.delete(appDb.valorColumna).go();
+                            await appDb.delete(appDb.listaColumnas).go();
+                            await appDb.delete(appDb.listaReproduccion).go();
+                            await appDb.delete(appDb.columna).go();
+
+                            await actUltimaListaRep(0);
+
+                            await borrarTodo();
+                          },
+                          texto: "Borrar Todo")
+                    ],
                   )
                 ],
               ),
@@ -122,7 +194,8 @@ class _PanelAjustesState extends State<PanelAjustes> {
                       config.copiarCon(
                           ipServidor_: txtContIpServidor.text,
                           ipAuto_: buscarIPAutomaticamente,
-                          mostrarLog_: mostrarLog));
+                          mostrarLog_: mostrarLog,
+                          sincAuto_: sincAuto));
 
                   if (context.mounted) {
                     context.read<BlocLog>().add(EvAgregarLog(Log(

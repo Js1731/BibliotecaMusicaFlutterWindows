@@ -91,9 +91,9 @@ class BlocListaReproduccionSeleccionada extends Bloc<
     });
   }
 
-  void _onOrdenarPorColumna(EvOrdenarListaPorColumna evento,
-      Emitter<EstadoListaReproduccionSelecconada> emit) {
-    _repositorioListasReproduccion.actOrdenColumna(
+  Future<void> _onOrdenarPorColumna(EvOrdenarListaPorColumna evento,
+      Emitter<EstadoListaReproduccionSelecconada> emit) async {
+    await _repositorioListasReproduccion.actOrdenColumna(
         evento.idColumnaOrden, state.listaReproduccionSeleccionada.id);
     emit(state.copiarCon(
         nuevaListaSel: ListaReproduccionData(

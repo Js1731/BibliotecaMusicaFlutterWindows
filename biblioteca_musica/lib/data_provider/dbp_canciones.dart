@@ -132,7 +132,13 @@ class DBPCanciones {
               estado: estado,
               mapaColumnas: {});
         }
-        return nuevaLista.map<CancionColumnas>((e) => e!).toList();
+        final orden =
+            await obtOrdenBiblioteca() == OrdenBiblioteca.porNombre ? -1 : -2;
+        final asc = await obtAcendOrdenBiblioteca();
+        final lista = nuevaLista.map<CancionColumnas>((e) => e!).toList();
+        ordenarListaColumna(lista, orden, asc);
+
+        return lista;
       }();
 
       return tarea;

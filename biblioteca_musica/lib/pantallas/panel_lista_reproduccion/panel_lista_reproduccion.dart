@@ -130,7 +130,7 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                         //COLUMNAS DE LA LISTA DE REPRODUCCION
                         if (widget.modoResponsive != ModoResponsive.muyReducido)
                           LimitedBox(
-                              maxHeight: 50,
+                              maxHeight: 30,
                               child: EncabezadoColumnas(
                                   modo: widget.modoResponsive)),
 

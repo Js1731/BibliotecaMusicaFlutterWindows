@@ -140,3 +140,29 @@ Future<int?> obtUltimaListaRep() async {
   final shr = await SharedPreferences.getInstance();
   return shr.getInt("ultimaLista");
 }
+
+enum OrdenBiblioteca { porNombre, porDuracion }
+
+Future<void> actOrdenBiblioteca(OrdenBiblioteca orden) async {
+  final shr = await SharedPreferences.getInstance();
+
+  OrdenBiblioteca ordenBiblioteca =
+      OrdenBiblioteca.values[shr.getInt("ordenBiblioteca") ?? 0];
+  bool ascend = shr.getBool("ordenBibliotecaAsc") ?? true;
+
+  shr.setInt("ordenBiblioteca", orden.index);
+
+  if (ordenBiblioteca == orden) {
+    shr.setBool("ordenBibliotecaAsc", !ascend);
+  }
+}
+
+Future<OrdenBiblioteca> obtOrdenBiblioteca() async {
+  final shr = await SharedPreferences.getInstance();
+  return OrdenBiblioteca.values[shr.getInt("ordenBiblioteca") ?? 0];
+}
+
+Future<bool> obtAcendOrdenBiblioteca() async {
+  final shr = await SharedPreferences.getInstance();
+  return shr.getBool("ordenBibliotecaAsc") ?? true;
+}

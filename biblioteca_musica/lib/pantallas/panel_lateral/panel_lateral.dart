@@ -1,17 +1,15 @@
 import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
+import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/bloc_listas_reproduccion.dart';
 import 'package:biblioteca_musica/bloc/panel_lateral/estado_listas_reproduccion.dart';
-import 'package:biblioteca_musica/datos/AppDb.dart';
-import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/estado_reproductor.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
-import 'package:biblioteca_musica/pantallas/panel_lateral/auxiliar_panel_lateral.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/pantallas/panel_lateral/barra_agregar_lista_rep.dart';
 import 'package:biblioteca_musica/pantallas/panel_log/btn_sincronizar.dart';
-import 'package:biblioteca_musica/widgets/btn_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/item_panel_lateral_lista_rep.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
@@ -22,7 +20,6 @@ import 'package:tuple/tuple.dart';
 
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
 import '../../painters/custom_painter_KOPI.dart';
-import '../../painters/custom_painter_agregar_lista.dart';
 import '../../painters/custom_painter_panel_lateral.dart';
 import 'item_panel_lateral_sub_menu.dart';
 

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,7 +5,6 @@ import '../../bloc/reproductor/bloc_reproductor.dart';
 import '../../bloc/reproductor/estado_reproductor.dart';
 import '../../bloc/reproductor/evento_reproductor.dart';
 import '../../misc/archivos.dart';
-import '../../widgets/decoracion_.dart';
 import '../../widgets/imagen_round_rect.dart';
 import '../../widgets/texto_per.dart';
 import '../reproductor/btn_accion_reproductor.dart';
@@ -59,8 +57,8 @@ class PanelReducido extends StatelessWidget {
             ],
           )),
           LinearProgressIndicator(
-            color: DecoColores.rosaClaro1,
-            backgroundColor: Colors.grey,
+            color: Colors.white,
+            backgroundColor: Colors.black,
             value: (stateRep.progresoReproduccion /
                     (stateRep.cancionReproducida?.duracion ?? 1))
                 .clamp(0, 1),

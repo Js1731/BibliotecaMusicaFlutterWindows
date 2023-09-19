@@ -33,12 +33,37 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
         BtnReproducirAzar(modo: modo),
       ]),
       const SizedBox(width: 10),
-      SeccionCintaOpciones(
-        lstItems: [
-          //IMPORTAR CANCIONES
-          BtnImportarCanciones(modo: modo)
-        ],
-      )
+      if (modo != ModoResponsive.muyReducido)
+        SeccionCintaOpciones(
+          lstItems: [
+            //IMPORTAR CANCIONES
+            BtnImportarCanciones(modo: modo)
+          ],
+        ),
+      const Spacer(),
+      SeccionCintaOpciones(lstItems: [
+        BotonPopUpMenuCintaOpciones<int>(
+            icono: Icons.south_rounded,
+            texto: "Ordenar",
+            modo: modo,
+            enabled: true,
+            onSelected: (idColumnaSel) {
+              context
+                  .read<AuxiliarListaReproduccion>()
+                  .ordenarListaPorColumna(context, idColumnaSel);
+            },
+            itemBuilder: (context) {
+              List<PopupMenuItem<int>> listaColumnas = [];
+
+              listaColumnas.insert(
+                  0, const PopupMenuItem(value: -1, child: Text("Nombre")));
+
+              listaColumnas
+                  .add(const PopupMenuItem(value: -2, child: Text("Duracion")));
+
+              return listaColumnas;
+            })
+      ]),
     ];
   }
 
