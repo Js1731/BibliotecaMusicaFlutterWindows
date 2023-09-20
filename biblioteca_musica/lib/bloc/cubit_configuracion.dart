@@ -44,21 +44,17 @@ class CubitConf extends Cubit<EstadoConfig> {
             ipServidor: "", ipAuto: true, mostrarLog: true, sincAuto: true));
 
   Future<void> cargarConfig() async {
-    try {
-      final sharedPref = await SharedPreferences.getInstance();
-      final ipServidor = sharedPref.getString(Config.ipServidor.name);
-      final ipAuto = sharedPref.getBool(Config.ipAuto.name);
-      final mostrarLog = sharedPref.getBool(Config.mostrarLog.name);
-      final sincAuto = sharedPref.getBool(Config.sincAuto.name);
+    final sharedPref = await SharedPreferences.getInstance();
+    final ipServidor = sharedPref.getString(Config.ipServidor.name);
+    final ipAuto = sharedPref.getBool(Config.ipAuto.name);
+    final mostrarLog = sharedPref.getBool(Config.mostrarLog.name);
+    final sincAuto = sharedPref.getBool(Config.sincAuto.name);
 
-      emit(state.copiarCon(
-          ipServidor_: ipServidor,
-          ipAuto_: ipAuto,
-          mostrarLog_: mostrarLog,
-          sincAuto_: sincAuto));
-    } catch (e) {
-      print(e);
-    }
+    emit(state.copiarCon(
+        ipServidor_: ipServidor,
+        ipAuto_: ipAuto,
+        mostrarLog_: mostrarLog,
+        sincAuto_: sincAuto));
   }
 
   Future<void> actualizarConfig(EstadoConfig estadoConfig) async {

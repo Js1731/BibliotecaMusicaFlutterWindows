@@ -1,9 +1,10 @@
 import 'package:biblioteca_musica/dialogos/dialogo_generico.dart';
 import 'package:biblioteca_musica/painters/custom_painter_dialogo.dart';
 import 'package:biblioteca_musica/widgets/btn_flotante_simple.dart';
-import 'package:biblioteca_musica/widgets/form/txt_field.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/custom_textfield_decoration.dart';
 
 ///Abre un dialogo para ingresar texto
 ///

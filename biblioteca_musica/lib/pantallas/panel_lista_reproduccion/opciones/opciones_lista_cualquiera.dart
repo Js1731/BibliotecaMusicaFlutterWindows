@@ -60,7 +60,7 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
             selector: (state) => state.lstColumnas,
             builder: (context, columnas) {
               return BotonPopUpMenuCintaOpciones<int>(
-                  icono: Icons.south_rounded,
+                  icono: Icons.sort,
                   texto: "Ordenar",
                   enabled: true,
                   modoResponsive: modoResponsive,

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/datos/cancion_columnas.dart';
-import 'package:biblioteca_musica/misc/Proceso.dart';
+import 'package:biblioteca_musica/misc/proceso.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/sincronizacion.dart';
 import 'package:biblioteca_musica/bloc/reproductor/evento_reproductor.dart';
@@ -10,7 +10,6 @@ import 'package:biblioteca_musica/data_provider/dbp_canciones.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_progreso.dart';
 import 'package:biblioteca_musica/pantallas/pant_principal.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:path/path.dart';

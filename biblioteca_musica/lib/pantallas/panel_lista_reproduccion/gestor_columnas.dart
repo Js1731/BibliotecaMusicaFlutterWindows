@@ -163,7 +163,7 @@ class _EstadoGestorColumnas extends State<GestorColumnas> {
                     constructorContenido: (hover) => Container(
                       decoration:
                           BtnDecoration(hover, true, Colors.grey.shade600),
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         size: 20,
                         color: Colors.white,

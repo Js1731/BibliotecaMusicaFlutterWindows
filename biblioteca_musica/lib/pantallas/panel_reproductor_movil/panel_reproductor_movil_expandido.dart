@@ -94,7 +94,7 @@ class _BtnContraerPanelRep extends BtnGenerico {
             decoration: BoxDecoration(
                 color: DecoColores.rosa,
                 borderRadius: BorderRadius.circular(10)),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(

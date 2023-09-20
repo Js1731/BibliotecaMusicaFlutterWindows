@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:biblioteca_musica/bloc/logs/Log.dart';
+import 'package:biblioteca_musica/bloc/logs/log.dart';
 import 'package:biblioteca_musica/bloc/logs/estado_log.dart';
 import 'package:biblioteca_musica/bloc/logs/evento_bloc_log.dart';
 import 'package:bloc/bloc.dart';

@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/misc/Proceso.dart';
+import 'package:biblioteca_musica/misc/proceso.dart';
 import 'package:biblioteca_musica/dialogos/dialogo_generico.dart';
 import 'package:biblioteca_musica/painters/custom_painter_dialogo_confirmar.dart';
 import 'package:flutter/material.dart';

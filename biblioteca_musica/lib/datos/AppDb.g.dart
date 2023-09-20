@@ -211,16 +211,13 @@ class $ListaReproduccionTable extends ListaReproduccion
   static const VerificationMeta _ordenAscendenteMeta =
       const VerificationMeta('ordenAscendente');
   @override
-  late final GeneratedColumn<bool> ordenAscendente =
-      GeneratedColumn<bool>('ordenAscendente', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("ordenAscendente" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }),
-          defaultValue: const Constant(true));
+  late final GeneratedColumn<bool> ordenAscendente = GeneratedColumn<bool>(
+      'ordenAscendente', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("ordenAscendente" IN (0, 1))'),
+      defaultValue: const Constant(true));
   @override
   List<GeneratedColumn> get $columns =>
       [id, nombre, idColumnaPrincipal, idColumnaOrden, ordenAscendente];

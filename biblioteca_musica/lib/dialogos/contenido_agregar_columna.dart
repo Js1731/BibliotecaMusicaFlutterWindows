@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/btn_flotante_simple.dart';
+import '../widgets/custom_textfield_decoration.dart';
 import '../widgets/decoracion_.dart';
-import '../widgets/form/txt_field.dart';
 import '../widgets/texto_per.dart';
 
 class ContenidoAgregarColumna extends StatelessWidget {

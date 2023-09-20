@@ -43,7 +43,7 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
       const Spacer(),
       SeccionCintaOpciones(lstItems: [
         BotonPopUpMenuCintaOpciones<int>(
-            icono: Icons.south_rounded,
+            icono: Icons.sort,
             texto: "Ordenar",
             enabled: true,
             modoResponsive: modoResponsive,

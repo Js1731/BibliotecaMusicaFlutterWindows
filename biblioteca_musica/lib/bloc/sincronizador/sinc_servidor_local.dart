@@ -4,7 +4,7 @@ import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../logs/Log.dart';
+import '../logs/log.dart';
 import '../logs/evento_bloc_log.dart';
 import '../../datos/AppDb.dart';
 import '../../misc/archivos.dart';

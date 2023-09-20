@@ -48,7 +48,7 @@ Future<File> abrirArchivo(String nombreArchivo) async {
 ///Copia un archivo a la carpeta de trabajo. Devuelve la ruta al archivo en la carpeta de trabajo.
 Future<String> copiarArchivo(
     String rutaOriginal, String nombreDestinoExtension) async {
-  String ruta = await rutaDoc(nombreDestinoExtension);
+  String ruta = rutaDoc(nombreDestinoExtension);
   await File(rutaOriginal).copy(ruta);
 
   return ruta;

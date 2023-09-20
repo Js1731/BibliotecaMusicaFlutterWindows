@@ -2,7 +2,6 @@ import 'package:biblioteca_musica/widgets/btn_flotante_generico.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'btn_flotante_icono.dart';
 

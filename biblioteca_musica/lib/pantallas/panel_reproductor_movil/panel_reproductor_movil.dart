@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PanelReproductorMovil extends StatefulWidget {
-  PanelReproductorMovil({super.key});
+  const PanelReproductorMovil({super.key});
 
   @override
   State<StatefulWidget> createState() => _EstadoPanelReproductorMovil();

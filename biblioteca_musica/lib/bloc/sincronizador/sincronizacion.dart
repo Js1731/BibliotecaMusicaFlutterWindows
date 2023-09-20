@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
-import 'package:biblioteca_musica/bloc/logs/Log.dart';
+import 'package:biblioteca_musica/bloc/logs/log.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/logs/evento_bloc_log.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';

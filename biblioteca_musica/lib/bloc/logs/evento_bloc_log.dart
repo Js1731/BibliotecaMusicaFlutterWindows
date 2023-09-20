@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/bloc/logs/Log.dart';
+import 'package:biblioteca_musica/bloc/logs/log.dart';
 import 'package:equatable/equatable.dart';
 
 class EventoLog extends Equatable {

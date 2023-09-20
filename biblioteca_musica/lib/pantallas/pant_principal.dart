@@ -16,7 +16,7 @@ import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/datos/cancion_columna_principal.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
-import 'package:biblioteca_musica/pantallas/BarraVentana.dart';
+import 'package:biblioteca_musica/pantallas/barra_ventana.dart';
 import 'package:biblioteca_musica/pantallas/panel_ajustes/panel_ajustes.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/auxiliar_panel_columnas.dart';
 import 'package:biblioteca_musica/pantallas/panel_columnas/panel_columnas_principal.dart';
@@ -96,7 +96,6 @@ class PantPrincipalState extends State<PantPrincipal>
 
       context.read<CubitModoResponsive>().actModoResponsive(modoResp);
 
-      print(modoResp.name);
       return Scaffold(
         bottomNavigationBar: modoResp == ModoResponsive.muyReducido
             ? BlocBuilder<CubitPanelSeleccionado, Panel>(
@@ -204,7 +203,7 @@ class PantPrincipalState extends State<PantPrincipal>
                               cancionReproducida != null)
                             const SizedBox(height: 60),
                           if (modoResp != ModoResponsive.muyReducido)
-                            PanelReproductor()
+                            const PanelReproductor()
                         ],
                       ),
                     ),
@@ -217,7 +216,7 @@ class PantPrincipalState extends State<PantPrincipal>
                           alignment: Alignment.bottomCenter,
                           child: BlocProvider(
                               create: (context) => CubitReproductorMovil(),
-                              child: PanelReproductorMovil()))
+                              child: const PanelReproductorMovil()))
                   ],
                 ),
               );

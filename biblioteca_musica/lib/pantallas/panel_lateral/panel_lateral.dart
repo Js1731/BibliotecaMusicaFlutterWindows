@@ -19,7 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../bloc/panel_lista_reproduccion/eventos_lista_reproduccion_seleccionada.dart';
-import '../../painters/custom_painter_KOPI.dart';
+import '../../painters/custom_painter_kopi.dart';
 import '../../painters/custom_painter_panel_lateral.dart';
 import 'item_panel_lateral_sub_menu.dart';
 

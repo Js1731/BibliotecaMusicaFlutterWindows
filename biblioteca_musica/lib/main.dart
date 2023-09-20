@@ -37,6 +37,8 @@ Future<void> main() async {
   await initRutaDoc();
 
   final repositorioCanciones = RepositorioCanciones(DBPCanciones());
+  final CubitConf cubitConfig = CubitConf();
+  await cubitConfig.cargarConfig();
 
   runApp(
     MultiRepositoryProvider(
@@ -59,7 +61,7 @@ Future<void> main() async {
         child: MultiBlocProvider(providers: [
           BlocProvider(
               create: (context) => CubitModoResponsive(ModoResponsive.normal)),
-          BlocProvider(create: (context) => CubitConf()..cargarConfig()),
+          BlocProvider(create: (context) => cubitConfig),
           BlocProvider(
               create: (context) =>
                   CubitSincronizacion(context.read<Sincronizador>())),

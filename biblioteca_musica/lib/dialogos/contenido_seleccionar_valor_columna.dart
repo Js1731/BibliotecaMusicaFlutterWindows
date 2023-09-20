@@ -1,18 +1,16 @@
-import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/bloc_dimesiones_panel.dart';
 import 'package:biblioteca_musica/bloc/dimensiones_panel.dart/evento_dimensiones_panel.dart';
+import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/dialogos/contenido_valor_columna.dart';
 import 'package:biblioteca_musica/widgets/btn_flotante_icono.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/dialogo_sel_valor_columna.dart/bloc_dialogo_seleccionar_columnas.dart';
 import '../bloc/dialogo_sel_valor_columna.dart/estado_dialogo_seleccionar_valor_columna.dart';
 import '../bloc/dialogo_sel_valor_columna.dart/eventos_dialogo_seleccionar_valor_columna.dart';
 import '../widgets/btn_flotante_simple.dart';
-import '../widgets/form/txt_field.dart';
+import '../widgets/custom_textfield_decoration.dart';
 import '../widgets/texto_per.dart';
 import 'item_sugerencia_valor_columna.dart';
 

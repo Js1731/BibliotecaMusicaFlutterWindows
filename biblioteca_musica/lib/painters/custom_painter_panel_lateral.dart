@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 class CustomPainterPanelLateral extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Rect rect = Rect.fromPoints(Offset(0, 2), Offset(size.width, size.height));
+    Rect rect =
+        Rect.fromPoints(const Offset(0, 2), Offset(size.width, size.height));
 
     LinearGradient gradient = const LinearGradient(
         begin: Alignment.topLeft,
@@ -15,7 +16,7 @@ class CustomPainterPanelLateral extends CustomPainter {
     canvas.drawRRect(
         RRect.fromRectAndCorners(
           rect,
-          bottomLeft: Radius.circular(20),
+          bottomLeft: const Radius.circular(20),
         ),
         Paint()..shader = gradient.createShader(rect));
   }

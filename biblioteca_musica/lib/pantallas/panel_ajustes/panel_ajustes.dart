@@ -1,5 +1,5 @@
 import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
-import 'package:biblioteca_musica/bloc/logs/Log.dart';
+import 'package:biblioteca_musica/bloc/logs/log.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/logs/evento_bloc_log.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
@@ -9,10 +9,11 @@ import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
 import 'package:biblioteca_musica/widgets/btn_flotante_simple.dart';
 import 'package:biblioteca_musica/widgets/decoracion_.dart';
-import 'package:biblioteca_musica/widgets/form/txt_field.dart';
 import 'package:biblioteca_musica/widgets/texto_per.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../widgets/custom_textfield_decoration.dart';
 
 class PanelAjustes extends StatefulWidget {
   const PanelAjustes({super.key});
@@ -102,7 +103,7 @@ class _PanelAjustesState extends State<PanelAjustes> {
                           child: TextFormField(
                             controller: txtContIpServidor,
                             enabled: !buscarIPAutomaticamente,
-                            decoration: CustomTxtFieldDecoration(),
+                            decoration: const CustomTxtFieldDecoration(),
                           ))
                     ],
                   ),

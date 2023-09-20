@@ -1,4 +1,4 @@
-import 'package:biblioteca_musica/bloc/logs/Log.dart';
+import 'package:biblioteca_musica/bloc/logs/log.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
 import 'package:biblioteca_musica/bloc/logs/estado_log.dart';
 import 'package:biblioteca_musica/pantallas/panel_log/btn_sincronizar.dart';
