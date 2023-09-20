@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/bloc/cubit_modo_responsive.dart';
 import 'package:biblioteca_musica/datos/AppDb.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/bloc_columna_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/columna_seleccionada/estado_columna_seleccionada.dart';
@@ -21,111 +22,115 @@ class PanelColumnasCentral extends StatefulWidget {
 class EstadoPanelPropiedadesCentral extends State<PanelColumnasCentral> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 10, bottom: 10, top: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BlocSelector<BlocColumnaSeleccionada, EstadoColumnaSeleccionada,
-                  ColumnaData>(
-              selector: (state) => state.columnaSeleccionada!,
-              builder: (_, columnaSel) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //NOMBRE DE LA COLUMNA
+    return BlocBuilder<CubitModoResponsive, ModoResponsive>(
+        builder: (context, modoResponsive) {
+      return Padding(
+        padding:
+            const EdgeInsets.only(left: 20, right: 10, bottom: 10, top: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlocSelector<BlocColumnaSeleccionada, EstadoColumnaSeleccionada,
+                    ColumnaData>(
+                selector: (state) => state.columnaSeleccionada!,
+                builder: (_, columnaSel) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //NOMBRE DE LA COLUMNA
 
-                    TextoPer(
-                      texto: columnaSel.nombre,
-                      weight: FontWeight.bold,
-                      tam: 30,
-                    ),
+                      TextoPer(
+                        texto: columnaSel.nombre,
+                        weight: FontWeight.bold,
+                        tam: 30,
+                      ),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    CintaOpciones(
-                      lstOpciones: [
-                        //AGREGAR VALOR A LA COLUMNA
-                        SeccionCintaOpciones(
-                          lstItems: [
+                      CintaOpciones(
+                        lstOpciones: [
+                          //AGREGAR VALOR A LA COLUMNA
+                          SeccionCintaOpciones(
+                            lstItems: [
+                              BotonCintaOpciones(
+                                  icono: Icons.add,
+                                  texto: "Agregar ${columnaSel.nombre}",
+                                  modoResponsive: modoResponsive,
+                                  onPressed: (_) async {
+                                    await context
+                                        .read<AuxiliarPanelColumnas>()
+                                        .agregarValorColumna(context);
+                                  })
+                            ],
+                          ),
+
+                          const Spacer(),
+
+                          SeccionCintaOpciones(lstItems: [
+                            //RENOMBRAR COLUMNA
                             BotonCintaOpciones(
-                                icono: Icons.add,
-                                texto: "Agregar ${columnaSel.nombre}",
-                                modo: ModoResponsive.normal,
+                                icono: Icons.edit,
+                                texto: "Renombrar",
+                                modoResponsive: modoResponsive,
                                 onPressed: (_) async {
-                                  await context
-                                      .read<AuxiliarPanelColumnas>()
-                                      .agregarValorColumna(context);
-                                })
-                          ],
-                        ),
+                                  // await controlador
+                                  //     .renombrarColumna(columnaSel.id);
+                                }),
+                            //ELIMINAR COLUMNA
+                            BotonCintaOpciones(
+                                icono: Icons.delete,
+                                texto: "Eliminar",
+                                modoResponsive: modoResponsive,
+                                onPressed: (_) async {
+                                  bool? confirmar = await abrirDialogoConfirmar(
+                                      context,
+                                      "Quieres eliminar la propiedad ${columnaSel.nombre}",
+                                      "La propiedad ${columnaSel.nombre} junto todos sus valores y referencias, seran eliminados. Estas Seguro?");
 
-                        const Spacer(),
+                                  if (confirmar == null) return;
 
-                        SeccionCintaOpciones(lstItems: [
-                          //RENOMBRAR COLUMNA
-                          BotonCintaOpciones(
-                              icono: Icons.edit,
-                              texto: "Renombrar",
-                              modo: ModoResponsive.normal,
-                              onPressed: (_) async {
-                                // await controlador
-                                //     .renombrarColumna(columnaSel.id);
-                              }),
-                          //ELIMINAR COLUMNA
-                          BotonCintaOpciones(
-                              icono: Icons.delete,
-                              texto: "Eliminar",
-                              modo: ModoResponsive.normal,
-                              onPressed: (_) async {
-                                bool? confirmar = await abrirDialogoConfirmar(
-                                    context,
-                                    "Quieres eliminar la propiedad ${columnaSel.nombre}",
-                                    "La propiedad ${columnaSel.nombre} junto todos sus valores y referencias, seran eliminados. Estas Seguro?");
+                                  // await controlador
+                                  //     .eliminarColumna(columnaSel.id);
+                                }),
+                          ])
+                        ],
+                      ),
+                    ],
+                  );
+                }),
 
-                                if (confirmar == null) return;
+            const SizedBox(height: 10),
 
-                                // await controlador
-                                //     .eliminarColumna(columnaSel.id);
-                              }),
-                        ])
-                      ],
-                    ),
-                  ],
-                );
-              }),
-
-          const SizedBox(height: 10),
-
-          //LISTA DE VALORES COLUMNA
-          BlocSelector<BlocColumnaSeleccionada, EstadoColumnaSeleccionada,
-                  List<ValorColumnaData>>(
-              selector: (state) => state.listaValoresColumna,
-              builder: (_, lstValoresColumna) {
-                return Expanded(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Wrap(
-                          runSpacing: 10,
-                          spacing: 10,
-                          children: [
-                            for (ValorColumnaData valorColumna
-                                in lstValoresColumna)
-                              ItemValorColumna(
-                                valorColumna: valorColumna,
-                              )
-                          ],
+            //LISTA DE VALORES COLUMNA
+            BlocSelector<BlocColumnaSeleccionada, EstadoColumnaSeleccionada,
+                    List<ValorColumnaData>>(
+                selector: (state) => state.listaValoresColumna,
+                builder: (_, lstValoresColumna) {
+                  return Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Wrap(
+                            runSpacing: 10,
+                            spacing: 10,
+                            children: [
+                              for (ValorColumnaData valorColumna
+                                  in lstValoresColumna)
+                                ItemValorColumna(
+                                  valorColumna: valorColumna,
+                                )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              })
-        ],
-      ),
-    );
+                  );
+                })
+          ],
+        ),
+      );
+    });
   }
 }

@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/bloc/cubit_modo_responsive.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/misc/utiles.dart';
@@ -7,16 +8,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
 
 class OpcionesListaGenerica extends StatelessWidget {
-  final ModoResponsive modo;
-  const OpcionesListaGenerica({required this.modo, super.key});
+  const OpcionesListaGenerica({super.key});
 
   List<Widget> construirOpcionesNormales(
-      BuildContext context, ModoResponsive modo) {
+      BuildContext context, ModoResponsive modoResponsive) {
     throw "No se definio un constructor para las opciones normales";
   }
 
   List<Widget> construirOpcionesSeleccion(
-      BuildContext context, ModoResponsive modo) {
+      BuildContext context, ModoResponsive modoResponsive) {
     throw "No se definio un constructor para las opciones de seleccion";
   }
 
@@ -32,13 +32,15 @@ class OpcionesListaGenerica extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             transitionBuilder: (child, animation) =>
                 FadeTransition(opacity: animation, child: child),
-            child: CintaOpciones(
-                key: ValueKey(cancionesSeleccionadas),
-                lstOpciones: [
-                  ...cancionesSeleccionadas
-                      ? construirOpcionesSeleccion(context, modo)
-                      : construirOpcionesNormales(context, modo)
-                ]),
+            child: BlocBuilder<CubitModoResponsive, ModoResponsive>(
+              builder: (context, modoResponsive) => CintaOpciones(
+                  key: ValueKey(cancionesSeleccionadas),
+                  lstOpciones: [
+                    ...cancionesSeleccionadas
+                        ? construirOpcionesSeleccion(context, modoResponsive)
+                        : construirOpcionesNormales(context, modoResponsive)
+                  ]),
+            ),
           );
         });
   }

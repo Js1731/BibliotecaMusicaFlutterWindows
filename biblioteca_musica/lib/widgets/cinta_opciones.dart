@@ -88,7 +88,7 @@ class BotonCintaOpciones extends BtnGenerico {
   BotonCintaOpciones(
       {required String texto,
       required IconData icono,
-      required ModoResponsive modo,
+      required ModoResponsive modoResponsive,
       super.onPressed,
       super.key})
       : super(
@@ -102,7 +102,7 @@ class BotonCintaOpciones extends BtnGenerico {
                   icono,
                   color: Deco.cGray1,
                 ),
-                if (modo == ModoResponsive.normal)
+                if (modoResponsive == ModoResponsive.normal)
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(texto),
@@ -119,11 +119,11 @@ class BotonPopUpMenuCintaOpciones<T> extends BtnPopupMenuGenerico<T> {
       super.enabled,
       IconData? icono,
       required String texto,
+      required ModoResponsive modoResponsive,
       required super.onSelected,
-      required super.itemBuilder,
-      required ModoResponsive modo})
+      required super.itemBuilder})
       : super(
-            botonBuilder: (hover, contexto) => Container(
+            botonBuilder: (hover, context) => Container(
                   height: double.maxFinite,
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   color: hover ? Colors.white24 : Colors.transparent,
@@ -135,7 +135,7 @@ class BotonPopUpMenuCintaOpciones<T> extends BtnPopupMenuGenerico<T> {
                               color: Deco.cGray1,
                             )
                           : const SizedBox(),
-                      if (modo == ModoResponsive.normal)
+                      if (modoResponsive == ModoResponsive.normal)
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(texto),

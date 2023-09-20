@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
+import 'package:biblioteca_musica/bloc/cubit_modo_responsive.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/cubit_sincronizacion.dart';
 import 'package:biblioteca_musica/misc/archivos.dart';
 import 'package:biblioteca_musica/bloc/sincronizador/sincronizacion.dart';
@@ -56,6 +57,8 @@ Future<void> main() async {
                   RepositorioReproductor(Reproductor(), repositorioCanciones))
         ],
         child: MultiBlocProvider(providers: [
+          BlocProvider(
+              create: (context) => CubitModoResponsive(ModoResponsive.normal)),
           BlocProvider(create: (context) => CubitConf()..cargarConfig()),
           BlocProvider(
               create: (context) =>
@@ -88,7 +91,7 @@ Future<void> main() async {
 
   if (Platform.isWindows) {
     doWhenWindowReady(() {
-      const initialSize = Size(1024, 700);
+      const initialSize = Size(1100, 700);
       appWindow.minSize = const Size(100, 700);
       appWindow.size = initialSize;
       appWindow.alignment = Alignment.center;

@@ -17,27 +17,27 @@ import 'btn_reproducir_orden.dart';
 import 'opciones_lista_generica.dart';
 
 class OpcionesListaBiblioteca extends OpcionesListaGenerica {
-  const OpcionesListaBiblioteca({required super.modo, super.key});
+  const OpcionesListaBiblioteca({super.key});
 
   @override
   List<Widget> construirOpcionesNormales(
-      BuildContext context, ModoResponsive modo) {
+      BuildContext context, ModoResponsive modoResponsive) {
     return [
       SeccionCintaOpciones(lstItems: [
         const TextoCintaOpciones(texto: "Reproducir"),
 
         //REPRODUCIR EN ORDEN
-        BtnReproducirOrden(modo: modo),
+        BtnReproducirOrden(modoResponsive: modoResponsive),
 
         //REPRODUCIR AL AZAR
-        BtnReproducirAzar(modo: modo),
+        BtnReproducirAzar(modoResponsive: modoResponsive),
       ]),
       const SizedBox(width: 10),
-      if (modo != ModoResponsive.muyReducido)
+      if (modoResponsive != ModoResponsive.muyReducido)
         SeccionCintaOpciones(
           lstItems: [
             //IMPORTAR CANCIONES
-            BtnImportarCanciones(modo: modo)
+            BtnImportarCanciones(modoResponsive: modoResponsive)
           ],
         ),
       const Spacer(),
@@ -45,8 +45,8 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
         BotonPopUpMenuCintaOpciones<int>(
             icono: Icons.south_rounded,
             texto: "Ordenar",
-            modo: modo,
             enabled: true,
+            modoResponsive: modoResponsive,
             onSelected: (idColumnaSel) {
               context
                   .read<AuxiliarListaReproduccion>()
@@ -69,7 +69,7 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
 
   @override
   List<Widget> construirOpcionesSeleccion(
-      BuildContext context, ModoResponsive modo) {
+      BuildContext context, ModoResponsive modoResponsive) {
     return [
       SeccionCintaOpciones(
         lstItems: [
@@ -109,7 +109,7 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
               return BotonPopUpMenuCintaOpciones(
                 icono: Icons.playlist_add_outlined,
                 enabled: cantCancSel > 0,
-                modo: modo,
+                modoResponsive: modoResponsive,
                 itemBuilder: (_) => (context
                     .read<BlocListasReproduccion>()
                     .state
@@ -131,7 +131,7 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
         BotonCintaOpciones(
           icono: Icons.view_column,
           texto: "Asignar Columnas...",
-          modo: modo,
+          modoResponsive: modoResponsive,
           onPressed: (context) async {
             await context
                 .read<AuxiliarListaReproduccion>()
@@ -140,9 +140,7 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
         ),
 
         //RECORTAR NOMBRES
-        BtnRecortarNombres(
-          modo: modo,
-        )
+        BtnRecortarNombres(modoResponsive: modoResponsive)
       ]),
 
       const Spacer(),
@@ -153,7 +151,7 @@ class OpcionesListaBiblioteca extends OpcionesListaGenerica {
           BotonCintaOpciones(
               icono: Icons.delete_sweep,
               texto: "Eliminar",
-              modo: modo,
+              modoResponsive: modoResponsive,
               onPressed: (_) async {
                 context
                     .read<AuxiliarListaReproduccion>()

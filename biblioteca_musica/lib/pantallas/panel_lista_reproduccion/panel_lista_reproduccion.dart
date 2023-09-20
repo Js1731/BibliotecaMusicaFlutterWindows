@@ -1,3 +1,4 @@
+import 'package:biblioteca_musica/bloc/cubit_modo_responsive.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/bloc_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/panel_lista_reproduccion/estado_lista_reproduccion_seleccionada.dart';
 import 'package:biblioteca_musica/bloc/reproductor/bloc_reproductor.dart';
@@ -27,8 +28,7 @@ class PanelListaReproduccion extends StatefulWidget {
   ///<p>Para configurar el contenido de la cinta de opciones normales usar [builderOpcionesNormales]
   ///<p>Para configurar el contenido de la cinta cuando se seleccionan canciones usar [builderOpcionesSeleccion],
   ///los ultimos enteros del builder son [cantidad de canciones seleccionadas y Total de canciones de la lista]
-  final ModoResponsive modoResponsive;
-  const PanelListaReproduccion({required this.modoResponsive, super.key});
+  const PanelListaReproduccion({super.key});
 
   @override
   State<StatefulWidget> createState() => EstadoPanelListaReproduccion();
@@ -90,82 +90,79 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<
-        BlocListaReproduccionSeleccionada,
-        EstadoListaReproduccionSelecconada,
-        Tuple3<List<CancionColumnas>, ListaReproduccionData, Map<int, bool>>>(
-      selector: (state) => Tuple3(
-          state.listaCanciones,
-          state.listaReproduccionSeleccionada,
-          state.mapaCancionesSeleccionadas),
-      builder: (_, datos) {
-        final canciones = datos.item1;
-        final listaSel = datos.item2;
+    return BlocBuilder<CubitModoResponsive, ModoResponsive>(
+        builder: (context, modoResponsive) {
+      return BlocSelector<
+          BlocListaReproduccionSeleccionada,
+          EstadoListaReproduccionSelecconada,
+          Tuple3<List<CancionColumnas>, ListaReproduccionData, Map<int, bool>>>(
+        selector: (state) => Tuple3(
+            state.listaCanciones,
+            state.listaReproduccionSeleccionada,
+            state.mapaCancionesSeleccionadas),
+        builder: (_, datos) {
+          final canciones = datos.item1;
+          final listaSel = datos.item2;
 
-        return BlocSelector<BlocReproductor, EstadoReproductor,
-                CancionColumnaPrincipal?>(
-            selector: (state) => state.cancionReproducida,
-            builder: (context, cancionReproducida) {
-              return Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //INFORMACION SOBRE LISTA DE REPRODUCTOR
-                        _construirTitulo(
-                            widget.modoResponsive, listaSel, canciones),
+          return BlocSelector<BlocReproductor, EstadoReproductor,
+                  CancionColumnaPrincipal?>(
+              selector: (state) => state.cancionReproducida,
+              builder: (context, cancionReproducida) {
+                return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //INFORMACION SOBRE LISTA DE REPRODUCTOR
+                          _construirTitulo(modoResponsive, listaSel, canciones),
 
-                        //CANTIDAD DE CANCIONES
+                          //CANTIDAD DE CANCIONES
 
-                        const SizedBox(height: 5),
+                          const SizedBox(height: 5),
 
-                        //CINTA DE OPCIONES ESCRITORIO
-                        if (widget.modoResponsive != ModoResponsive.muyReducido)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10, bottom: 10),
-                            child:
-                                CintaOpcionesLista(modo: widget.modoResponsive),
-                          ),
+                          //CINTA DE OPCIONES ESCRITORIO
+                          if (modoResponsive != ModoResponsive.muyReducido)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 10, bottom: 10),
+                              child: CintaOpcionesLista(),
+                            ),
 
-                        //COLUMNAS DE LA LISTA DE REPRODUCCION
-                        if (widget.modoResponsive != ModoResponsive.muyReducido)
-                          LimitedBox(
-                              maxHeight: 30,
-                              child: EncabezadoColumnas(
-                                  modo: widget.modoResponsive)),
+                          //COLUMNAS DE LA LISTA DE REPRODUCCION
+                          if (modoResponsive != ModoResponsive.muyReducido)
+                            const LimitedBox(
+                                maxHeight: 30, child: EncabezadoColumnas()),
 
-                        if (widget.modoResponsive == ModoResponsive.muyReducido)
-                          const Divider(
-                            color: Colors.black26,
-                            height: 30,
-                          ),
+                          if (modoResponsive == ModoResponsive.muyReducido)
+                            const Divider(
+                              color: Colors.black26,
+                              height: 30,
+                            ),
 
-                        //LISTA DE CANCIONES
-                        Expanded(
-                            child: canciones.isNotEmpty
-                                ? BlocSelector<
-                                        BlocListaReproduccionSeleccionada,
-                                        EstadoListaReproduccionSelecconada,
-                                        Map<int, bool>>(
-                                    selector: (state) =>
-                                        state.mapaCancionesSeleccionadas,
-                                    builder: (context, mapaCancionesSel) {
-                                      return BlocBuilder<BlocReproductor,
-                                              EstadoReproductor>(
-                                          builder: (context, state) {
-                                        final cancionReproducida =
-                                            state.cancionReproducida;
-                                        return ListView.builder(
-                                            itemCount: canciones.length,
-                                            itemBuilder: (_, index) {
-                                              CancionColumnas cancion =
-                                                  canciones[index];
+                          //LISTA DE CANCIONES
+                          Expanded(
+                              child: canciones.isNotEmpty
+                                  ? BlocSelector<
+                                          BlocListaReproduccionSeleccionada,
+                                          EstadoListaReproduccionSelecconada,
+                                          Map<int, bool>>(
+                                      selector: (state) =>
+                                          state.mapaCancionesSeleccionadas,
+                                      builder: (context, mapaCancionesSel) {
+                                        return BlocBuilder<BlocReproductor,
+                                                EstadoReproductor>(
+                                            builder: (context, state) {
+                                          final cancionReproducida =
+                                              state.cancionReproducida;
+                                          return ListView.builder(
+                                              itemCount: canciones.length,
+                                              itemBuilder: (_, index) {
+                                                CancionColumnas cancion =
+                                                    canciones[index];
 
-                                              return Container(
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 3),
-                                                child: ItemCancion(
+                                                return Container(
+                                                  margin: const EdgeInsets
+                                                      .symmetric(vertical: 3),
+                                                  child: ItemCancion(
                                                     cancion: cancion,
                                                     idLst: listaSel.id,
                                                     modoSeleccion:
@@ -180,28 +177,29 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                                                         cancionReproducida?.id,
                                                     idColumnaPrincipal: listaSel
                                                         .idColumnaPrincipal,
-                                                    modo:
-                                                        widget.modoResponsive),
-                                              );
-                                            });
-                                      });
-                                    })
-                                : const SizedBox()),
-                        //CINTA OPCIONES MOVIL
-                        //CINTA DE OPCIONES
-                        if (widget.modoResponsive == ModoResponsive.muyReducido)
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: widget.modoResponsive ==
-                                        ModoResponsive.muyReducido
-                                    ? 10
-                                    : 0),
-                            child:
-                                CintaOpcionesLista(modo: widget.modoResponsive),
-                          ),
-                      ]));
-            });
-      },
-    );
+                                                    modoResponsive:
+                                                        modoResponsive,
+                                                  ),
+                                                );
+                                              });
+                                        });
+                                      })
+                                  : const SizedBox()),
+                          //CINTA OPCIONES MOVIL
+                          //CINTA DE OPCIONES
+                          if (modoResponsive == ModoResponsive.muyReducido)
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: modoResponsive ==
+                                          ModoResponsive.muyReducido
+                                      ? 10
+                                      : 0),
+                              child: const CintaOpcionesLista(),
+                            ),
+                        ]));
+              });
+        },
+      );
+    });
   }
 }

@@ -18,36 +18,36 @@ import 'btn_reproducir_orden.dart';
 import 'opciones_lista_generica.dart';
 
 class OpcionesListaCualquiera extends OpcionesListaGenerica {
-  const OpcionesListaCualquiera({required super.modo, super.key});
+  const OpcionesListaCualquiera({super.key});
 
   @override
   List<Widget> construirOpcionesNormales(
-      BuildContext context, ModoResponsive modo) {
+      BuildContext context, ModoResponsive modoResponsive) {
     return [
       SeccionCintaOpciones(lstItems: [
-        if (modo == ModoResponsive.normal)
+        if (modoResponsive == ModoResponsive.normal)
           const TextoCintaOpciones(texto: "Reproducir"),
 
         //REPRODUCIR EN ORDEN
-        BtnReproducirOrden(modo: modo),
+        BtnReproducirOrden(modoResponsive: modoResponsive),
 
         //REPRODUCIR AL AZAR
-        BtnReproducirAzar(modo: modo),
+        BtnReproducirAzar(modoResponsive: modoResponsive),
       ]),
       const SizedBox(width: 10),
-      if (modo != ModoResponsive.muyReducido)
+      if (modoResponsive != ModoResponsive.muyReducido)
         SeccionCintaOpciones(lstItems: [
           //IMPORTAR CANCIONES
-          BtnImportarCanciones(modo: modo)
+          BtnImportarCanciones(modoResponsive: modoResponsive)
         ]),
       const Spacer(),
       SeccionCintaOpciones(lstItems: [
         //RENOMBRAR LISTA
-        if (modo != ModoResponsive.muyReducido)
+        if (modoResponsive != ModoResponsive.muyReducido)
           BotonCintaOpciones(
             icono: Icons.drive_file_rename_outline,
             texto: "Renombrar",
-            modo: modo,
+            modoResponsive: modoResponsive,
             onPressed: (context) async {
               await context
                   .read<AuxiliarListaReproduccion>()
@@ -62,8 +62,8 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
               return BotonPopUpMenuCintaOpciones<int>(
                   icono: Icons.south_rounded,
                   texto: "Ordenar",
-                  modo: modo,
                   enabled: true,
+                  modoResponsive: modoResponsive,
                   onSelected: (idColumnaSel) {
                     context
                         .read<AuxiliarListaReproduccion>()
@@ -86,11 +86,11 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
             }),
 
         //ELIMINAR LISTA
-        if (modo != ModoResponsive.muyReducido)
+        if (modoResponsive != ModoResponsive.muyReducido)
           BotonCintaOpciones(
               icono: Icons.delete,
               texto: "Eliminar",
-              modo: modo,
+              modoResponsive: modoResponsive,
               onPressed: (context) async {
                 await context
                     .read<AuxiliarListaReproduccion>()
@@ -102,7 +102,7 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
 
   @override
   List<Widget> construirOpcionesSeleccion(
-      BuildContext context, ModoResponsive modo) {
+      BuildContext context, ModoResponsive modoResponsive) {
     return [
       SeccionCintaOpciones(lstItems: [
         //CHECKBOX SELECCIONAR TODOS
@@ -139,7 +139,7 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
               return BotonPopUpMenuCintaOpciones(
                 icono: Icons.playlist_add_outlined,
                 enabled: cantCancSel > 0,
-                modo: modo,
+                modoResponsive: modoResponsive,
                 itemBuilder: (_) {
                   return List<ListaReproduccionData>.from(context
                           .read<BlocListasReproduccion>()
@@ -168,7 +168,7 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
         BotonCintaOpciones(
           icono: Icons.view_column,
           texto: "Asignar Columnas...",
-          modo: modo,
+          modoResponsive: modoResponsive,
           onPressed: (context) async {
             await context
                 .read<AuxiliarListaReproduccion>()
@@ -177,7 +177,7 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
         ),
 
         //RECORTAR NOMBRES
-        BtnRecortarNombres(modo: modo)
+        BtnRecortarNombres(modoResponsive: modoResponsive)
       ]),
 
       const Spacer(),
@@ -187,7 +187,7 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
         BotonPopUpMenuCintaOpciones(
             icono: Icons.delete_sweep,
             texto: "Eliminar...",
-            modo: modo,
+            modoResponsive: modoResponsive,
             itemBuilder: (_) => [
                   const PopupMenuItem(value: 0, child: Text("De esta Lista")),
                   const PopupMenuItem(value: 1, child: Text("Totalmente"))

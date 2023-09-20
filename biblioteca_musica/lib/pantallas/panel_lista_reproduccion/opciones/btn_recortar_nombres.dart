@@ -7,11 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../auxiliar_lista_reproduccion.dart';
 
 class BtnRecortarNombres extends BotonCintaOpciones {
-  BtnRecortarNombres({required ModoResponsive modo, super.key})
+  BtnRecortarNombres({required ModoResponsive modoResponsive, super.key})
       : super(
             icono: Icons.content_cut_rounded,
             texto: "Recortar Nombres",
-            modo: modo,
+            modoResponsive: modoResponsive,
             onPressed: (context) async {
               await context.read<AuxiliarListaReproduccion>().recortarNombres(
                   context,

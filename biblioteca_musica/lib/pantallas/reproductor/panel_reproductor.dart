@@ -10,43 +10,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PanelReproductor extends StatelessWidget {
-  final ModoResponsive modo;
-
-  const PanelReproductor({required this.modo, super.key});
+  const PanelReproductor({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<BlocReproductor, EstadoReproductor,
-        CancionColumnaPrincipal?>(
-      selector: (state) => state.cancionReproducida,
-      builder: (context, cancionRep) {
-        return Container(
-            height: 100,
-            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-                color: DecoColores.rosa,
-                borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              children: [
-                const SliderProgresoReproductor(),
-                Row(
-                  children: [
-                    const Spacer(),
+    return LayoutBuilder(builder: (context, constraints) {
+      return BlocSelector<BlocReproductor, EstadoReproductor,
+          CancionColumnaPrincipal?>(
+        selector: (state) => state.cancionReproducida,
+        builder: (context, cancionRep) {
+          return Container(
+              height: 100,
+              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                  color: DecoColores.rosa,
+                  borderRadius: BorderRadius.circular(20)),
+              child: Column(
+                children: [
+                  const SliderProgresoReproductor(),
+                  Row(
+                    children: [
+                      const Spacer(),
 
-                    ///INFORMACION DE LA CANCION REPRODUCIDA
-                    InformacionCancionReproducida(modo: modo),
+                      ///INFORMACION DE LA CANCION REPRODUCIDA
+                      InformacionCancionReproducida(
+                          modo: constraints.maxWidth > 950
+                              ? ModoResponsive.normal
+                              : ModoResponsive.reducido),
 
-                    const SizedBox(width: 20),
+                      const SizedBox(width: 20),
 
-                    ControlesPanelReproduccion(modoResp: modo),
+                      const ControlesPanelReproduccion(),
 
-                    const Spacer()
-                  ],
-                ),
-              ],
-            ));
-      },
-    );
+                      const Spacer()
+                    ],
+                  ),
+                ],
+              ));
+        },
+      );
+    });
   }
 }

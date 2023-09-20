@@ -12,7 +12,8 @@ import 'modo_reproduccion.dart';
 class ControlesPanelReproduccion extends StatelessWidget {
   final ModoResponsive modoResp;
 
-  const ControlesPanelReproduccion({super.key, required this.modoResp});
+  const ControlesPanelReproduccion(
+      {super.key, this.modoResp = ModoResponsive.normal});
 
   @override
   Widget build(BuildContext context) {

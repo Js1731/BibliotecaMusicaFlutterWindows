@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../auxiliar_lista_reproduccion.dart';
 
 class BtnReproducirAzar extends BotonCintaOpciones {
-  BtnReproducirAzar({required ModoResponsive modo, super.key})
+  BtnReproducirAzar({required ModoResponsive modoResponsive, super.key})
       : super(
             icono: Icons.shuffle,
             texto: "Azar",
-            modo: modo,
+            modoResponsive: modoResponsive,
             onPressed: (context) async {
               context
                   .read<AuxiliarListaReproduccion>()

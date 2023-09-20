@@ -21,7 +21,7 @@ class ItemCancion extends BtnGenerico {
   final bool seleccionado;
   final bool modoSeleccion;
   final int? idColumnaPrincipal;
-  final ModoResponsive modo;
+  final ModoResponsive modoResponsive;
 
   ItemCancion(
       {required this.cancion,
@@ -30,11 +30,11 @@ class ItemCancion extends BtnGenerico {
       required this.modoSeleccion,
       required this.reproduciendo,
       required this.idColumnaPrincipal,
-      required this.modo,
+      required this.modoResponsive,
       super.key})
       : super(builder: (hover, context) {
           return SizedBox(
-            height: modo == ModoResponsive.muyReducido ? 40 : 30,
+            height: modoResponsive == ModoResponsive.muyReducido ? 40 : 30,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 100),
               width: double.infinity,
@@ -59,7 +59,7 @@ class ItemCancion extends BtnGenerico {
                     child: Row(
                       children: [
                         //CHECKBOX
-                        if (modo != ModoResponsive.muyReducido)
+                        if (modoResponsive != ModoResponsive.muyReducido)
                           Checkbox(
                               shape: const CircleBorder(),
                               splashRadius: 15,
@@ -111,7 +111,7 @@ class ItemCancion extends BtnGenerico {
                         if (cancion.estado != estadoSync)
                           const SizedBox(width: 10),
 
-                        if (modo == ModoResponsive.muyReducido)
+                        if (modoResponsive == ModoResponsive.muyReducido)
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
                             child: Builder(builder: (context) {
@@ -127,12 +127,15 @@ class ItemCancion extends BtnGenerico {
                           ),
 
                         Expanded(
-                          flex: modo == ModoResponsive.muyReducido ? 3 : 1,
+                          flex: modoResponsive == ModoResponsive.muyReducido
+                              ? 3
+                              : 1,
                           child: Padding(
                             padding: EdgeInsets.only(
-                                right: modo == ModoResponsive.muyReducido
-                                    ? 10.0
-                                    : 0),
+                                right:
+                                    modoResponsive == ModoResponsive.muyReducido
+                                        ? 10.0
+                                        : 0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,7 +149,8 @@ class ItemCancion extends BtnGenerico {
                                       cancion.estado == estadoLocal,
                                   align: TextAlign.left,
                                 ),
-                                if (modo == ModoResponsive.muyReducido)
+                                if (modoResponsive ==
+                                    ModoResponsive.muyReducido)
                                   _SubTextoItemCancion(
                                     texto:
                                         cancion.mapaColumnas[idColumnaPrincipal]
@@ -170,12 +174,12 @@ class ItemCancion extends BtnGenerico {
                   //VALORES COLUMNA DE LA CANCION
                   for (Map<String, dynamic>? valorColumna
                       in cancion.mapaColumnas.values)
-                    if ((modo == ModoResponsive.reducido &&
+                    if ((modoResponsive == ModoResponsive.reducido &&
                             idColumnaPrincipal ==
                                 int.tryParse(
                                     valorColumna?["valor_columna_id"] ??
                                         "a")) ||
-                        modo == ModoResponsive.normal)
+                        modoResponsive == ModoResponsive.normal)
                       Expanded(
                           child: _TextoItemCancion(
                               texto:
@@ -188,7 +192,7 @@ class ItemCancion extends BtnGenerico {
 
                   //DURACION DE LA CANCION
                   Expanded(
-                    flex: modo == ModoResponsive.muyReducido ? 0 : 1,
+                    flex: modoResponsive == ModoResponsive.muyReducido ? 0 : 1,
                     child: _TextoItemCancion(
                       texto:
                           duracionString(Duration(seconds: cancion.duracion)),
@@ -254,7 +258,7 @@ class ItemCancion extends BtnGenerico {
                     ])));
           }
 
-          if (modo != ModoResponsive.muyReducido) {
+          if (modoResponsive != ModoResponsive.muyReducido) {
             lstOpciones.insert(
               1,
               const PopupMenuItem(

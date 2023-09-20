@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../auxiliar_lista_reproduccion.dart';
 
 class BtnImportarCanciones extends BotonCintaOpciones {
-  BtnImportarCanciones({required ModoResponsive modo, super.key})
+  BtnImportarCanciones({required ModoResponsive modoResponsive, super.key})
       : super(
             icono: Icons.folder_copy,
             texto: "Importar Canciones",
-            modo: modo,
+            modoResponsive: modoResponsive,
             onPressed: (context) async {
               await context
                   .read<AuxiliarListaReproduccion>()

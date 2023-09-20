@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:biblioteca_musica/bloc/cubit_configuracion.dart';
 import 'package:biblioteca_musica/bloc/cubit_gestor_columnas.dart';
+import 'package:biblioteca_musica/bloc/cubit_modo_responsive.dart';
 import 'package:biblioteca_musica/bloc/cubit_panel_seleccionado.dart';
 import 'package:biblioteca_musica/bloc/cubit_reproductor_movil.dart';
 import 'package:biblioteca_musica/bloc/logs/bloc_log.dart';
@@ -46,8 +47,7 @@ class PantPrincipal extends StatefulWidget {
 
 class PantPrincipalState extends State<PantPrincipal>
     with SingleTickerProviderStateMixin {
-  Widget construirPanelCentral(
-      BuildContext context, Panel panel, ModoResponsive modo) {
+  Widget construirPanelCentral(BuildContext context, Panel panel) {
     switch (panel) {
       case Panel.listasRep:
         return BlocProvider(
@@ -56,9 +56,7 @@ class PantPrincipalState extends State<PantPrincipal>
                 create: (context) => AuxiliarListaReproduccion(
                       context.read<RepositorioColumnas>(),
                     ),
-                child: PanelListaReproduccion(
-                  modoResponsive: modo,
-                )));
+                child: const PanelListaReproduccion()));
 
       case Panel.columnas:
         return Provider(
@@ -90,11 +88,13 @@ class PantPrincipalState extends State<PantPrincipal>
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final modoResp = constraints.maxWidth >= 1030
+      final modoResp = constraints.maxWidth >= 1080
           ? ModoResponsive.normal
-          : constraints.maxWidth < 1030 && constraints.maxWidth > 700
+          : constraints.maxWidth < 1080 && constraints.maxWidth > 700
               ? ModoResponsive.reducido
               : ModoResponsive.muyReducido;
+
+      context.read<CubitModoResponsive>().actModoResponsive(modoResp);
 
       print(modoResp.name);
       return Scaffold(
@@ -180,7 +180,7 @@ class PantPrincipalState extends State<PantPrincipal>
                                               child: Stack(
                                                 children: [
                                                   construirPanelCentral(
-                                                      context, panel, modoResp),
+                                                      context, panel),
                                                 ],
                                               )),
                                         ),
@@ -204,7 +204,7 @@ class PantPrincipalState extends State<PantPrincipal>
                               cancionReproducida != null)
                             const SizedBox(height: 60),
                           if (modoResp != ModoResponsive.muyReducido)
-                            PanelReproductor(modo: modoResp)
+                            PanelReproductor()
                         ],
                       ),
                     ),
