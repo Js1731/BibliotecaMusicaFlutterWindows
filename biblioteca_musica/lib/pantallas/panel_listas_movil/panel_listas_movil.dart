@@ -44,6 +44,11 @@ class PanelListasMovil extends StatelessWidget {
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold)),
                             ),
+                            const Divider(
+                              height: 1,
+                              thickness: 1,
+                            ),
+                            const SizedBox(height: 10),
                             ItemListaRepMovil(
                               listaRep: listaRepBiblioteca,
                               estaSeleccionada:
@@ -51,16 +56,21 @@ class PanelListasMovil extends StatelessWidget {
                               esListaReproducida:
                                   listaReproducida?.id == listaRepBiblioteca.id,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: TextoPer(
-                                  texto: "Listas",
-                                  tam: 25,
-                                  weight: FontWeight.bold),
+                            Container(
+                              width: double.maxFinite,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20),
+                              child: TextoPer(texto: "Listas", tam: 24),
                             ),
                             Expanded(
-                                child: ListView.builder(
+                                child: ListView.separated(
                               itemCount: listasRep.length,
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  thickness: 1,
+                                  height: 10,
+                                );
+                              },
                               itemBuilder: (context, index) {
                                 return ItemListaRepMovil(
                                     listaRep: listasRep[index],

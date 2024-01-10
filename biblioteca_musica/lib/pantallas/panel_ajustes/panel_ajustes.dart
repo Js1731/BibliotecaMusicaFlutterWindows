@@ -49,7 +49,7 @@ class _PanelAjustesState extends State<PanelAjustes> {
     return FutureBuilder(
       future: cargarAjustes(context),
       builder: (context, snap) => Padding(
-        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         child: Column(
           children: [
             SizedBox(

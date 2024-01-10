@@ -25,8 +25,7 @@ class OpcionesListaCualquiera extends OpcionesListaGenerica {
       BuildContext context, ModoResponsive modoResponsive) {
     return [
       SeccionCintaOpciones(lstItems: [
-        if (modoResponsive == ModoResponsive.normal)
-          const TextoCintaOpciones(texto: "Reproducir"),
+        const TextoCintaOpciones(texto: "Reproducir"),
 
         //REPRODUCIR EN ORDEN
         BtnReproducirOrden(modoResponsive: modoResponsive),

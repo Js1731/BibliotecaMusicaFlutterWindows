@@ -26,6 +26,7 @@ class PanelReducido extends StatelessWidget {
                 url: rutaImagen(
                     stateRep.cancionReproducida?.valorColumnaPrincipal?.id),
                 tam: 30,
+                radio: 5,
                 sombra: false,
               ),
               Expanded(

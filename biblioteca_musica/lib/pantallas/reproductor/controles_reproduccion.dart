@@ -33,6 +33,7 @@ class ControlesReproduccion extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       BtnAccionReproductor(
+                          tam: modoResp == ModoResponsive.muyReducido ? 50 : 30,
                           pausado: reproduciendo,
                           enabled: cancionRep != null,
                           icono: Icons.skip_previous,
@@ -41,16 +42,19 @@ class ControlesReproduccion extends StatelessWidget {
                                 .read<BlocReproductor>()
                                 .add(EvRegresarCancion());
                           }),
-                      const SizedBox(width: 5),
-                      BtnAccionReproductor(
-                          pausado: reproduciendo,
-                          enabled: cancionRep != null,
-                          icono: Icons.fast_rewind,
-                          onPressed: (_) async {
-                            context
-                                .read<BlocReproductor>()
-                                .add(EvRegresar10s());
-                          }),
+                      SizedBox(
+                        width: modoResp == ModoResponsive.muyReducido ? 20 : 5,
+                      ),
+                      if (modoResp != ModoResponsive.muyReducido)
+                        BtnAccionReproductor(
+                            pausado: reproduciendo,
+                            enabled: cancionRep != null,
+                            icono: Icons.fast_rewind,
+                            onPressed: (_) async {
+                              context
+                                  .read<BlocReproductor>()
+                                  .add(EvRegresar10s());
+                            }),
                       const SizedBox(width: 5),
                       BtnAccionReproductor(
                           tam: modoResp == ModoResponsive.muyReducido ? 50 : 30,
@@ -62,16 +66,22 @@ class ControlesReproduccion extends StatelessWidget {
                                 .read<BlocReproductor>()
                                 .add(EvTogglePausa());
                           }),
+                      SizedBox(
+                        width: modoResp == ModoResponsive.muyReducido ? 20 : 5,
+                      ),
+                      if (modoResp != ModoResponsive.muyReducido)
+                        BtnAccionReproductor(
+                            pausado: reproduciendo,
+                            enabled: cancionRep != null,
+                            icono: Icons.fast_forward,
+                            onPressed: (_) async {
+                              context
+                                  .read<BlocReproductor>()
+                                  .add(EvAvanzar10s());
+                            }),
                       const SizedBox(width: 5),
                       BtnAccionReproductor(
-                          pausado: reproduciendo,
-                          enabled: cancionRep != null,
-                          icono: Icons.fast_forward,
-                          onPressed: (_) async {
-                            context.read<BlocReproductor>().add(EvAvanzar10s());
-                          }),
-                      const SizedBox(width: 5),
-                      BtnAccionReproductor(
+                          tam: modoResp == ModoResponsive.muyReducido ? 50 : 30,
                           pausado: reproduciendo,
                           enabled: cancionRep != null,
                           icono: Icons.skip_next,

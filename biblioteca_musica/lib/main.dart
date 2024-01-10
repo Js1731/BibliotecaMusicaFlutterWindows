@@ -33,7 +33,7 @@ import 'bloc/columnas_sistema/eventos_columnas_sistema.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await actNumeroVersionLocal(0);
+  //await actNumeroVersionLocal(0);
   await initRutaDoc();
 
   final repositorioCanciones = RepositorioCanciones(DBPCanciones());
@@ -94,7 +94,7 @@ Future<void> main() async {
   if (Platform.isWindows) {
     doWhenWindowReady(() {
       const initialSize = Size(1100, 700);
-      appWindow.minSize = const Size(800, 700);
+      appWindow.minSize = const Size(400, 700);
       appWindow.size = initialSize;
       appWindow.alignment = Alignment.center;
       appWindow.show();

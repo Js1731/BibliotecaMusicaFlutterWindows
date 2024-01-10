@@ -23,7 +23,7 @@
         "biblioteca_musica/macos": true,
         "biblioteca_musica/web": true,
         "biblioteca_musica/ios": true,
-        "biblioteca_musica/android": true,
+        "biblioteca_musica/android": false,
         "biblioteca_musica/.dart_tool": true,
         "**/.vscode": true
     },

@@ -47,53 +47,56 @@ class EstadoPanelPropiedadesCentral extends State<PanelColumnasCentral> {
 
                       const SizedBox(height: 10),
 
-                      CintaOpciones(
-                        lstOpciones: [
-                          //AGREGAR VALOR A LA COLUMNA
-                          SeccionCintaOpciones(
-                            lstItems: [
+                      LimitedBox(
+                        maxHeight: 45,
+                        child: CintaOpciones(
+                          lstOpciones: [
+                            //AGREGAR VALOR A LA COLUMNA
+                            SeccionCintaOpciones(
+                              lstItems: [
+                                BotonCintaOpciones(
+                                    icono: Icons.add,
+                                    texto: "Agregar ${columnaSel.nombre}",
+                                    modoResponsive: modoResponsive,
+                                    onPressed: (_) async {
+                                      await context
+                                          .read<AuxiliarPanelColumnas>()
+                                          .agregarValorColumna(context);
+                                    })
+                              ],
+                            ),
+
+                            const Spacer(),
+
+                            SeccionCintaOpciones(lstItems: [
+                              //RENOMBRAR COLUMNA
                               BotonCintaOpciones(
-                                  icono: Icons.add,
-                                  texto: "Agregar ${columnaSel.nombre}",
+                                  icono: Icons.edit,
+                                  texto: "Renombrar",
                                   modoResponsive: modoResponsive,
                                   onPressed: (_) async {
-                                    await context
-                                        .read<AuxiliarPanelColumnas>()
-                                        .agregarValorColumna(context);
-                                  })
-                            ],
-                          ),
+                                    // await controlador
+                                    //     .renombrarColumna(columnaSel.id);
+                                  }),
+                              //ELIMINAR COLUMNA
+                              BotonCintaOpciones(
+                                  icono: Icons.delete,
+                                  texto: "Eliminar",
+                                  modoResponsive: modoResponsive,
+                                  onPressed: (_) async {
+                                    bool? confirmar = await abrirDialogoConfirmar(
+                                        context,
+                                        "Quieres eliminar la propiedad ${columnaSel.nombre}",
+                                        "La propiedad ${columnaSel.nombre} junto todos sus valores y referencias, seran eliminados. Estas Seguro?");
 
-                          const Spacer(),
+                                    if (confirmar == null) return;
 
-                          SeccionCintaOpciones(lstItems: [
-                            //RENOMBRAR COLUMNA
-                            BotonCintaOpciones(
-                                icono: Icons.edit,
-                                texto: "Renombrar",
-                                modoResponsive: modoResponsive,
-                                onPressed: (_) async {
-                                  // await controlador
-                                  //     .renombrarColumna(columnaSel.id);
-                                }),
-                            //ELIMINAR COLUMNA
-                            BotonCintaOpciones(
-                                icono: Icons.delete,
-                                texto: "Eliminar",
-                                modoResponsive: modoResponsive,
-                                onPressed: (_) async {
-                                  bool? confirmar = await abrirDialogoConfirmar(
-                                      context,
-                                      "Quieres eliminar la propiedad ${columnaSel.nombre}",
-                                      "La propiedad ${columnaSel.nombre} junto todos sus valores y referencias, seran eliminados. Estas Seguro?");
-
-                                  if (confirmar == null) return;
-
-                                  // await controlador
-                                  //     .eliminarColumna(columnaSel.id);
-                                }),
-                          ])
-                        ],
+                                    // await controlador
+                                    //     .eliminarColumna(columnaSel.id);
+                                  }),
+                            ])
+                          ],
+                        ),
                       ),
                     ],
                   );

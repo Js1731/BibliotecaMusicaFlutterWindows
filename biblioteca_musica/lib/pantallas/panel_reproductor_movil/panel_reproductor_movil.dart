@@ -27,10 +27,12 @@ class _EstadoPanelReproductorMovil extends State<PanelReproductorMovil> {
           enabled: !expandido,
           constructorContenido: (context, hover) => GestureDetector(
             onTap: () {
-              setState(() {
-                animTerminado = false;
-              });
-              context.read<CubitReproductorMovil>().toggleModo();
+              if (context.read<CubitReproductorMovil>().state == false) {
+                setState(() {
+                  animTerminado = false;
+                });
+                context.read<CubitReproductorMovil>().toggleModo();
+              }
             },
             child: AnimatedContainer(
               onEnd: () {
@@ -40,7 +42,8 @@ class _EstadoPanelReproductorMovil extends State<PanelReproductorMovil> {
               },
               duration: const Duration(milliseconds: 200),
               curve: Curves.decelerate,
-              height: expandido ? (constraints.maxHeight - 20) : 50,
+              height:
+                  expandido ? (constraints.maxHeight - 20).clamp(0, 600) : 50,
               decoration: BoxDecoration(
                   color: hover ? colorHoverReproductor : DecoColores.rosaOscuro,
                   borderRadius: BorderRadius.circular(10)),

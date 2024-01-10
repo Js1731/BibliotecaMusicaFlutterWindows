@@ -83,6 +83,7 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                       fontSize: 30, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 15),
               _constructorInfoLista(canciones)
             ],
           );
@@ -122,9 +123,11 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
 
                           //CINTA DE OPCIONES ESCRITORIO
                           if (modoResponsive != ModoResponsive.muyReducido)
-                            const Padding(
-                              padding: EdgeInsets.only(top: 10, bottom: 10),
-                              child: CintaOpcionesLista(),
+                            Container(
+                              height: 60,
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              child: const CintaOpcionesLista(),
                             ),
 
                           //COLUMNAS DE LA LISTA DE REPRODUCCION
@@ -188,7 +191,8 @@ class EstadoPanelListaReproduccion extends State<PanelListaReproduccion> {
                           //CINTA OPCIONES MOVIL
                           //CINTA DE OPCIONES
                           if (modoResponsive == ModoResponsive.muyReducido)
-                            Padding(
+                            Container(
+                              height: 70,
                               padding: EdgeInsets.only(
                                   top: modoResponsive ==
                                           ModoResponsive.muyReducido

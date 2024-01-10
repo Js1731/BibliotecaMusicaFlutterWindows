@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
 
+import 'area_boton_avanzar_retroceder.dart';
+
 class PanelExpandido extends StatelessWidget {
   const PanelExpandido({super.key});
 
@@ -32,37 +34,62 @@ class PanelExpandido extends StatelessWidget {
           return LayoutBuilder(builder: (context, constraints) {
             return Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: TextoPer(
-                      texto: listaSel?.nombre ?? "---",
-                      color: Colors.white,
-                      tam: 18),
-                ),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 30),
-                        child: LimitedBox(
-                          maxWidth: 250,
-                          maxHeight: 250,
-                          child: ImagenRectRounded(
-                            url: rutaImagen(cancion?.valorColumnaPrincipal?.id),
-                            tam: constraints.maxWidth - 70,
+                      AspectRatio(
+                        aspectRatio: 1,
+                        child: Stack(children: [
+                          SizedBox(
+                            width: double.maxFinite,
+                            height: double.maxFinite,
+                            child: ImagenRectRounded(
+                              url: rutaImagen(
+                                  cancion?.valorColumnaPrincipal?.id),
+                              tam: constraints.maxWidth - 70,
+                            ),
                           ),
-                        ),
-                      ),
-                      TextoPer(
-                        texto: cancion?.nombre ?? "---",
-                        color: Colors.white,
-                        tam: 18,
-                      ),
-                      TextoPer(
-                        texto: cancion?.valorColumnaPrincipal?.nombre ?? "---",
-                        color: Colors.white54,
-                        tam: 18,
+                          Container(
+                            width: double.maxFinite,
+                            alignment: Alignment.bottomLeft,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              width: double.maxFinite,
+                              decoration: const BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.zero,
+                                    topRight: Radius.zero,
+                                    bottomLeft: Radius.circular(17),
+                                    bottomRight: Radius.circular(17),
+                                  )),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      cancion?.nombre ?? "---",
+                                      style: const TextStyle(
+                                          fontSize: 20, color: Colors.white),
+                                    ),
+                                    TextoPer(
+                                      texto: cancion
+                                              ?.valorColumnaPrincipal?.nombre ??
+                                          "---",
+                                      color: Colors.white54,
+                                      tam: 18,
+                                    ),
+                                    TextoPer(
+                                        texto: listaSel?.nombre ?? "---",
+                                        color: Colors.white54,
+                                        tam: 18),
+                                  ]),
+                            ),
+                          ),
+                          const AreaBtnAvanzarRetroceder()
+                        ]),
                       ),
                       const SizedBox(height: 10),
                       const SliderProgresoReproductor(),
